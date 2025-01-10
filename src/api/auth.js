@@ -1,0 +1,16 @@
+import { authAxios } from '@/axios/auth'
+import { baseAxios } from '@/axios/base'
+
+function login(data) {
+  return baseAxios.post('/login', data)
+}
+
+function logout() {
+  return authAxios.post('/logout')
+}
+
+function userData() {
+  return authAxios.get('/me')
+}
+
+export default { login, logout, userData }
