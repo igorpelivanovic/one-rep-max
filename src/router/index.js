@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import { authGuard } from './guards'
+import { authRequired, getUserData, noAuthRequired, rolePremission } from './guards'
 import { REQUIRED_AUTH_STATUS } from './data'
+import { useLoadingRouteStore } from '@/stores/loadingRoute'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +29,14 @@ const router = createRouter({
           name: 'profile',
           component: () => import('../views/ProfileView.vue'),
         },
+        {
+          path: '/post',
+          name: 'post',
+          component: () => import('../views/PostView.vue'),
+          meta: {
+            roles: ['admin'],
+          },
+        },
       ],
     },
     // Required NoAuth Route
@@ -38,8 +47,8 @@ const router = createRouter({
       },
       children: [
         {
-          path: '/login',
-          name: 'login',
+          path: '/auth',
+          name: 'auth',
           component: () => import('../views/LoginView.vue'),
         },
       ],
@@ -47,6 +56,24 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach(authGuard)
+router.beforeEach(async (to, _, next) => {
+  const loadingStatus = useLoadingRouteStore()
+  try {
+    loadingStatus.isLoading = true
+    await getUserData()
+    noAuthRequired(to)
+    authRequired(to)
+    rolePremission(to)
+    next()
+  } catch (e) {
+    next({ name: e.next || '' })
+  }
+})
+
+router.afterEach(() => {
+  const loadingStatus = useLoadingRouteStore()
+
+  loadingStatus.isLoading = false
+})
 
 export default router

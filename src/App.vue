@@ -1,43 +1,32 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-import { onBeforeMount } from 'vue'
-import { ref } from 'vue'
-import { useAuthUserStore } from './stores/auth'
+import { useLoadingRouteStore } from './stores/loadingRoute'
+import { toRefs } from 'vue'
 
-const loading = ref(false)
-const { me } = useAuthUserStore()
-
-onBeforeMount(async () => {
-  console.log('check')
-  loading.value = true
-  await me()
-  console.log('check2')
-
-  loading.value = false
-})
+const { isLoading } = toRefs(useLoadingRouteStore())
 </script>
 
 <template>
-  <div v-if="loading">loading....</div>
-  <div v-else>
-    <header>
-      <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <header>
+    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
-      <div class="wrapper">
-        <HelloWorld msg="You did it!" />
+    <div class="wrapper">
+      <HelloWorld msg="You did it!" />
 
-        <nav>
-          <RouterLink to="/">Home</RouterLink>
-          <RouterLink to="/about">About</RouterLink>
-          <RouterLink to="/login">login</RouterLink>
-          <RouterLink to="/profile">profile</RouterLink>
-        </nav>
-      </div>
-    </header>
-
+      <nav>
+        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/auth">login</RouterLink>
+        <RouterLink to="/profile">profile</RouterLink>
+      </nav>
+    </div>
+    {{ isLoading }}
+  </header>
+  <template v-if="isLoading"> loading.... </template>
+  <template v-else>
     <RouterView />
-  </div>
+  </template>
 </template>
 
 <style scoped>

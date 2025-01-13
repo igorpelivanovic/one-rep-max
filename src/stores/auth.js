@@ -10,42 +10,39 @@ const useAuthUserStore = defineStore('auth', () => {
   const getUser = computed(() => user)
 
   const login = async (data) => {
-    try {
-      const response = await auth.login(data)
-      const resData = response.data.data
-      user = { ...user, ...resData.user }
-      authToken.setAuthToken(resData.sessionId)
-      router.push({ name: 'profile' })
-      return true
-    } catch (e) {}
+    const response = await auth.login(data)
+    const resData = response.data.data
+    user = { ...user, ...resData.user }
+    authToken.setAuthToken(resData.sessionId)
+    router.push({ name: 'profile' })
+    return true
   }
 
   const logout = async () => {
-    try {
-      await auth.logout()
-      authToken.removeAuthToken()
-      router.push({ name: 'home' })
-      return true
-    } catch (e) {}
+    await auth.logout()
+    authToken.removeAuthToken()
+    router.replace({ name: 'auth' })
+    return true
   }
 
   const me = async () => {
-    try {
-      if (authToken.getAuthToken()) {
-        const response = await auth.userData()
-        const resData = response.data.data
-        user = { ...user, ...resData.user }
-        return true
-      }
-      return false
-    } catch (e) {
-      authToken.removeAuthToken()
+    if (authToken.getAuthToken() && !user) {
+      const response = await auth.userData()
+      const resData = response.data.data
+      user = { ...user, ...resData.user }
     }
+    return true
   }
 
   const isLogged = () => authToken.getAuthToken() && !!user
 
-  return { getUser, login, logout, me, isLogged, user }
+  const register = async (data) => {
+    await auth.register(data)
+    router.replace({ name: 'auth' })
+    return true
+  }
+
+  return { getUser, login, logout, me, isLogged, register }
 })
 
 export { useAuthUserStore }

@@ -9,8 +9,12 @@ function logout() {
   return authAxios.post('/logout')
 }
 
+function register(data) {
+  return baseAxios.post('/register', data)
+}
+
 function userData() {
   return authAxios.get('/me')
 }
 
-export default { login, logout, userData }
+export default { login, logout, userData, register }

@@ -1,34 +1,15 @@
 <script setup>
-import { reactive } from 'vue'
-import { ref } from 'vue'
-import { useAuthUserStore } from '@/stores/auth'
+import LoginForm from '@/components/auth/LoginForm.vue'
+import RegisterForm from '@/components/auth/RegisterForm.vue'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 
-const formData = reactive({
-  email: 'prochkhkedure@email.com',
-  password: 'Rootroot12',
-})
+const { query, path } = useRoute()
 
-const loading = ref(false)
-const { login } = useAuthUserStore()
-
-async function submitFormHandler() {
-  try {
-    loading.value = true
-    await login(formData)
-  } catch (e) {
-    console.log(e)
-  } finally {
-    loading.value = false
-  }
-}
+const isRegisterForm = computed(() => query.f == 'r')
 </script>
 
 <template>
-  login view
-  <form @submit.prevent="submitFormHandler">
-    <input type="email" v-model="formData.email" />
-    <input type="password" v-model="formData.password" />
-    <button :disabled="loading" type="submit">login</button>
-  </form>
-  <p v-if="loading">loading....</p>
+  <RegisterForm v-if="isRegisterForm" />
+  <LoginForm v-else />
 </template>
