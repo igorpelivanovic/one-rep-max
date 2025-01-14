@@ -3,13 +3,13 @@ import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
 import { useLoadingRouteStore } from './stores/loadingRoute'
 import { toRefs } from 'vue'
-import AlertLayout from './components/alerts/AlertLayout.vue'
+import AlertsLayout from './components/alerts/AlertLayout.vue'
 
 const { isLoading } = toRefs(useLoadingRouteStore())
 </script>
 
 <template>
-  <AlertLayout />
+  <AlertsLayout />
   <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
