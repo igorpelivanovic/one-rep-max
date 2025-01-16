@@ -36,6 +36,7 @@ async function submitFormHandler() {
     await login(formData)
   } catch (e) {
     console.log(e)
+    addError()
     responseError.value = e?.response?.data?.message || 'something wrong'
   } finally {
     loading.value = false

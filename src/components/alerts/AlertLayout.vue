@@ -16,15 +16,18 @@ const { getAlerts } = toRefs(useAlertBoxStore())
 
 <style scoped>
 .layout {
-  width: 350px;
-  padding-right: 10px;
+  z-index: 1;
+  width: 200px;
+  padding-right: 5px;
   position: fixed;
-  bottom: 50px;
+  top: 50px;
   right: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  justify-content: flex-end;
+  justify-content: flex-start;
+  max-height: 200px;
+  overflow: hidden;
 }
 .alert-group-move,
 .alert-group-enter-active,
@@ -41,5 +44,15 @@ const { getAlerts } = toRefs(useAlertBoxStore())
 .alert-group-leave-active {
   position: absolute;
   z-index: -1;
+}
+@media screen and (min-width: 481px) {
+  .layout {
+    width: 350px;
+    padding-right: 10px;
+    top: inherit;
+    bottom: 50px;
+    justify-content: flex-end;
+    max-height: auto;
+  }
 }
 </style>

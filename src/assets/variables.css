@@ -1,4 +1,5 @@
-:root {
+:root,
+body {
   --gray: #f2f2f2;
   --gray-600: #cbcbcb;
   --blue-600: #033479;
@@ -16,4 +17,13 @@
   --alert-red-light: #ecc8c5;
   --alert-green-dark: #1f7d00;
   --alert-green-light: #afc3a7;
+
+  /* media break points */
+  --break-point-small-phone: 320px;
+  --break-point-large-phone: 481px;
+  --break-point-small-tablet: 601px;
+  --break-point-large-tablet: 769px;
+  --break-point-small-desktop: 1025px;
+  --break-point-large-desktop: 1281px;
+  --break-point-extra-large-desktop: 1441p;
 }

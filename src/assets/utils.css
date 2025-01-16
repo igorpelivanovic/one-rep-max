@@ -32,7 +32,7 @@ body {
               padding: 4px 10px 4px 12px;
               &:has(.input-container input:not(:placeholder-shown), .input-container input:focus) {
                 span.label {
-                  font-size: 0.9rem;
+                  font-size: 0.8rem;
                   top: 0;
                   transform: translateY(0%);
                 }
@@ -62,14 +62,15 @@ body {
                   left: 0;
                   top: 50%;
                   transform: translateY(-50%);
-                  font-size: 1.15rem;
+                  font-size: 1rem;
                   transition: 0.2s;
                 }
 
                 .input-container {
                   display: flex;
-                  margin-top: 18px;
+                  margin-top: 16px;
                   input {
+                    width: 100%;
                     flex: 1;
                     background-color: transparent;
                     border: none;
@@ -116,6 +117,39 @@ body {
       .auth-page-link {
         color: var(--blue-600);
         text-transform: capitalize;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 481px) {
+  body {
+    .auth-page-wrapper {
+      .auth-form {
+        .fields-container {
+          .label-container {
+            label {
+              .field-border {
+                &:has(
+                    .input-container input:not(:placeholder-shown),
+                    .input-container input:focus
+                  ) {
+                  span.label {
+                    font-size: 0.9rem;
+                  }
+                }
+                .field-container {
+                  span.label {
+                    font-size: 1.15rem;
+                  }
+                  .input-container {
+                    margin-top: 14px;
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

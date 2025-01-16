@@ -64,6 +64,7 @@ const btnClickHandle = (id) => {
   border-radius: 4px;
   overflow: hidden;
   width: 100%;
+  flex-shrink: 0;
   &.alert-success {
     background-color: var(--alert-green-light);
     .alert-icon {

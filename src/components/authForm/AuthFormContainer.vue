@@ -28,40 +28,54 @@ const showFooter = computed(() => !!slot.footer)
 </template>
 
 <style scoped>
-.auth-page-wrapper {
-  background: linear-gradient(136.83deg, var(--blue-600) 17%, var(--blue-900) 100%);
-  height: 100dvh;
+.auth-form-container {
+  overflow: hidden;
+  width: 100%;
+  background-color: var(--gray);
+  height: 100%;
+  padding-block: 20px;
+  padding-inline: 30px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  .auth-form-container {
-    overflow: hidden;
-    border-radius: 20px;
-    width: 450px;
-    background-color: var(--gray);
-    min-height: 500px;
-    max-height: 650px;
-    padding: 40px 60px;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  justify-content: flex-end;
+  .auth-form-container-header {
+    text-align: center;
+    margin-top: auto;
+    h1 {
+      font-size: 1.6rem;
+      &::first-letter {
+        text-transform: capitalize;
+      }
+      margin: 0;
+    }
+  }
+  .auth-form-container-body {
+    margin-top: 30px;
+    margin-bottom: auto;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    position: relative;
+    justify-content: center;
+  }
+}
+
+@media screen and (min-width: 481px) {
+  .auth-form-container {
+    padding-block: 30px;
     .auth-form-container-header {
-      text-align: center;
       h1 {
-        &::first-letter {
-          text-transform: capitalize;
-        }
-        margin: 0;
+        font-size: 1.8rem;
       }
     }
     .auth-form-container-body {
-      margin-top: 30px;
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
     }
+    width: 450px;
+    padding-inline: 60px;
+    border-radius: 20px;
+    max-height: 650px;
+    height: auto;
   }
 }
 </style>
