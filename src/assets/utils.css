@@ -1,0 +1,100 @@
+body {
+  .auth-form {
+    text-align: center;
+    padding-bottom: 40px;
+    position: relative;
+    .response-error {
+      width: 100%;
+      text-align: center;
+    }
+    .fields-container {
+      .label-container {
+        label {
+          display: block;
+          position: relative;
+          margin-bottom: 40px;
+
+          .field-border {
+            border-radius: 10px;
+            border: 1px solid;
+            border-color: var(--gray-600);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+            padding: 4px 10px 4px 12px;
+            &:has(.input-container input:not(:placeholder-shown), .input-container input:focus) {
+              span.label {
+                font-size: 0.9rem;
+                top: 0;
+                transform: translateY(0%);
+              }
+            }
+            &:has(.input-container input:focus) {
+              border-color: var(--blue);
+              .icon-container,
+              span.label {
+                color: var(--blue);
+              }
+            }
+            &:has(p.error-message) {
+              border-color: var(--red);
+              .icon-container,
+              span.label {
+                color: var(--red);
+              }
+            }
+            .field-container {
+              flex: 1;
+              position: relative;
+              span.label {
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 1.15rem;
+                transition: 0.2s;
+              }
+
+              .input-container {
+                display: flex;
+                margin-top: 18px;
+                input {
+                  flex: 1;
+                  background-color: transparent;
+                  border: none;
+                  font-size: 1rem;
+                }
+                button {
+                  font-size: 1rem;
+                  background-color: transparent;
+                  border: none;
+                  cursor: pointer;
+                }
+              }
+            }
+            .icon-container {
+              font-size: 1.1rem;
+              display: flex;
+              transition: 0.2s;
+            }
+          }
+        }
+      }
+    }
+    .auth-form-submit-btn {
+      border: none;
+      cursor: pointer;
+      text-transform: capitalize;
+      background-color: #1150a9;
+      color: var(--gray);
+      font-size: 1.1rem;
+      padding: 10px 45px;
+      border-radius: 20px;
+      transition: 0.2s;
+      &:hover {
+        background-color: var(--blue-600);
+      }
+    }
+  }
+}
