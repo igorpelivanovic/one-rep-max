@@ -7,15 +7,17 @@ import { required } from '@/utils/formValidation'
 import AuthFormInput from './AuthFormInput.vue'
 import SpinnerContainer from '../spinner/SpinnerContainer.vue'
 import AuthFormErrorMessage from './AuthFormErrorMessage.vue'
+import { useAlertBoxStore } from '@/stores/alertBox'
 
 const formData = reactive({
-  email: 'prochkhkemail.com',
-  password: 'Rootroot12',
+  email: '',
+  password: '',
 })
 
 const loading = ref(false)
 const responseError = ref(false)
 const { login } = useAuthUserStore()
+const { addError } = useAlertBoxStore()
 
 const validation = {
   email: [required('email je obavezan')],
@@ -33,8 +35,8 @@ async function submitFormHandler() {
     loading.value = true
     await login(formData)
   } catch (e) {
-    responseError.value = e.response.data.message || 'something wrong'
-    console.log(responseError.value)
+    console.log(e)
+    responseError.value = e?.response?.data?.message || 'something wrong'
   } finally {
     loading.value = false
   }
@@ -46,7 +48,7 @@ async function submitFormHandler() {
     <div class="fields-container">
       <AuthFormInput v-model="formData.email" label-id="email" title="email" :error="errors?.email">
         <template #icon>
-          <i class="fas fa-user"></i>
+          <i class="fas fa-envelope"></i>
         </template>
       </AuthFormInput>
       <AuthFormInput

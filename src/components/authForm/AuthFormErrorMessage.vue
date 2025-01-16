@@ -13,12 +13,13 @@ const { message, customClass } = defineProps({
 
 <template>
   <p class="error-message" :class="customClass">
-    <i class="fa-solid fa-circle-exclamation"></i><span>{{ message }}</span>
+    <i class="fa-solid fa-circle-exclamation"></i><span class="error-content">{{ message }}</span>
   </p>
 </template>
 
 <style scoped>
 p.error-message {
+  display: flex;
   color: var(--red);
   margin: 0;
   position: absolute;
@@ -26,8 +27,10 @@ p.error-message {
   left: 15px;
   font-size: 1rem;
   margin-top: 4px;
-  span {
+  span.error-content {
     margin-left: 5px;
+    display: inline-block;
+    text-align: left;
     &::first-letter {
       text-transform: capitalize;
     }

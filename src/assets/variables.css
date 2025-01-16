@@ -8,4 +8,12 @@
   --black: #000;
   --red: #d91010;
   --transparent-gray: #4b4b4b52;
+
+  /* alert color*/
+  --alert-blue-dark: #447eaf;
+  --alert-blue-light: #cde8f6;
+  --alert-red-dark: #b83c37;
+  --alert-red-light: #ecc8c5;
+  --alert-green-dark: #1f7d00;
+  --alert-green-light: #afc3a7;
 }

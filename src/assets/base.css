@@ -6,7 +6,17 @@ body {
   margin: 0;
   width: 100dvw;
   min-height: 100dvh;
+  background: linear-gradient(136.83deg, var(--blue-600) 17%, var(--blue-900) 100%);
 }
 input {
   outline: none;
+}
+
+@keyframes timeLineLoader {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
 }

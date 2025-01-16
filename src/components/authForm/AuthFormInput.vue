@@ -58,6 +58,7 @@ const toggleInputType = () => {
               placeholder=""
               :id="labelId"
               @input="$emit('update:modelValue', $event.target.value)"
+              autocomplete="off"
             />
             <template v-if="showClearBtn">
               <button v-if="inputType === 'password'" type="button" @click="toggleInputType">
@@ -69,8 +70,23 @@ const toggleInputType = () => {
             </template>
           </div>
         </div>
-        <AuthFormErrorMessage v-if="error" :message="error"></AuthFormErrorMessage>
+        <Transition name="error-message">
+          <AuthFormErrorMessage v-if="error" :message="error"></AuthFormErrorMessage>
+        </Transition>
       </div>
     </label>
   </div>
 </template>
+
+<style scoped>
+.error-message-enter-active,
+.error-message-leave-active {
+  transition: all 0.2s ease;
+}
+
+.error-message-enter-from,
+.error-message-leave-to {
+  opacity: 0;
+  transform: translateY(-20%);
+}
+</style>

@@ -40,7 +40,6 @@ function useFormValidation({
   function validationField(key) {
     try {
       validation[key].forEach((fn) => {
-        console.log(values[key])
         fn(values[key])
       })
       delete errorsObj[key]

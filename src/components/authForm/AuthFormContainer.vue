@@ -40,22 +40,27 @@ const showFooter = computed(() => !!slot.footer)
     width: 450px;
     background-color: var(--gray);
     min-height: 500px;
-    max-height: 600px;
+    max-height: 650px;
     padding: 40px 60px;
     display: flex;
     flex-direction: column;
     gap: 10px;
     position: relative;
     .auth-form-container-header {
-      text-transform: capitalize;
       text-align: center;
       h1 {
+        &::first-letter {
+          text-transform: capitalize;
+        }
         margin: 0;
       }
     }
     .auth-form-container-body {
       margin-top: 30px;
       flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
   }
 }

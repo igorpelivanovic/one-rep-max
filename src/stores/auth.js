@@ -2,17 +2,17 @@ import auth from '@/api/auth'
 import router from '@/router'
 import authToken from '@/utils/authToken'
 import { defineStore } from 'pinia'
-import { reactive, computed } from 'vue'
+import { ref, computed } from 'vue'
 
 const useAuthUserStore = defineStore('auth', () => {
-  let user = reactive(null)
+  let user = ref(null)
 
   const getUser = computed(() => user)
 
   const login = async (data) => {
     const response = await auth.login(data)
     const resData = response.data.data
-    user = { ...user, ...resData.user }
+    user.value = { ...user.value, ...resData.user }
     authToken.setAuthToken(resData.sessionId)
     router.push({ name: 'profile' })
     return true
@@ -26,15 +26,15 @@ const useAuthUserStore = defineStore('auth', () => {
   }
 
   const me = async () => {
-    if (authToken.getAuthToken() && !user) {
+    if (authToken.getAuthToken() && !user.value) {
       const response = await auth.userData()
       const resData = response.data.data
-      user = { ...user, ...resData.user }
+      user.value = { ...user, ...resData.user }
     }
     return true
   }
 
-  const isLogged = () => authToken.getAuthToken() && !!user
+  const isLogged = () => authToken.getAuthToken() && !!user.value
 
   const register = async (data) => {
     await auth.register(data)

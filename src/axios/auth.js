@@ -4,6 +4,7 @@ import AuthToken from '@/utils/authToken'
 import { BaseAxiosHeader } from './_config'
 import { useAuthUserStore } from '@/stores/auth'
 import { isAxiosError } from 'axios'
+import { useAlertBoxStore } from '@/stores/alertBox'
 
 const authAxios = axios.create({
   baseURL: API_BASE_URL.concat('/auth'),
@@ -22,6 +23,9 @@ authAxios.interceptors.response.use(
       const { status } = response
       if ([401, 403].includes(status)) {
         await useAuthUserStore().logout()
+      }
+      if (status > 499 && status < 600) {
+        useAlertBoxStore().addError()
       }
     }
     return Promise.reject(response)

@@ -1,32 +1,45 @@
 <script setup>
 import { useAlertBoxStore } from '@/stores/alertBox'
 import { toRefs } from 'vue'
+import Alert from './Alert.vue'
 
-const { removeAlert, ...alertBoxStore } = useAlertBoxStore()
-
-const { getAlerts } = toRefs(alertBoxStore)
-
-const btnClickHandle = (id) => {
-  removeAlert(id)
-  return
-}
+const { getAlerts } = toRefs(useAlertBoxStore())
 </script>
 
 <template>
-  <div class="layout" v-if="getAlerts.length > 0">
-    <div v-for="alert of getAlerts" :key="alert.id">
-      {{ alert.content }}
-      <div v-if="alert.enableClose">
-        <button type="button" @click="() => btnClickHandle(alert.id)">close</button>
-      </div>
-    </div>
+  <div class="layout">
+    <TransitionGroup name="alert-group" appear>
+      <Alert :key="alert.id" :alert v-for="alert of getAlerts"></Alert>
+    </TransitionGroup>
   </div>
 </template>
 
 <style scoped>
 .layout {
-  position: absolute;
-  top: 0;
+  width: 350px;
+  padding-right: 10px;
+  position: fixed;
+  bottom: 50px;
   right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: flex-end;
+}
+.alert-group-move,
+.alert-group-enter-active,
+.alert-group-leave-active {
+  transition: all 0.2s ease;
+}
+
+.alert-group-enter-from,
+.alert-group-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.alert-group-leave-active {
+  position: absolute;
+  z-index: -1;
 }
 </style>
