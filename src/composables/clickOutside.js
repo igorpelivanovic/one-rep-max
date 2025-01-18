@@ -1,16 +1,19 @@
 import { onMounted, onUnmounted } from 'vue'
 
 export default function useClickOutside(target, callback, excludesRefs = []) {
-  function clickHandler(e) {
-    if (!target.value) return
-    if (![...excludesRefs, target.value].some((ref) => ref.contains(e.target))) {
-      callback.call()
+  function clickHandler(target, e) {
+    if (!target?.value) return
+    if (![...excludesRefs, target].some((ref) => ref.value.contains(e.target))) {
+      callback(e)
     }
   }
+
   onMounted(() => {
-    document.addEventListener('click', clickHandler)
+    document.addEventListener('click', (e) => {
+      clickHandler(target, e)
+    })
   })
   onUnmounted(() => {
-    document.removeEventListener('click', clickHandler)
+    document.removeEventListener('click', (e) => clickHandler(target, e))
   })
 }

@@ -17,6 +17,11 @@ const router = createRouter({
       name: 'about',
       component: () => import('../views/AboutView.vue'),
     },
+    {
+      path: '/addpost',
+      name: 'addPost',
+      component: () => import('../views/AddPostView.vue'),
+    },
     // Required Auth Route
     {
       path: '',
@@ -29,6 +34,7 @@ const router = createRouter({
           name: 'profile',
           component: () => import('../views/ProfileView.vue'),
         },
+
         {
           path: '/post',
           name: 'post',

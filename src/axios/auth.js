@@ -22,7 +22,7 @@ authAxios.interceptors.response.use(
     if (isAxiosError(response)) {
       const { status } = response
       if ([401, 403].includes(status)) {
-        await useAuthUserStore().logout()
+        //await useAuthUserStore().logout()
       }
       if (status > 499 && status < 600) {
         useAlertBoxStore().addError()

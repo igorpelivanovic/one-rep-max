@@ -25,7 +25,8 @@ p.error-message {
   margin: 0;
   position: absolute;
   top: 100%;
-  left: 15px;
+  left: 0;
+  padding-left: 15px;
   font-size: 0.8rem;
   margin-top: 4px;
   span.error-content {

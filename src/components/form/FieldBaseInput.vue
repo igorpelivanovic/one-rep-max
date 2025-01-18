@@ -1,37 +1,53 @@
 <script setup>
+import { computed } from 'vue'
 import { useSlots } from 'vue'
 import { ref } from 'vue'
-import { computed } from 'vue'
-import AuthFormErrorMessage from './AuthFormErrorMessage.vue'
+import AuthFormErrorMessage from '../authForm/AuthFormErrorMessage.vue'
+import { useTemplateRef } from 'vue'
 
-const { labelId, error, modelValue, title, inputType } = defineProps({
+const { labelId, error, value, title, inputType, styleClass, renderClearBtn } = defineProps({
   labelId: {
     required: true,
     type: String,
   },
-  modelValue: {
+  value: {
     type: [String, Number],
     required: true,
   },
   error: {
     type: [String, undefined],
   },
-  inputType: {
-    type: String,
-    default: 'text',
-  },
   title: {
     type: String,
     default: '',
   },
+  styleClass: {
+    type: [String, Object],
+    default: '',
+  },
+  inputType: {
+    type: String,
+    default: 'text',
+  },
+  renderClearBtn: {
+    type: Boolean,
+    default: true,
+  },
 })
+
+const wrapper = useTemplateRef('wrapper')
+
+defineExpose({ wrapper })
+
+const emit = defineEmits(['clearInput'])
 
 const iType = ref(inputType)
 
 const slots = useSlots()
 
-const showClearBtn = computed(() => modelValue.toString().length > 0)
+const showClearBtn = computed(() => value.toString().length > 0)
 const isHiddenData = computed(() => iType.value === inputType)
+const isSelectInput = computed(() => inputType === 'select')
 
 const toggleInputType = () => {
   if (isHiddenData.value) {
@@ -43,8 +59,11 @@ const toggleInputType = () => {
 </script>
 
 <template>
-  <div class="label-container">
-    <label :for="labelId">
+  <div class="label-container" ref="wrapper" :class="styleClass">
+    <component
+      :is="isSelectInput ? 'div' : 'label'"
+      v-bind="isSelectInput ? { class: 'select-label' } : { for: labelId }"
+    >
       <div class="field-border">
         <div class="icon-container" v-if="slots.icon">
           <slot name="icon"></slot>
@@ -52,41 +71,22 @@ const toggleInputType = () => {
         <div class="field-container">
           <span class="label">{{ title }}</span>
           <div class="input-container">
-            <input
-              :type="iType"
-              :value="modelValue"
-              placeholder=""
-              :id="labelId"
-              @input="$emit('update:modelValue', $event.target.value)"
-              autocomplete="off"
-            />
+            <slot name="field" v-if="slots.field"></slot>
             <template v-if="showClearBtn">
               <button v-if="inputType === 'password'" type="button" @click="toggleInputType">
                 <i class="fas" :class="isHiddenData ? 'fa-eye-slash' : 'fa-eye'"></i>
               </button>
-              <button type="button" @click="$emit('update:modelValue', '')">
+              <button type="button" @click="emit('clearInput', '')" v-if="renderClearBtn">
                 <i class="fas fa-xmark"></i>
               </button>
             </template>
           </div>
+          <slot name="other"></slot>
         </div>
         <Transition name="error-message">
           <AuthFormErrorMessage v-if="error" :message="error"></AuthFormErrorMessage>
         </Transition>
       </div>
-    </label>
+    </component>
   </div>
 </template>
-
-<style scoped>
-.error-message-enter-active,
-.error-message-leave-active {
-  transition: all 0.2s ease;
-}
-
-.error-message-enter-from,
-.error-message-leave-to {
-  opacity: 0;
-  transform: translateY(-20%);
-}
-</style>
