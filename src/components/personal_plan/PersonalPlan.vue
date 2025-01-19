@@ -1,32 +1,35 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import { usePlanStore } from '@/stores/personal_plan'
 import PlanForm from '../personal_plan/PlanForm.vue'
 import DeactivatePlanButton from './DeactivatePlanButton.vue'
 import WorkoutInWeeklyPlan from './WorkoutInWeeklyPlan.vue'
 
-const props = defineProps(['exists'])
 const planStore = usePlanStore()
-const weeklyPlan = ref(null)
-
+const exists = ref(true)
 const finished = ref(false)
+
+const weeklyPlan = ref(null)
+const workouts = ref([])
 
 function handlePlanReset() {
   console.log('planReset')
 }
 
-onMounted(async () => {
-  if (props.exists) {
+onBeforeMount(async () => {
+  try {
+    await planStore.getPlanData()
     if (planStore.planData.resetAllowed) {
       finished.value = true
       return
     }
-    try {
-      const res1 = await planStore.checkActiveWeek(planStore.planData.id)
-      const res2 = await planStore.getAcitveWeeklyPlan(res1.data.data.id)
-      weeklyPlan.value = res2.data.data
-    } catch (e) {
-      console.log(e)
+    const res1 = await planStore.checkActiveWeek(planStore.planData.id)
+    const res2 = await planStore.getActiveWeeklyPlan(res1.data.data.id)
+    weeklyPlan.value = res2.data.data
+    workouts.value = res2.data.data.workouts
+  } catch (e) {
+    if (e.status === 404) {
+      exists.value = false
     }
   }
 })
@@ -34,9 +37,13 @@ onMounted(async () => {
 
 <template>
   <div class="personal-plan-wrapper">
-    <div class="weekly-plan-wrapper" v-if="props.exists && !finished">
+    <div class="weekly-plan-wrapper" v-if="exists && !finished">
       <h2>Plan vežbanja</h2>
-      <WorkoutInWeeklyPlan></WorkoutInWeeklyPlan>
+      <WorkoutInWeeklyPlan
+        v-for="wko in workouts"
+        :key="wko.id"
+        :workout-data="wko"
+      ></WorkoutInWeeklyPlan>
     </div>
     <div class="finished-plan-wrapper" v-else-if="finished">
       <h2>Bravo! Uspešno si završio/la svoj plan treninga!</h2>
