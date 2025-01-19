@@ -10,11 +10,19 @@ const usePlanStore = defineStore('plan', () => {
     planData.value = res.data.data
   }
 
+  async function changePlanState(params) {
+    return await api.changePlanState(params)
+  }
+
   async function checkActiveWeek(planId) {
     return await api.checkActiveWeek({ planId })
   }
 
-  return { planData, getPlanData, checkActiveWeek }
+  async function getActiveWeeklyPlan(weeklyPlanId) {
+    return await api.getWeeklyPlan({ weeklyPlanId })
+  }
+
+  return { planData, getPlanData, changePlanState, checkActiveWeek, getActiveWeeklyPlan }
 })
 
 export { usePlanStore }
