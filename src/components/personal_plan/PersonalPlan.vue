@@ -1,11 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import usePlanStore from '@/stores/personal_plan'
-import PlanForm from '@/components/PlanForm.vue'
+import { usePlanStore } from '@/stores/personal_plan'
+import PlanForm from '../personal_plan/PlanForm.vue'
 import DeactivatePlanButton from './DeactivatePlanButton.vue'
 import WorkoutInWeeklyPlan from './WorkoutInWeeklyPlan.vue'
 
-const props = defineProps('exists')
+const props = defineProps(['exists'])
 const planStore = usePlanStore()
 const weeklyPlan = ref(null)
 
@@ -17,7 +17,7 @@ function handlePlanReset() {
 
 onMounted(async () => {
   if (props.exists) {
-    if (planStore.userData.resetAllowed) {
+    if (planStore.planData.resetAllowed) {
       finished.value = true
       return
     }

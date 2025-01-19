@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { usePlanStore } from '@/stores/personal_plan.js'
-import PersonalPlan from '@/components/PersonalPlan.vue'
+import PersonalPlan from '@/components/personal_plan/PersonalPlan.vue'
 
 const planStore = usePlanStore()
 const hasPlan = ref(true)
@@ -21,7 +21,7 @@ onMounted(async () => {
   <div class="container">
     <main>
       <PersonalPlan :exists="hasPlan"></PersonalPlan>
-      <PersonalRecords></PersonalRecords>
+      {{ planStore.planData + ' ' + hasPlan }}
     </main>
     <aside></aside>
   </div>
