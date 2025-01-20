@@ -103,6 +103,7 @@ body:has(.body-disable-scroll) {
           }
           textarea {
             resize: none;
+            margin-bottom: 40px;
           }
           button {
             font-size: 1rem;
@@ -118,6 +119,9 @@ body:has(.body-disable-scroll) {
         transition: 0.2s;
       }
     }
+  }
+  .select-label {
+    cursor: pointer;
   }
 }
 .auth-page-wrapper {
@@ -163,13 +167,28 @@ body:has(.body-disable-scroll) {
   }
 }
 .container {
-  /*     width: 1280px;
- */
   margin-inline: auto;
   width: 95%;
 }
 
-form.post-form {
+.page-main-title {
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.post-form {
+  &.edit {
+    .bottom-section {
+      position: relative;
+      flex-direction: column-reverse;
+    }
+  }
+  .post-form-title {
+    text-align: center;
+    &::first-letter {
+      text-transform: capitalize;
+    }
+  }
   .field-border {
     background-color: var(--gray);
   }
@@ -177,6 +196,44 @@ form.post-form {
     textarea {
       height: 400px;
       margin-bottom: 20px;
+    }
+  }
+  .form-bottom-section {
+    margin-top: auto;
+    margin-bottom: 0;
+  }
+  .bottom-section {
+    display: flex;
+
+    gap: 20px;
+    flex-direction: column-reverse;
+
+    .form-action-btns-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+
+      button {
+        cursor: pointer;
+        background-color: var(--gray-650);
+        border: none;
+        padding: 8px 20px;
+        text-transform: capitalize;
+        font-size: 1.1rem;
+        border-radius: 10px;
+        &[type='submit'] {
+          font-size: 1.2rem;
+          padding-inline: 30px;
+          background-color: var(--blue-700);
+          color: var(--gray);
+        }
+      }
+    }
+    .response-error {
+      position: relative;
+      width: initial;
+      margin: 0;
     }
   }
 }
@@ -203,6 +260,7 @@ form.post-form {
   border-radius: 15px;
   font-size: 0.9rem;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 @media screen and (min-width: 481px) {
@@ -245,16 +303,38 @@ form.post-form {
   .container {
     max-width: 590px;
   }
+  .post-form {
+    .bottom-section {
+      align-items: flex-end;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      .form-action-btns-container {
+        gap: 15px;
+        align-items: flex-end;
+        button {
+          font-size: 0.95rem;
+        }
+      }
+    }
+  }
 }
 
 @media screen and (min-width: 769px) {
   .container {
     max-width: 750px;
   }
+  .post-form {
+    .post-form-title {
+      text-align: left;
+    }
+  }
 }
 
 @media screen and (min-width: 1025px) {
   .container {
     max-width: 1150px;
+  }
+  .page-main-title {
+    text-align: left;
   }
 }

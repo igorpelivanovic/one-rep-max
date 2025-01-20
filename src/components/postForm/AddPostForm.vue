@@ -21,6 +21,10 @@ import SelectInput from '../form/SelectInput.vue'
 import ImageField from '../form/ImageField.vue'
 import TextAreaField from '../form/TextAreaField.vue'
 import AuthFormErrorMessage from '../authForm/AuthFormErrorMessage.vue'
+import TextAreaTemplate from './postFormInputs/TextAreaTemplate.vue'
+import FormLayout from '../layout/FormLayout.vue'
+import ImageFieldTemplate from './postFormInputs/ImageFieldTemplate.vue'
+import { useAlertBoxStore } from '@/stores/alertBox'
 
 const initalFormData = {
   title: '',
@@ -40,12 +44,15 @@ const categoryOptions = ref([
 ])
 
 const responseError = ref(null)
+const { addSuccess, addError } = useAlertBoxStore()
 
 const submitForm = async () => {
   try {
     isLoading.value = true
     responseError.value = null
     await post.add(formData)
+    addSuccess({ content: 'uspešno dodat post' })
+    resetForm()
   } catch (e) {
     responseError.value = e?.response?.data?.message || 'something wrong'
   } finally {
@@ -54,6 +61,7 @@ const submitForm = async () => {
 }
 
 const resetForm = () => {
+  reset()
   Object.assign(formData, initalFormData)
   return
 }
@@ -77,13 +85,11 @@ const validation = {
   ],
 }
 
-const { onSubmit, errors } = useFormValidation({
+const { onSubmit, errors, reset } = useFormValidation({
   values: formData,
   validation,
   onSuccess: submitForm,
 })
-
-const formatCurrentNumberCarachterText = computed(() => Format.number(formData.text.length))
 
 const rednerTextAreaClearBtn = computed(() => formData.text.length > 0)
 </script>
@@ -93,78 +99,67 @@ const rednerTextAreaClearBtn = computed(() => formData.text.length > 0)
     v-if="isLoading"
     class="spinner-container body-disable-scroll"
   ></SpinnerContainer>
-  <form class="post-form" @submit.prevent="onSubmit">
-    <div class="top-section">
-      <div class="form-section">
-        <InputField
-          label-id="title"
-          title="naslov"
-          v-model="formData.title"
-          :error="errors?.title"
-        ></InputField>
-        <SelectInput
-          :options="categoryOptions"
-          v-model="formData.categoryId"
-          labelId="categoryId"
-          title="kategorija"
-          :error="errors?.categoryId"
-          placeholder="izaberite kategoriju"
-        ></SelectInput>
-        <ImageField
-          v-model="formData.img"
-          label-id="image"
-          style-class="image-field-container"
-          :error="errors?.img"
-        >
-          <template #placeholder>
-            <div class="no-image-placeholder-container">
-              <div class="no-image-placeholder-content">
-                <div class="icon-container">
-                  <i class="fas fa-camera icon"></i>
-                </div>
-                <p class="title">
-                  <span class="main">dodaj sliku</span>
-                  <span>(maksimalna veličina 5MB)</span>
-                </p>
-              </div>
-            </div>
-          </template>
-        </ImageField>
+  <FormLayout @form-submit="onSubmit" custom-class="post-form">
+    <template #fields-section>
+      <div class="top-section">
+        <div class="form-section">
+          <InputField
+            label-id="title"
+            title="naslov"
+            v-model="formData.title"
+            :error="errors?.title"
+          ></InputField>
+          <SelectInput
+            :options="categoryOptions"
+            v-model="formData.categoryId"
+            labelId="categoryId"
+            title="kategorija"
+            :error="errors?.categoryId"
+            placeholder="izaberite kategoriju"
+          ></SelectInput>
+          <ImageField
+            v-model="formData.img"
+            label-id="image"
+            style-class="image-field-container"
+            :error="errors?.img"
+          >
+            <template #placeholder>
+              <ImageFieldTemplate />
+            </template>
+          </ImageField>
+        </div>
+        <div class="form-section">
+          <TextAreaField
+            label-id="description"
+            title="opis"
+            v-model="formData.text"
+            style-class="post-description-field"
+            :error="errors?.text"
+          >
+            <template #other v-if="rednerTextAreaClearBtn">
+              <TextAreaTemplate
+                :text-value="formData.text"
+                @clear-field="(val) => (formData.text = val)"
+              />
+            </template>
+          </TextAreaField>
+        </div>
       </div>
-      <div class="form-section">
-        <TextAreaField
-          label-id="description"
-          title="opis"
-          v-model="formData.text"
-          style-class="post-description-field"
-          :error="errors?.text"
-        >
-          <template #other v-if="rednerTextAreaClearBtn">
-            <div class="text-area-bottom-content">
-              <span class="letter-counter"
-                >broj karaktera: {{ formatCurrentNumberCarachterText }} /
-                {{ Format.number(65535) }}</span
-              >
-              <button type="button" class="custom-clear-btn" @click="formData.text = ''">
-                obriši
-              </button>
-            </div>
-          </template>
-        </TextAreaField>
+    </template>
+    <template #actions-section>
+      <div class="bottom-section">
+        <div class="form-action-btns-container">
+          <button type="button" @click="resetForm">očisti</button>
+          <button type="submit">kreiraj</button>
+        </div>
+        <AuthFormErrorMessage
+          v-if="responseError"
+          custom-class="response-error"
+          :message="responseError"
+        ></AuthFormErrorMessage>
       </div>
-    </div>
-    <div class="bottom-section">
-      <div class="form-action-btns-container">
-        <button type="button" @click="resetForm">očisti</button>
-        <button type="submit">kreiraj</button>
-      </div>
-      <AuthFormErrorMessage
-        v-if="responseError"
-        custom-class="response-error"
-        :message="responseError"
-      ></AuthFormErrorMessage>
-    </div>
-  </form>
+    </template>
+  </FormLayout>
 </template>
 
 <style scoped>
@@ -172,138 +167,70 @@ const rednerTextAreaClearBtn = computed(() => formData.text.length > 0)
   z-index: 5;
   position: fixed;
 }
-form {
+.top-section {
+  flex: 1;
   display: flex;
+  gap: 0px;
   flex-direction: column;
-  gap: 50px;
-  .top-section {
+  .form-section {
     flex: 1;
+  }
+}
+.bottom-section {
+  display: flex;
+
+  gap: 20px;
+  flex-direction: column-reverse;
+
+  .form-action-btns-container {
     display: flex;
-    gap: 0px;
-    /*     gap: 50px;
- */
-    flex-direction: column;
-    .form-section {
-      flex: 1;
-      .text-area-bottom-content {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        .letter-counter {
-          &::first-letter {
-            text-transform: capitalize;
-          }
-          color: var(--gray-700);
-        }
-      }
-      .image-field-container {
-      }
-    }
-    .no-image-placeholder-container {
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+
+    button {
       cursor: pointer;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      align-self: stretch;
-      .no-image-placeholder-content {
-        height: 60%;
-        .icon-container {
-          margin: auto;
-          background-color: var(--gray-620);
-          width: 50px;
-          aspect-ratio: 1/1;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          border-radius: 50%;
-          .icon {
-            color: var(--gray);
-            font-size: 1.4rem;
-          }
-        }
-        p.title {
-          font-size: 0.85rem;
-          span {
-            display: block;
-            &.main {
-              font-size: 0.95rem;
-              text-transform: capitalize;
-              margin-bottom: 5px;
-            }
-            &:not(.main) {
-              font-style: italic;
-            }
-          }
-        }
-        text-align: center;
+      background-color: var(--gray-650);
+      border: none;
+      padding: 8px 20px;
+      /*         font-size: 0.9rem;
+ */
+      text-transform: capitalize;
+      font-size: 1.1rem;
+      border-radius: 10px;
+      &[type='submit'] {
+        font-size: 1.2rem;
+        padding-inline: 30px;
+        background-color: var(--blue-700);
+        color: var(--gray);
       }
     }
   }
-  .bottom-section {
-    display: flex;
-
-    gap: 20px;
-    flex-direction: column-reverse;
-
-    .form-action-btns-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 40px;
-
-      button {
-        cursor: pointer;
-        background-color: var(--gray-650);
-        border: none;
-        padding: 8px 20px;
-        /*         font-size: 0.9rem;
- */
-        text-transform: capitalize;
-        font-size: 1.1rem;
-        border-radius: 10px;
-        &[type='submit'] {
-          font-size: 1.2rem;
-          padding-inline: 30px;
-          background-color: var(--blue-700);
-          color: var(--gray);
-        }
-      }
-    }
-    .response-error {
-      position: relative;
-      width: initial;
-      margin: 0;
-    }
+  .response-error {
+    position: relative;
+    width: initial;
+    margin: 0;
   }
 }
 @media screen and (min-width: 601px) {
-  form {
-    .bottom-section {
+  .bottom-section {
+    align-items: flex-end;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    .form-action-btns-container {
+      gap: 15px;
       align-items: flex-end;
-      flex-direction: row-reverse;
-      justify-content: space-between;
-      .form-action-btns-container {
-        gap: 15px;
-        align-items: flex-end;
-        button {
-          font-size: 0.95rem;
-        }
+      button {
+        font-size: 0.95rem;
       }
     }
   }
 }
 
 @media screen and (min-width: 1025px) {
-  form {
-    .top-section {
-      flex-direction: row;
-      gap: 50px;
-    }
+  .top-section {
+    flex-direction: row;
+    gap: 50px;
   }
 }
 </style>

@@ -35,7 +35,6 @@ const fileSizeToMB = computed(() => {
 })
 
 const changeInputValue = (val) => {
-  console.log(modelValue)
   emit('update:modelValue', val)
 }
 </script>

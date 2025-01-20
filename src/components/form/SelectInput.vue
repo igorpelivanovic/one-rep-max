@@ -127,6 +127,7 @@ useClickOutside(elementRef, hideOptionsContainer)
 }
 
 .options-container {
+  cursor: auto;
   box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.16);
   z-index: 1;
   border: 1px solid;

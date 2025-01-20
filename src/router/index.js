@@ -22,6 +22,11 @@ const router = createRouter({
       name: 'addPost',
       component: () => import('../views/AddPostView.vue'),
     },
+    {
+      path: '/editpost/:id',
+      name: 'editPost',
+      component: () => import('../views/EditPostView.vue'),
+    },
     // Required Auth Route
     {
       path: '',
@@ -38,10 +43,10 @@ const router = createRouter({
         {
           path: '/post',
           name: 'post',
-          component: () => import('../views/PostView.vue'),
           meta: {
             roles: ['admin'],
           },
+          children: [],
         },
       ],
     },
