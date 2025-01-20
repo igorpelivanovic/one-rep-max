@@ -6,4 +6,5 @@ export default {
   changePlanState: (params) => planAxios.patch('/personal_plan', params),
   getWeeklyPlan: (params) => planAxios.get('/weekly_plan', { params }),
   checkActiveWeek: (params) => planAxios.patch('/weekly_plan', params),
+  getWorkout: (params) => planAxios.get('/workout', { params }),
 }

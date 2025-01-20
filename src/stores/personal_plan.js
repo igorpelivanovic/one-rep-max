@@ -10,19 +10,36 @@ const usePlanStore = defineStore('plan', () => {
     planData.value = res.data.data
   }
 
-  async function changePlanState(params) {
-    return await api.changePlanState(params)
+  function deactivatePlan(planId) {
+    return api.changePlanState({ planId, action: 'deactivate' })
   }
 
-  async function checkActiveWeek(planId) {
-    return await api.checkActiveWeek({ planId })
+  function resetPlan(planId) {
+    const currTime = new Date().toISOString().slice(0, 19).replace('T', ' ')
+    return api.changePlanState({ planId, action: 'reset', currTime })
   }
 
-  async function getActiveWeeklyPlan(weeklyPlanId) {
-    return await api.getWeeklyPlan({ weeklyPlanId })
+  function checkActiveWeek(planId) {
+    return api.checkActiveWeek({ planId })
   }
 
-  return { planData, getPlanData, changePlanState, checkActiveWeek, getActiveWeeklyPlan }
+  function getActiveWeeklyPlan(weeklyPlanId) {
+    return api.getWeeklyPlan({ weeklyPlanId })
+  }
+
+  function getWorkout(workoutId) {
+    return api.getWorkout({ workoutId })
+  }
+
+  return {
+    planData,
+    getPlanData,
+    deactivatePlan,
+    resetPlan,
+    checkActiveWeek,
+    getActiveWeeklyPlan,
+    getWorkout,
+  }
 })
 
 export { usePlanStore }

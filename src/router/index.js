@@ -37,6 +37,16 @@ const router = createRouter({
             roles: ['admin'],
           },
         },
+        {
+          path: 'user',
+          name: 'user',
+          component: () => import('../views/UserProfileView.vue'),
+        },
+        {
+          path: 'workout/:id',
+          name: 'workout',
+          component: () => import('../views/WorkoutView.vue'),
+        },
       ],
     },
     // Required NoAuth Route

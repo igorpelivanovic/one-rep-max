@@ -1,9 +1,21 @@
 <script setup>
-const props = defineProps(['workoutData'])
+defineProps(['workoutData'])
 </script>
 
 <template>
-  <div>{{ props.workoutData }}</div>
+  <RouterLink :to="{ name: 'workout', params: { id: workoutData.id } }">
+    <div class="workout-wrapper">
+      <h3>{{ workoutData.name }}</h3>
+      <p>{{ workoutData.descr }}</p>
+    </div>
+  </RouterLink>
 </template>
 
-<style scoped></style>
+<style scoped>
+.workout-wrapper {
+  height: 100%;
+  padding: 1rem;
+  background-color: var(--gray);
+  border-radius: 2rem;
+}
+</style>
