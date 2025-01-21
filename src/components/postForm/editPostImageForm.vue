@@ -10,6 +10,7 @@ import { computed } from 'vue'
 import FormLayout from '../layout/FormLayout.vue'
 import AuthFormErrorMessage from '../authForm/AuthFormErrorMessage.vue'
 import ImageFieldTemplate from './postFormInputs/ImageFieldTemplate.vue'
+import { useAlertBoxStore } from '@/stores/alertBox'
 
 const { initialFormData } = defineProps({
   initialFormData: {
@@ -19,6 +20,8 @@ const { initialFormData } = defineProps({
 })
 
 const initialImageData = ref(initialFormData.image)
+
+const { addSuccess } = useAlertBoxStore()
 
 const formData = reactive({ image: undefined })
 const responseError = ref(null)
@@ -35,8 +38,8 @@ const validation = {
 const submitForm = async () => {
   try {
     isLoading.value = true
-    const response = await post.updateImage({ id: initialFormData.id, ...formData })
-    console.log(response)
+    await post.updateImage({ id: initialFormData.id, ...formData })
+    addSuccess({ content: 'uspešno izemenjena slika bloga' })
   } catch (e) {
     console.log(e)
     responseError.value = e?.response?.data?.message || 'something wrong'

@@ -38,7 +38,7 @@ const getPostById = async () => {
     const response = await post.getById(route.params.id)
     postData.value = response.data.data
   } catch (e) {
-    console.log(e)
+    router.replace({ name: 'notfound' })
   } finally {
     loadingRef.isLoading = false
   }

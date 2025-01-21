@@ -1,7 +1,11 @@
 import { authAxios } from '@/axios/auth'
 import { baseAxios } from '@/axios/base'
 function add(data) {
-  return authAxios.post('/posts/add', data)
+  return authAxios.post('/posts/add', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data; boundary=ExampleBoundaryString',
+    },
+  })
 }
 
 function getById(id) {
@@ -15,7 +19,11 @@ function updateData(data) {
 
 function updateImage(data) {
   const { id, ...formData } = data
-  return authAxios.put('/posts/image/' + id, formData)
+  return authAxios.put('/posts/image/' + id, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data; boundary=ExampleBoundaryString',
+    },
+  })
 }
 
 function removeById(id) {

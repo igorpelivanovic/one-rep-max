@@ -13,6 +13,7 @@ import SpinnerContainer from '../spinner/SpinnerContainer.vue'
 import TextAreaTemplate from './postFormInputs/TextAreaTemplate.vue'
 import FormLayout from '../layout/FormLayout.vue'
 import AuthFormErrorMessage from '../authForm/AuthFormErrorMessage.vue'
+import { useAlertBoxStore } from '@/stores/alertBox'
 
 const { initialFormData } = defineProps({
   initialFormData: {
@@ -28,12 +29,14 @@ const formData = reactive({ ...initFormDataRef.value })
 const isLoading = ref(false)
 
 const responseError = ref(null)
+const { addSuccess } = useAlertBoxStore()
 
 const submitFormHandle = async () => {
   try {
     isLoading.value = true
     responseError.value = null
-    const response = await post.updateData(formData)
+    await post.updateData(formData)
+    addSuccess({ content: 'uspešno izmenjen sadržaj bloga' })
   } catch (e) {
     responseError.value = e?.response?.data?.message || 'something wrong'
   } finally {

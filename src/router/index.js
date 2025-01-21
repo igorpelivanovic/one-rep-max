@@ -56,6 +56,7 @@ const router = createRouter({
       meta: {
         auth: REQUIRED_AUTH_STATUS.get('noAuthRequired'),
       },
+      component: () => import('../layout/AuthPageLayout.vue'),
       children: [
         {
           path: '/login',
@@ -69,10 +70,20 @@ const router = createRouter({
         },
       ],
     },
+    {
+      path: '/notfound',
+      component: () => import('../views/NotFoundView.vue'),
+      name: 'notfound',
+      beforeEnter: (to, from, next) => {
+        if (from.matched.length === 0) next({ name: 'home' })
+        next()
+      },
+    },
+    { path: '/:pathMatch(.*)*', redirect: () => ({ name: 'home' }) },
   ],
 })
 
-router.beforeEach(async (to, _, next) => {
+router.beforeEach(async (to, from, next) => {
   const loadingStatus = useLoadingRouteStore()
   try {
     loadingStatus.isLoading = true

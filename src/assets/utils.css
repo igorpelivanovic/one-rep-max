@@ -129,6 +129,7 @@ body:has(.body-disable-scroll) {
   display: flex;
   justify-content: center;
   align-items: center;
+  background: linear-gradient(136.83deg, var(--blue-600) 17%, var(--blue-900) 100%);
   .auth-form {
     text-align: center;
     padding-bottom: 40px;
