@@ -65,8 +65,8 @@ const router = useRouter()
       text-decoration: none;
       text-transform: uppercase;
       background-color: transparent;
-      width: 200px;
-      padding: 8px 20px;
+
+      padding: 8px 10px;
       border-radius: 5px;
       border: 2px solid var(--blue-700);
       color: var(--blue-700);
@@ -88,6 +88,16 @@ const router = useRouter()
         &::before {
           height: 100%;
         }
+      }
+    }
+  }
+}
+@media screen and (min-width: 481px) {
+  .container {
+    .actions-btn-container {
+      .nav-element {
+        width: 200px;
+        padding-inline: 20px;
       }
     }
   }
