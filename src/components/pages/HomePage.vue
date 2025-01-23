@@ -11,7 +11,7 @@ export default {
   data() {
     return {
       posts: [],
-      limit: 3,
+      limit: 4,
       offset: 0,
     }
   },
@@ -51,7 +51,7 @@ export default {
   </section>
   <section class="blog-cards">
     <h2 class="section-title">DNEVNIK</h2>
-    <h3 class="section-subtitle">Budite u toku</h3>
+    <p class="section-subtitle">Budite u toku</p>
     <div class="blog-cards-container">
       <BlogCard v-for="post in posts" :key="post.pst_id" :post="post" />
     </div>
@@ -59,6 +59,7 @@ export default {
   <section class="promo">
     <div class="text-container">
       <h2 class="text">Pridruži nam se i stekni pristup personalizovanim trening planovima</h2>
+      <RouterLink to="/register" class="register-button">REGISTRUJ SE</RouterLink>
     </div>
     <div class="image-container">
       <img src="@/assets/kartica.png" />
@@ -103,7 +104,8 @@ export default {
 }
 
 .hero-title {
-  font-size: 3rem;
+  font-family: EtruscoNowCondensed;
+  font-size: 5rem;
   font-weight: bold;
   margin-bottom: 20px;
 }
@@ -126,13 +128,50 @@ export default {
 
 .blog-cards {
   align-items: center;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 
 .blog-cards-container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
+  gap: 20px;
+}
+
+.section-title,
+.section-subtitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+}
+
+.section-title {
+  margin-top: 20px;
+}
+.section-subtitle {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 1024px) {
+  .blog-cards-container {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .blog-cards-container {
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .blog-card {
+    width: 100%;
+    max-width: 300px;
+  }
 }
 
 .promo {
@@ -147,6 +186,7 @@ export default {
 .text-container {
   flex: 1;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -156,6 +196,25 @@ export default {
   font-weight: bold;
   color: #000000;
   text-align: center;
+  margin-bottom: 10px;
+}
+
+.register-button {
+  display: inline-block;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #0b5ad0;
+  padding: 15px 25px;
+  border-radius: 25px;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.register-button:hover {
+  background-color: #0745a1;
 }
 
 .image-container {

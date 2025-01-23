@@ -15,18 +15,19 @@ export default {
   <div class="blog-card">
     <img :src="post.image" alt="Blog Image" class="blog-card-img" />
     <div class="blog-card-content">
-      <h3 class="blog-card-title">{{ post.pst_name }}</h3>
-      <p class="blog-card-excerpt">{{ post.psct_name }}</p>
-      <router-link :to="'/post/' + post.pst_id" class="read-more">Pročitaj više</router-link>
+      <!-- <p class="blog-card-category">{{ post.category_name }}</p> -->
+      <h3 class="blog-card-title">{{ post.title }}</h3>
+      <router-link :to="'/post/' + post.id" class="read-more">Pročitaj više</router-link>
     </div>
   </div>
 </template>
 
 <style scoped>
 .blog-card {
+  display: flex;
+  flex-direction: column;
   width: 300px;
   height: 400px;
-  border: 1px solid #ddd;
   border-radius: 25px;
   overflow: hidden;
   background: linear-gradient(136.83deg, #033479 17%, #212023 100%);
@@ -53,10 +54,13 @@ export default {
 
   padding: 20px;
   color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .blog-card-title {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   margin-bottom: 15px;
 }
 
@@ -67,8 +71,9 @@ export default {
 
 .read-more {
   display: inline-block;
-  margin-top: 10px;
-  color: #ff9f00;
+  margin-top: auto;
+
+  color: #f2f2f2;
   text-decoration: none;
 }
 
