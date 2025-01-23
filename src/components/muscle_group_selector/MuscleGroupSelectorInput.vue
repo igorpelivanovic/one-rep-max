@@ -1,0 +1,1137 @@
+<script setup>
+import { ref, computed, watch } from 'vue'
+
+const emit = defineEmits(['primaryMgChange', 'secondaryMgsChange'])
+
+const muscleGroupsIdByName = new Map([
+  ['biceps', 1],
+  ['triceps', 2],
+  ['upper-chest', 3],
+  ['lower-chest', 4],
+  ['front-delts', 5],
+  ['side-delts', 6],
+  ['rear-delts', 7],
+  ['upper-back', 8],
+  ['lower-back', 9],
+  ['quads', 10],
+  ['hamstrings', 11],
+  ['glutes', 12],
+  ['calves', 13],
+  ['upper-abs', 14],
+  ['lower-abs', 15],
+  ['obliques', 16],
+])
+
+const isPrimary = ref(true)
+const primaryMuscleGroup = ref(null)
+const primaryMuscleGroupId = computed(() => {
+  return muscleGroupsIdByName.get(primaryMuscleGroup.value)
+})
+const secondaryMuscleGroups = ref([])
+const secondaryMuscleGroupsId = computed(() => {
+  let res = []
+  for (let mg of secondaryMuscleGroups.value) {
+    res.push(muscleGroupsIdByName.get(mg))
+  }
+  return res
+})
+const disabled = ref(false)
+
+watch(primaryMuscleGroup, () => {
+  disabled.value = true
+  if (secondaryMuscleGroups.value.includes(primaryMuscleGroup.value)) {
+    secondaryMuscleGroups.value.splice(
+      secondaryMuscleGroups.value.indexOf(primaryMuscleGroup.value),
+      1,
+    )
+    document.getElementById(primaryMuscleGroup.value).classList.remove('secondary-muscle-group')
+  }
+  const selected = document.getElementsByClassName('primary-muscle-group')[0]
+  if (selected) {
+    selected.classList.remove('primary-muscle-group')
+  }
+  const newSelected = document.getElementById(primaryMuscleGroup.value)
+  newSelected.classList.add('primary-muscle-group')
+  if (newSelected.classList.contains('muscle-group-hover')) {
+    newSelected.classList.remove('muscle-group-hover')
+  }
+  disabled.value = false
+  emit('primaryMgChange', primaryMuscleGroupId.value)
+})
+
+watch(secondaryMuscleGroups, (newV, oldV) => {
+  disabled.value = true
+  if (oldV.length > newV.length) {
+    const unselected = oldV.filter((x) => !newV.includes(x))
+    document.getElementById(unselected[0]).classList.add('muscle-group-hover')
+  }
+  for (let id of oldV) {
+    document.getElementById(id).classList.remove('secondary-muscle-group')
+  }
+  for (let id of newV) {
+    const currMgElement = document.getElementById(id)
+    currMgElement.classList.add('secondary-muscle-group')
+    if (currMgElement.classList.contains('muscle-group-hover')) {
+      currMgElement.classList.remove('muscle-group-hover')
+    }
+  }
+  disabled.value = false
+  emit('secondaryMgsChange', [...secondaryMuscleGroupsId.value])
+})
+
+function handleHover(e) {
+  e.target.classList.toggle('label-hover')
+  const forAttr = e.target.htmlFor
+  const mgElementId = forAttr.substring(0, forAttr.length - 3)
+  const mgSvgElement = document.getElementById(mgElementId)
+  if (mgSvgElement.classList.value && mgSvgElement.classList.value != 'muscle-group-hover') {
+    mgSvgElement.classList.remove('muscle-group-hover')
+    return
+  }
+  mgSvgElement.classList.toggle('muscle-group-hover')
+}
+</script>
+
+<template>
+  <div class="muscle-group-selector-wrapper">
+    <div class="muscle-groups-input-wrapper">
+      <div class="is-primary-checkbox-wrapper">
+        <span>SEKUNDARNE GRUPE</span>
+        <div class="switch-wrapper">
+          <label class="switch" for="checkbox">
+            <input type="checkbox" id="checkbox" v-model="isPrimary" />
+            <div class="slider round"></div>
+          </label>
+        </div>
+        <span>PRIMARNA GRUPA</span>
+      </div>
+      <div class="primary-muscle-groups-fieldlist" v-if="isPrimary">
+        <div class="arms large-group">
+          <h4>Ruke</h4>
+          <label
+            for="biceps-rb"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="radio"
+              name="primary-mg"
+              id="biceps-rb"
+              value="biceps"
+              v-model="primaryMuscleGroup"
+            />
+            <span>Biceps</span>
+          </label>
+          <label
+            for="triceps-rb"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="radio"
+              name="primary-mg"
+              id="triceps-rb"
+              value="triceps"
+              v-model="primaryMuscleGroup"
+            />
+            <span>Triceps</span>
+          </label>
+        </div>
+        <div class="chest large-group">
+          <h4>Grudi</h4>
+          <label
+            for="upper-chest-rb"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="radio"
+              name="primary-mg"
+              id="upper-chest-rb"
+              value="upper-chest"
+              v-model="primaryMuscleGroup"
+            />
+            <span>Gornje grudi </span>
+          </label>
+          <label
+            for="lower-chest-rb"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="radio"
+              name="primary-mg"
+              id="lower-chest-rb"
+              value="lower-chest"
+              v-model="primaryMuscleGroup"
+            />
+            <span>Donje grudi</span>
+          </label>
+        </div>
+        <div class="shoulders large-group">
+          <h4>Ramena</h4>
+          <label
+            for="front-delts-rb"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="radio"
+              name="primary-mg"
+              id="front-delts-rb"
+              value="front-delts"
+              v-model="primaryMuscleGroup"
+            />
+            <span>Prednje rame</span>
+          </label>
+          <label
+            for="side-delts-rb"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="radio"
+              name="primary-mg"
+              id="side-delts-rb"
+              value="side-delts"
+              v-model="primaryMuscleGroup"
+            />
+            <span>Srednje rame</span>
+          </label>
+          <label
+            for="rear-delts-rb"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="radio"
+              name="primary-mg"
+              id="rear-delts-rb"
+              value="rear-delts"
+              v-model="primaryMuscleGroup"
+            />
+            <span>Zadnje rame</span>
+          </label>
+        </div>
+        <div class="back large-group">
+          <h4>Leđa</h4>
+          <label
+            for="upper-back-rb"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="radio"
+              name="primary-mg"
+              id="upper-back-rb"
+              value="upper-back"
+              v-model="primaryMuscleGroup"
+            />
+            <span>Gornja leđa</span>
+          </label>
+          <label
+            for="lower-back-rb"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="radio"
+              name="primary-mg"
+              id="lower-back-rb"
+              value="lower-back"
+              v-model="primaryMuscleGroup"
+            />
+            <span>Donja leđa</span>
+          </label>
+        </div>
+        <div class="abs large-group">
+          <h4>Trbušnjaci</h4>
+          <label
+            for="upper-abs-rb"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="radio"
+              name="primary-mg"
+              id="upper-abs-rb"
+              value="upper-abs"
+              v-model="primaryMuscleGroup"
+            />
+            <span>Gornji trbušnjaci</span>
+          </label>
+          <label
+            for="lower-abs-rb"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="radio"
+              name="primary-mg"
+              id="lower-abs-rb"
+              value="lower-abs"
+              v-model="primaryMuscleGroup"
+            />
+            <span>Donji trbušnjaci</span>
+          </label>
+          <label
+            for="obliques-rb"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="radio"
+              name="primary-mg"
+              id="obliques-rb"
+              value="obliques"
+              v-model="primaryMuscleGroup"
+            />
+            <span>Bočni trbušnjaci</span>
+          </label>
+        </div>
+        <div class="legs large-group">
+          <h4>Noge</h4>
+          <label
+            for="quads-rb"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="radio"
+              name="primary-mg"
+              id="quads-rb"
+              value="quads"
+              v-model="primaryMuscleGroup"
+            />
+            <span>Prednja loža</span>
+          </label>
+          <label
+            for="hamstrings-rb"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="radio"
+              name="primary-mg"
+              id="hamstrings-rb"
+              value="hamstrings"
+              v-model="primaryMuscleGroup"
+            />
+            <span>Zadnja loža</span>
+          </label>
+          <label
+            for="glutes-rb"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="radio"
+              name="primary-mg"
+              id="glutes-rb"
+              value="glutes"
+              v-model="primaryMuscleGroup"
+            />
+            <span>Gluteus</span>
+          </label>
+          <label
+            for="calves-rb"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="radio"
+              name="primary-mg"
+              id="calves-rb"
+              value="calves"
+              v-model="primaryMuscleGroup"
+            />
+            <span>Listovi</span>
+          </label>
+        </div>
+      </div>
+      <div class="secondary-muscle-groups-fieldlist" v-else>
+        <div class="arms large-group">
+          <h4>Ruke</h4>
+          <label
+            for="biceps-cb"
+            v-if="primaryMuscleGroup != 'biceps'"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="checkbox"
+              name="secondary-mg"
+              id="biceps-cb"
+              value="biceps"
+              v-model="secondaryMuscleGroups"
+            />
+            <span>Biceps</span>
+          </label>
+          <span v-else>Biceps</span>
+          <label
+            for="triceps-cb"
+            v-if="primaryMuscleGroup != 'triceps'"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="checkbox"
+              name="secondary-mg"
+              id="triceps-cb"
+              value="triceps"
+              v-model="secondaryMuscleGroups"
+            />
+            <span>Triceps</span>
+          </label>
+          <span v-else>Triceps</span>
+        </div>
+        <div class="chest large-group">
+          <h4>Grudi</h4>
+          <label
+            for="upper-chest-cb"
+            v-if="primaryMuscleGroup != 'upper-chest'"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="checkbox"
+              name="secondary-mg"
+              id="upper-chest-cb"
+              value="upper-chest"
+              v-model="secondaryMuscleGroups"
+            />
+            <span>Gornje grudi</span>
+          </label>
+          <span v-else>Gornje grudi</span>
+          <label
+            for="lower-chest-cb"
+            v-if="primaryMuscleGroup != 'lower-chest'"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="checkbox"
+              name="secondary-mg"
+              id="lower-chest-cb"
+              value="lower-chest"
+              v-model="secondaryMuscleGroups"
+            />
+            <span>Donje grudi</span>
+          </label>
+          <span v-else>Donje grudi</span>
+        </div>
+        <div class="shoulders large-group">
+          <h4>Ramena</h4>
+          <label
+            for="front-delts-cb"
+            v-if="primaryMuscleGroup != 'front-delts'"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="checkbox"
+              name="secondary-mg"
+              id="front-delts-cb"
+              value="front-delts"
+              v-model="secondaryMuscleGroups"
+            />
+            <span>Prednje rame</span>
+          </label>
+          <span v-else>Prednje rame</span>
+          <label
+            for="side-delts-cb"
+            v-if="primaryMuscleGroup != 'side-delts'"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="checkbox"
+              name="secondary-mg"
+              id="side-delts-cb"
+              value="side-delts"
+              v-model="secondaryMuscleGroups"
+            />
+            <span>Srednje rame</span>
+          </label>
+          <span v-else>Srednje rame</span>
+          <label
+            for="rear-delts-cb"
+            v-if="primaryMuscleGroup != 'rear-delts'"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="checkbox"
+              name="secondary-mg"
+              id="rear-delts-cb"
+              value="rear-delts"
+              v-model="secondaryMuscleGroups"
+            />
+            <span>Zadnje rame</span>
+          </label>
+          <span v-else>Zadnje rame</span>
+        </div>
+        <div class="back large-group">
+          <h4>Leđa</h4>
+          <label
+            for="upper-back-cb"
+            v-if="primaryMuscleGroup != 'upper-back'"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="checkbox"
+              name="secondary-mg"
+              id="upper-back-cb"
+              value="upper-back"
+              v-model="secondaryMuscleGroups"
+            />
+            <span>Gornja leđa</span>
+          </label>
+          <span v-else>Gornja leđa</span>
+          <label
+            for="lower-back-cb"
+            v-if="primaryMuscleGroup != 'lower-back'"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="checkbox"
+              name="secondary-mg"
+              id="lower-back-cb"
+              value="lower-back"
+              v-model="secondaryMuscleGroups"
+            />
+            <span>Donja leđa</span>
+          </label>
+          <span v-else>Donja leđa</span>
+        </div>
+        <div class="abs large-group">
+          <h4>Trbušnjaci</h4>
+          <label
+            for="upper-abs-cb"
+            v-if="primaryMuscleGroup != 'upper-abs'"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="checkbox"
+              name="secondary-mg"
+              id="upper-abs-cb"
+              value="upper-abs"
+              v-model="secondaryMuscleGroups"
+            />
+            <span>Gornji trbušnjaci</span>
+          </label>
+          <span v-else>Gornji trbušnjaci</span>
+          <label
+            for="lower-abs-cb"
+            v-if="primaryMuscleGroup != 'lower-abs'"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="checkbox"
+              name="secondary-mg"
+              id="lower-abs-cb"
+              value="lower-abs"
+              v-model="secondaryMuscleGroups"
+            />
+            <span>Donji trbušnjaci</span>
+          </label>
+          <span v-else>Donji trbušnjaci</span>
+          <label
+            for="obliques-cb"
+            v-if="primaryMuscleGroup != 'obliques'"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="checkbox"
+              name="secondary-mg"
+              id="obliques-cb"
+              value="obliques"
+              v-model="secondaryMuscleGroups"
+            />
+            <span>Bočni trbušnjaci</span>
+          </label>
+          <span v-else>Bočni trbušnjaci</span>
+        </div>
+        <div class="legs large-group">
+          <h4>Noge</h4>
+          <label
+            for="quads-cb"
+            v-if="primaryMuscleGroup != 'quads'"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="checkbox"
+              name="secondary-mg"
+              id="quads-cb"
+              value="quads"
+              v-model="secondaryMuscleGroups"
+            />
+            <span>Prednja loža</span>
+          </label>
+          <span v-else>Prednja loža</span>
+          <label
+            for="hamstrings-cb"
+            v-if="primaryMuscleGroup != 'hamstrings'"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="checkbox"
+              name="secondary-mg"
+              id="hamstrings-cb"
+              value="hamstrings"
+              v-model="secondaryMuscleGroups"
+            />
+            <span>Zadnja loža</span>
+          </label>
+          <span v-else>Zadnja loža</span>
+          <label
+            for="glutes-cb"
+            v-if="primaryMuscleGroup != 'glutes'"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="checkbox"
+              name="secondary-mg"
+              id="glutes-cb"
+              value="glutes"
+              v-model="secondaryMuscleGroups"
+            />
+            <span>Gluteus</span>
+          </label>
+          <span v-else>Gluteus</span>
+          <label
+            for="calves-cb"
+            v-if="primaryMuscleGroup != 'calves'"
+            :class="{ 'disable-label': disabled }"
+            @mouseenter="handleHover"
+            @mouseleave="handleHover"
+          >
+            <input
+              type="checkbox"
+              name="secondary-mg"
+              id="calves-cb"
+              value="calves"
+              v-model="secondaryMuscleGroups"
+            />
+            <span>Listovi</span>
+          </label>
+          <span v-else>Listovi</span>
+        </div>
+      </div>
+    </div>
+    <div class="svg-wrapper">
+      <svg
+        width="100%"
+        height="100%"
+        viewBox="0 0 873 1003"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g id="muscle-groups">
+          <path
+            id="body-back"
+            d="M612 31C619.58 11.46 629.676 0.661899 656.5 0.999953C683.08 0.655184 700.5 22.4999 702.5 31C704.5 39.5 703.996 53.4764 703.5 65C711.435 56.5274 716.5 65 710.5 81C704.5 97 700 97.4999 698.5 93C697 88.5 697 98.4999 694 112C691 125.5 698.127 132.144 721.5 140.5C731.121 145.658 733.76 147.748 738.426 151.442L738.5 151.5C787.324 160.438 800.549 175.949 798 223C812.298 261.656 812.445 278.218 810 306C829.141 333.38 832.013 377.283 839.5 447C850.239 455.256 854.986 463.096 861.5 482C864.565 485.887 866.629 488.154 871.5 492.5C869.853 498.435 866.048 498.197 855 492.5C855 492.5 860.5 529.5 860.5 537.5C860.5 545.5 853.5 547 851.5 537.5C849.5 528 843.5 506 843.5 506C843.5 506 846.5 536 847.5 545.5C848.5 555 839.5 555.5 837 545.5C834.5 535.5 831.5 504 831.5 504C831.5 504 833 526.5 835 537.5C837 548.5 828.5 550.5 824.5 537.5C820.5 524.5 819.5 510 819.5 510C819.5 510 818 526.5 818 533C818 539.5 812 542 810 533C808 524 807 496.5 807 496.5C800.679 478.057 801.109 468.427 809 452.5C801.762 433.139 795.802 421.99 784.5 402C768.93 374.662 758.216 360.501 762.5 321.5C759.637 305.927 757.142 297.166 751.5 281.5C742.61 306.502 739.149 320.403 735.5 345C740.692 363.696 741.892 374.199 738.5 393C747.729 411.117 750.216 421.933 751.5 442C770.963 546.305 760.262 583.256 737.5 645.5C732.685 679.754 735.986 697.205 743 728C751.883 763.042 735.929 803.633 711.5 872C709.965 877.188 709.99 879.92 711.5 884.5C713.872 891.518 714.076 895.777 714 903.5C715.258 909.975 716.525 912.779 720 916C732.126 916.393 736.399 918.624 738.5 927C737.296 932.634 734.152 936.816 728 944.5C718.586 945.851 713.976 948.566 707 957C697.5 958.667 691.064 958.468 678.5 957C667.643 953.426 666.186 947.188 673.5 927C675.133 918.64 675.505 913.733 672.5 903.5C671.738 894.603 672.458 889.843 677 882C680.291 852.822 679.113 834.93 675 802C668.6 766.996 670.946 747.794 681.5 714C682.461 709.696 680.5 701 679.5 698.5C678.5 696 678.532 688.905 677 682C665.109 620.508 659.673 584.201 657 509C650.086 575.548 654.259 608.002 635 682C636.316 686.273 634.5 698.5 634.5 698.5C634.5 698.5 632.019 707.774 631 714C641.801 749.383 644.116 768.749 638 802C632.784 836.148 632.927 853.283 636 882C640.782 887.647 641.867 892.363 641 903.5C639.61 912.416 639.2 917.337 639 926C645.614 946.094 646.277 953.983 637.5 957C628.72 959.504 604.5 957 604.5 957C604.5 957 599.866 949.065 587 944.5C579.169 939.865 575.261 936.928 575 927C577.176 917.206 581.892 915.521 593.5 916C597.244 913.071 598.114 909.925 599 903.5C599.286 897.213 599.01 894.247 602 884.5C602.113 880.862 601.804 878.159 600.5 872C575.477 798.497 563.688 761.866 570.5 728C577.789 697.886 578.921 679.793 576 645.5C544.221 576.249 546.187 529.794 562.5 442C563.556 422.049 567.098 411.526 574.5 393C572.196 371.659 574.094 361.95 578 345C573.765 320.52 571.295 306.784 560 281.5C554.405 294.539 553.559 304.449 551.5 321.5C555.322 353.706 547.843 371.176 529 402C517.019 421.522 511.715 432.584 504.5 452.5C509.911 467.675 506 496.5 506 496.5C506 496.5 504.164 529.23 503 535.5C501.836 541.77 497.5 540 496.5 535.5C495.5 531 494 509.5 494 509.5C494 509.5 490.5 534 487.5 541C484.5 548 479 548.5 479 541C479 533.5 481.5 504.5 481.5 504.5C481.5 504.5 478 538 476 546C474 554 465.5 554.5 465.5 545C465.5 535.5 469 506 469 506L461.5 538.5C460 545 453.5 546 453.5 538.5L458 492C447.126 498.194 442.848 499.386 442 493C446.597 488.606 449.14 486.048 453.5 481C457.164 465.381 462.568 458.352 474.5 447C482.002 367.142 486.792 326.839 502 306C501.034 294.49 499 288 502 273C505 258 510.472 241.636 514.5 223C516.981 182.627 519.359 160.567 575.5 151.5C579.732 146.356 582.975 143.839 591.5 140.5C614.505 133.986 623.5 124.5 620 112C616.5 99.5 618.5 89.5 616.5 93C614.5 96.4999 611.5 101 605.5 81C599.5 61 602.357 56.6172 612 65C610.411 52.3978 607.198 43.379 612 31Z"
+            stroke="black"
+          />
+          <path
+            id="body-front"
+            d="M214.5 1.49992C185.317 3.74386 179.028 13.4446 170.5 32.9999C166.422 45.4967 168.276 52.5032 170.5 64.9999C168.246 62.8069 166.653 62.5433 163.5 62.9999C158.71 66.1844 158.957 68.97 160 73.9999C159.943 74.1931 165.5 83.4999 165.5 83.4999L170.5 95.4999C170.5 95.4999 174.101 97.7147 174.5 95.4999L179 114.5C182.036 127.504 178.017 131.894 163.5 136C152.229 140.727 145.184 142.768 137.5 150.5C102.73 156.756 97 163 86.0001 176.5C76.6626 193.558 73.8644 204.181 73.5001 226C64.2491 254.103 61.5317 271.601 60.5001 305.5C42.0124 348.321 38.27 382.61 34.0001 447.5C19.5231 459.716 15.3875 468.028 12.5001 484.5C2.69036 491.086 -0.620385 494.204 1.50009 496.5C8.00197 499.719 11.7617 497.42 17.5001 493.5C14.5253 509.937 13.3451 519.322 12.5001 536.5C13.5802 546.799 19 546.5 21 539.5C23.6047 519.486 25.6991 516.563 28.5001 508C28.5001 508 24.8626 542.505 25 545.5C25.1374 548.495 30.7798 559.272 35.5 545.5C40.2202 531.728 39.5001 505.5 39.5001 505.5V542C40 548.5 45.5 550 47.5001 542L52.0001 510L56.0001 534C57 539.5 62.5 540 63.0001 534L65.5001 496C69.4057 482.761 70.4604 474.363 65.5001 453.5L83.0001 412.5C105.331 374.881 115.343 354.42 111 323.5C111.86 307.859 114.006 299.444 120.5 285C129.635 308.167 133.495 321.189 137 344.5C131.626 361.867 130.366 371.235 135 386.5C125.61 408.273 123.675 420.555 122 442.5C102.697 549.321 110.146 587.31 131 646L138.5 685.5C122.237 758.415 129.341 785.907 148 830L160.5 894.5C157.564 907.951 156.82 914.867 163 922C160.841 936.976 155.214 943.641 140 953.5C112.512 976.721 112.588 985.172 140 993C168.324 1007.17 179.921 1001.51 194 970.5C206.959 954.676 210.358 945.506 201.5 928C203.636 909.984 203.548 899.191 197 876.5C192.674 864.324 192.228 857.296 194 844.5C202.28 788.983 205.786 758.255 190.5 711C195.566 696.969 197.887 688.958 196 673C212.705 614.56 216.49 578.593 215.5 510C216.366 573.794 218.541 609.526 234.5 673L240.5 711C228.15 756.903 228.795 786.934 237 844.5C238.489 857.744 239.467 865.213 234.5 876.5C228.432 893.587 227.449 904.846 230 928C216.536 956.674 234.854 950.483 237 970.5C239.146 990.517 270.136 1009.26 278 999C317.414 985.282 323.16 975.705 289 953.5C270.4 938.019 266.709 931.257 270 922C273.257 914.846 274.299 909.487 273 894.5C275.319 869.157 276.4 854.933 284.5 830C302.488 784.901 307.704 755.697 294.5 685.5C294.914 670.976 296.439 662.284 301 646C325.029 574.584 325.33 529.421 309.5 442.5L297.5 390.5C300.124 374.542 301.079 365.307 295 344.5C298.991 321.607 301.429 308.744 311.5 285C318.15 301.258 319.907 309.554 321 323.5C315.499 358.979 328.274 378.148 347.5 412.5C357.701 428.403 362.699 437.358 368.5 453.5C359.707 470.096 358.97 479.401 366.5 496C366.5 496 366 527 368.5 534C371 541 375 540.5 376 534C377 527.5 378 510 378 510C378 510 381.5 534.5 384 542C386.5 549.5 395 549 394.5 542C394 535 391 505.5 391 505.5C391 505.5 395.5 536 397 545.5C398.5 555 407.5 556 407.5 545.5C407.5 535 404 508 404 508C404 508 407.5 535 410.5 542C413.5 549 419 546.5 419 540C419 533.5 414.5 496 414.5 496C424.417 500.347 427.927 499.756 431 494C431.577 492.743 428.492 490.483 422 486C418.076 476.244 415.678 470.908 410.5 462C406.606 455.162 404.092 451.656 397 448C391.525 376.084 387.396 340.362 372 311.5C370.082 280.322 368.786 262.871 360.5 232.5C356.699 183.334 346.653 162.996 300.5 152.5L265.5 136C254.335 131.613 248.409 128.933 252.5 114.5L256 95.4999C258.734 97.2093 260.265 97.1503 263 95.4999L268.5 83.4999L271 73.9999C271 73.9999 274 64.9999 268.5 62.9999C263 60.9999 263 64.9999 263 64.9999C263.456 49.985 261.382 39.2189 261 32.9999C256.237 11.2457 242.435 1.46292 214.5 1.49992Z"
+            stroke="black"
+          />
+          <g id="abs">
+            <g id="obliques">
+              <path
+                d="M272.5 280C278 278 289.99 284.125 296.5 283C296.649 288.158 293.427 292.319 287 300C289.854 301.318 292.403 301.999 300.5 303C298.828 307.334 297.071 309.64 289 313C296.536 323.544 294.721 329.456 289 340C290.487 352.756 289.266 356.135 287 362C299.033 381.67 293.958 395.924 266 426.5C265.775 408.48 264.956 399.261 272.5 373C268.639 365.613 267.567 360.413 272.5 344.5C267.191 336.264 267.419 331.078 272.5 321C266.509 312.799 266.261 308.201 272.5 300C266.258 293.415 267 282 272.5 280Z"
+                stroke="black"
+              />
+              <path
+                d="M161 279.405C155.5 277.405 143.51 283.529 137 282.405C136.851 287.563 140.073 291.723 146.5 299.405C143.646 300.722 141.097 301.404 133 302.405C134.672 306.739 136.429 309.044 144.5 312.405C136.964 322.949 138.779 328.86 144.5 339.405C143.013 352.16 144.234 355.539 146.5 361.405C134.467 381.075 139.542 395.328 167.5 425.905C167.725 407.885 168.544 398.665 161 372.405C164.861 365.018 165.933 359.817 161 343.905C166.309 335.668 166.081 330.483 161 320.405C166.991 312.203 167.239 307.606 161 299.405C167.242 292.819 166.5 281.404 161 279.405Z"
+                stroke="black"
+              />
+            </g>
+            <g id="lower-abs">
+              <path
+                d="M182 432C166.48 390.544 163.5 374.5 188.5 374.5C205 373.5 208.806 376.201 212 389.5C216.56 445.268 218.5 494 208 489C197.5 484 190.603 468.428 182 432Z"
+                stroke="black"
+              />
+              <path
+                d="M252.674 431.688C268.194 390.232 271.174 374.188 246.174 374.188C229.674 373.188 225.869 375.889 222.674 389.188C218.114 444.956 216.174 493.688 226.674 488.688C237.174 483.688 244.071 468.116 252.674 431.688Z"
+                stroke="black"
+              />
+              <path
+                d="M169.5 359C164 341 169.284 339.442 187 335.5C211.086 332.254 215.5 336 212 354.5C208.5 373 175 377 169.5 359Z"
+                stroke="black"
+              />
+              <path
+                d="M263.558 359.548C269.058 341.548 263.774 339.99 246.058 336.048C221.972 332.802 217.558 336.548 221.058 355.048C224.558 373.548 258.058 377.548 263.558 359.548Z"
+                stroke="black"
+              />
+            </g>
+            <g id="upper-abs">
+              <path
+                d="M168.5 329.5C161.334 313.253 201.151 303.555 209.5 307C217.848 310.445 217 333 203.5 333C190 333 193.796 332.391 178 333C174.366 333.413 172.324 333.546 168.5 329.5Z"
+                stroke="black"
+              />
+              <path
+                d="M265.396 330.193C272.562 313.946 232.745 304.248 224.396 307.693C216.048 311.138 216.896 333.693 230.396 333.693C243.896 333.693 240.1 333.084 255.896 333.693C259.53 334.106 261.572 334.239 265.396 330.193Z"
+                stroke="black"
+              />
+              <path
+                d="M170.5 307.5C169.291 306.1 165.794 272.035 196.5 264.5C212.713 266.523 213.974 275.332 212.5 296C198.434 307.193 171.709 308.9 170.5 307.5Z"
+                stroke="black"
+              />
+              <path
+                d="M262.46 308C263.67 306.6 267.166 272.535 236.46 265C220.247 267.023 218.987 275.832 220.46 296.5C234.526 307.693 261.251 309.4 262.46 308Z"
+                stroke="black"
+              />
+            </g>
+          </g>
+          <g id="legs">
+            <g id="glutes">
+              <path
+                d="M581 421.5C582.254 419.027 572.455 398.27 583 391C583 391 591 393.5 607.5 406.5C624 419.5 677.002 488.905 627.5 504C577.998 519.095 582.966 515.403 573 523.5C552.423 487.103 563 457 581 421.5Z"
+                stroke="black"
+              />
+              <path
+                d="M732.132 421.5C730.878 419.027 740.677 398.27 730.132 391C730.132 391 722.132 393.5 705.632 406.5C689.132 419.5 636.13 488.905 685.632 504C735.134 519.095 730.166 515.403 740.132 523.5C760.709 487.103 750.132 457 732.132 421.5Z"
+                stroke="black"
+              />
+            </g>
+            <g id="calves">
+              <path
+                d="M729 696C722.493 685.907 716.5 686.5 712 701.5C713.424 723.088 717 759.5 709.5 785.5C719.262 800.872 738.5 784 738.5 765.5C738.5 747 739.936 725.331 729 696Z"
+                stroke="black"
+              />
+              <path
+                d="M684 834C687.694 863.35 688.269 878.94 688 906C700.349 877.411 706.794 861.655 717.5 834C727.937 810.37 728.95 800.408 703 801.5C682.427 802.822 676.606 808.503 684 834Z"
+                stroke="black"
+              />
+              <path
+                d="M710 703.5C708.404 728.536 709.86 725.711 703 788.5C702.154 790.586 684.608 800.932 682 790.5C675.309 770.757 676.29 753.447 692.5 703.5C699.497 681.057 710.616 698.914 710 703.5Z"
+                stroke="black"
+              />
+              <path
+                d="M584.562 695.8C591.069 685.706 597.062 686.3 601.562 701.3C600.138 722.887 596.562 759.3 604.062 785.3C594.301 800.672 575.062 783.8 575.062 765.3C575.062 746.8 573.626 725.131 584.562 695.8Z"
+                stroke="black"
+              />
+              <path
+                d="M629.562 833.8C625.868 863.15 625.293 878.74 625.562 905.8C613.213 877.211 606.769 861.455 596.062 833.8C585.626 810.169 584.612 800.207 610.562 801.3C631.135 802.622 636.956 808.302 629.562 833.8Z"
+                stroke="black"
+              />
+              <path
+                d="M603.562 703.3C605.158 728.336 603.702 725.511 610.562 788.3C611.408 790.385 628.954 800.732 631.562 790.3C638.253 770.557 637.273 753.247 621.062 703.3C614.065 680.857 602.946 698.713 603.562 703.3Z"
+                stroke="black"
+              />
+              <path
+                d="M185.899 787.5C177.857 749.946 180.319 738.542 188.899 724C200.688 761.129 201.315 781.279 191.399 816C188.53 799.962 187 791.458 185.899 787.5Z"
+                stroke="black"
+              />
+              <path
+                d="M247.5 790C255.542 752.446 253.08 741.042 244.5 726.5C232.711 763.629 232.084 783.779 242 818.5C244.87 802.462 246.4 793.958 247.5 790Z"
+                stroke="black"
+              />
+            </g>
+            <g id="hamstrings">
+              <path
+                d="M686 700C701.031 571.167 707.767 525.65 715 520C751.663 524.159 744.524 576.698 726.5 680C724.254 671.123 721.761 665.873 715 656C724.12 633.191 728.436 619.448 729.5 587C720.924 644.332 707.71 663.282 686 700Z"
+                stroke="black"
+              />
+              <path
+                d="M628 700C612.969 571.167 606.233 525.65 599 520C562.337 524.159 569.476 576.698 587.5 680C589.746 671.123 592.239 665.873 599 656C589.88 633.191 585.564 619.448 584.5 587C593.076 644.332 606.29 663.282 628 700Z"
+                stroke="black"
+              />
+            </g>
+            <g id="quads">
+              <path
+                d="M128 608.5C111.522 545.429 114.2 521.042 132.5 490C120.648 559.194 126.426 585.916 143.5 627C143.5 627 158 654.5 155.5 664.5C153 674.5 147 675 143.5 666C140 657 134.844 638.789 128 608.5Z"
+                stroke="black"
+              />
+              <path
+                d="M305.79 608.5C322.268 545.429 319.589 521.042 301.29 490C313.141 559.194 307.364 585.916 290.29 627C290.29 627 275.79 654.5 278.29 664.5C280.79 674.5 286.79 675 290.29 666C293.79 657 298.946 638.789 305.79 608.5Z"
+                stroke="black"
+              />
+              <path
+                d="M197.19 661.119C201.724 647.609 186.389 555.538 172 501C179.779 555.951 191.909 588.858 178.549 638.102C178.549 638.102 172 643.106 174.519 661.119C177.038 679.132 192.656 674.629 197.19 661.119Z"
+                stroke="black"
+              />
+              <path
+                d="M235.804 661C231.304 647.5 246.523 555.498 260.804 501C253.084 555.91 241.045 588.793 254.304 638C254.304 638 260.804 643 258.304 661C255.804 679 240.304 674.5 235.804 661Z"
+                stroke="black"
+              />
+              <path
+                d="M256 621C254.622 550.383 259.234 511.829 277.5 445C303.478 525.65 307.33 569.963 283.5 633C268.5 651.5 258 646.5 256 621Z"
+                stroke="black"
+              />
+              <path
+                d="M176.36 621C177.738 550.383 173.126 511.829 154.86 445C128.882 525.65 125.03 569.963 148.86 633C163.86 651.5 174.36 646.5 176.36 621Z"
+                stroke="black"
+              />
+            </g>
+          </g>
+          <g id="back">
+            <g id="lower-back">
+              <path
+                d="M652 416C646.307 400.968 646.455 382.457 652 333.5C646.835 341.859 644.332 347.699 636.5 360C619.396 389.293 627.61 410.905 636.5 413.5C642.516 416.634 646.406 420.056 652 427.5C652.039 424.583 652.032 421.794 652 416Z"
+                stroke="black"
+              />
+              <path
+                d="M662.027 415.5C667.72 400.468 667.572 381.957 662.027 333C667.192 341.359 669.695 347.199 677.527 359.5C694.631 388.793 686.416 410.405 677.527 413C671.511 416.134 667.621 419.556 662.027 427C661.988 424.083 661.995 421.294 662.027 415.5Z"
+                stroke="black"
+              />
+            </g>
+            <g id="upper-back">
+              <path
+                d="M647 133C647.41 117.223 647.435 108.505 645 94.5C639.554 113.523 634.175 121.413 622.5 133C592.212 144.07 584.075 148.976 574.5 157C574.561 167.163 582.076 170.242 599 174.5C608.201 177.759 611.312 180.221 614 185.5C610.559 248.138 618.172 276.48 651.5 313C649.266 269.816 648.723 243.616 644.5 206C642.469 178.334 641.864 162.673 647 133Z"
+                stroke="black"
+              />
+              <path
+                d="M666.5 132.5C666.09 116.723 666.065 108.005 668.5 94C673.946 113.023 679.325 120.913 691 132.5C721.288 143.57 729.425 148.476 739 156.5C738.939 166.663 731.424 169.742 714.5 174C705.299 177.259 702.188 179.721 699.5 185C702.941 247.638 695.328 275.98 662 312.5C664.234 269.316 664.777 243.116 669 205.5C671.031 177.834 671.636 162.173 666.5 132.5Z"
+                stroke="black"
+              />
+              <path
+                d="M635.5 344.5C621.7 363.386 618.744 374.391 619 394.5L604.5 377C597.828 367.737 593.976 361.399 587 349C585.575 331.075 573.5 298.5 573.5 298.5C573.5 298.5 572.569 288.621 571 275.5C563.232 252.823 562.38 244.8 566.5 242C583.922 262.292 593.879 269.249 612.5 261.5C618.209 280.68 622.193 290.47 632.5 304C646.103 318.793 647.238 327.621 635.5 344.5Z"
+                stroke="black"
+              />
+              <path
+                d="M679.066 344.5C692.866 363.386 695.822 374.391 695.566 394.5L710.066 377C716.738 367.737 720.59 361.399 727.566 349C728.991 331.075 741.066 298.5 741.066 298.5C741.066 298.5 741.997 288.621 743.566 275.5C751.334 252.823 752.186 244.8 748.066 242C730.644 262.292 720.687 269.249 702.066 261.5C696.357 280.68 692.373 290.47 682.066 304C668.464 318.793 667.328 327.621 679.066 344.5Z"
+                stroke="black"
+              />
+            </g>
+          </g>
+          <g id="delts">
+            <g id="rear-delts">
+              <path
+                d="M599 185C581.769 176.1 575.369 171.618 569.5 164.5C536.543 177.089 527.761 195.753 520 238.5C545.208 204.103 558.287 182.296 599 185Z"
+                stroke="black"
+              />
+              <path
+                d="M713 184.5C730.231 175.6 736.631 171.118 742.5 164C775.457 176.589 784.239 195.253 792 238C766.792 203.603 753.713 181.796 713 184.5Z"
+                stroke="black"
+              />
+            </g>
+            <g id="side-delts">
+              <path
+                d="M747 159C779.143 167.848 791.534 178.364 794.5 216C785.294 189.449 776.434 176.261 747 159Z"
+                stroke="black"
+              />
+              <path
+                d="M317 163C346.286 177.42 353.614 191.343 354.5 224C345.768 191.582 337.286 178.621 317 163Z"
+                stroke="black"
+              />
+              <path
+                d="M566.5 159C534.357 167.848 521.966 178.364 519 216C528.206 189.449 537.066 176.261 566.5 159Z"
+                stroke="black"
+              />
+              <path
+                d="M116.5 162.5C87.214 176.92 79.8862 190.843 79 223.5C87.7323 191.082 96.2136 178.121 116.5 162.5Z"
+                stroke="black"
+              />
+            </g>
+            <g id="front-delts">
+              <path
+                d="M329 212.867C313.897 189.27 305.635 175.911 268 166.367C282.44 159.347 290.128 155.797 295.5 157.367C336.84 171.687 342.297 193.555 351 233.367C343.573 230.983 338.555 225.525 329 212.867Z"
+                stroke="black"
+              />
+              <path
+                d="M105 212C120.103 188.402 128.365 175.044 166 165.5C151.56 158.48 143.872 154.93 138.5 156.5C97.1604 170.819 91.7027 192.688 83 232.5C90.4273 230.116 95.4447 224.658 105 212Z"
+                stroke="black"
+              />
+            </g>
+          </g>
+          <g id="chest">
+            <g id="lower-chest">
+              <path
+                d="M220 234.495C220.324 242.766 220.203 246.922 220.011 255.193C219.877 260.969 221.5 262.503 229.456 262.894C272.965 265.075 303.361 271.893 306 239.309C305.532 238.054 303.917 237.427 299.04 236.421C268.565 231.906 250.483 230.16 220 234.495Z"
+                stroke="black"
+              />
+              <path
+                d="M212 234.495C211.676 242.766 211.797 246.922 211.989 255.193C212.123 260.969 210.5 262.503 202.544 262.894C159.035 265.075 128.639 271.893 126 239.309C126.468 238.054 128.083 237.427 132.96 236.421C163.435 231.906 181.517 230.16 212 234.495Z"
+                stroke="black"
+              />
+            </g>
+            <g id="upper-chest">
+              <path
+                d="M110.5 210.5C140.158 170.456 158.658 163.386 207.5 178.044C212.896 190.886 212.656 195.264 211.5 233.5C211.5 233.5 183.732 227.915 148 233.5C112.268 239.085 128.5 236 110.5 210.5Z"
+                stroke="black"
+              />
+              <path
+                d="M320.676 210.489C291.018 170.445 272.519 163.375 223.676 178.033C218.28 190.875 218.52 195.253 219.676 233.489C219.676 233.489 247.444 227.904 283.176 233.489C318.908 239.074 302.676 235.989 320.676 210.489Z"
+                stroke="black"
+              />
+            </g>
+          </g>
+          <g id="arms">
+            <g id="triceps">
+              <path
+                d="M86.5001 235C63.5 248 58 286 77.0001 311.5C71.9843 277.201 74.2999 260.57 86.5001 235Z"
+                stroke="black"
+              />
+              <path
+                d="M347 235C368.908 247.915 374.146 285.667 356.049 311C360.826 276.925 358.621 260.403 347 235Z"
+                stroke="black"
+              />
+              <path
+                d="M785.677 338.5C754.625 341.115 752.32 216.663 759.177 208C771.642 211.423 827.064 283.638 801.677 329C798.553 329.752 798.023 312.716 793.177 308C784.314 301.359 781.201 333.887 785.677 338.5Z"
+                stroke="black"
+              />
+              <path
+                d="M528 339C559.052 341.615 561.357 217.163 554.5 208.5C542.035 211.923 486.613 284.138 512 329.5C515.124 330.252 515.654 313.216 520.5 308.5C529.363 301.859 532.476 334.387 528 339Z"
+                stroke="black"
+              />
+            </g>
+            <g id="biceps">
+              <path
+                d="M77.5 276C83.1229 249.24 99.9278 219.497 108.24 219.003C116.551 218.509 119.67 282.015 112.5 298.5C105.33 314.985 89 329.5 89 329.5L88.9916 329.486C79.696 313.98 74.9941 306.137 77.5 276Z"
+                stroke="black"
+              />
+              <path
+                d="M355.5 273C349.873 247.068 332.086 219.482 323.768 219.003C315.449 218.524 311.592 280.528 318.768 296.503C325.944 312.477 345 332 345 332C354.309 316.965 358.009 302.214 355.5 273Z"
+                stroke="black"
+              />
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+h4 {
+  margin: 0;
+}
+
+h4 {
+  text-transform: uppercase;
+}
+
+/* Component wrapper */
+
+.muscle-group-selector-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+}
+
+/* Slider */
+
+.is-primary-checkbox-wrapper {
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr;
+}
+
+.is-primary-checkbox-wrapper > span {
+  text-align: center;
+}
+
+.switch-wrapper {
+  margin: 0 auto;
+}
+
+.switch {
+  display: inline-block;
+  height: 34px;
+  position: relative;
+  width: 60px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  background-color: #0b5ad080;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: 0.4s;
+}
+
+.slider:before {
+  background-color: #fff;
+  bottom: 4px;
+  content: '';
+  height: 26px;
+  left: 4px;
+  position: absolute;
+  transition: 0.4s;
+  width: 26px;
+}
+
+input:checked + .slider {
+  background-color: #0b5ad0;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* Input wrapper */
+
+.muscle-groups-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 470px;
+}
+
+/* Radio buttons and checkboxes */
+
+.primary-muscle-groups-fieldlist,
+.secondary-muscle-groups-fieldlist {
+  width: 100%;
+}
+
+.primary-muscle-groups-fieldlist input,
+.secondary-muscle-groups-fieldlist input {
+  display: none;
+}
+
+.primary-muscle-groups-fieldlist label,
+.secondary-muscle-groups-fieldlist label {
+  cursor: pointer;
+  border-radius: 20px;
+  padding: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.disable-label {
+  pointer-events: none;
+  cursor: default;
+}
+
+.primary-muscle-groups-fieldlist label:has(input[type='radio']:checked) {
+  background-color: #0b5ad0;
+  color: #fff;
+}
+
+.secondary-muscle-groups-fieldlist label:has(input[type='checkbox']:checked) {
+  background-color: #0b5ad080;
+  color: #fff;
+}
+
+/* Super group titles */
+
+.large-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.large-group > h4 {
+  text-decoration: underline;
+  margin-bottom: 0.25rem;
+}
+
+.large-group > span {
+  cursor: pointer;
+  background-color: #0b5ad0;
+  color: #fff;
+  border-radius: 20px;
+  padding: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+/* SVG wrapper */
+.svg-wrapper {
+  width: 100%;
+  max-width: 380px;
+}
+
+/* SVG fill */
+
+.primary-muscle-group {
+  fill: #0b5ad0;
+}
+
+.secondary-muscle-group {
+  fill: #0b5ad080;
+}
+
+@media screen and (min-width: 320px) and (max-width: 481px) {
+  .primary-muscle-groups-fieldlist,
+  .secondary-muscle-groups-fieldlist {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 481px) {
+  .primary-muscle-groups-fieldlist,
+  .secondary-muscle-groups-fieldlist {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (min-width: 601px) {
+  .muscle-group-selector-wrapper {
+    flex-direction: row;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .label-hover:has(:not(input:checked)) {
+    background-color: #cbcbcb;
+  }
+
+  .muscle-group-hover {
+    fill: #cbcbcb;
+  }
+}
+</style>
