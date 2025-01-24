@@ -1,37 +1,38 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
+import MuscleGroupInput from './MuscleGroupInput.vue'
 
 const emit = defineEmits(['primaryMgChange', 'secondaryMgsChange'])
 
 const muscleGroupsIdByName = new Map([
-  ['biceps', 1],
-  ['triceps', 2],
-  ['upper-chest', 3],
-  ['lower-chest', 4],
-  ['front-delts', 5],
-  ['side-delts', 6],
-  ['rear-delts', 7],
-  ['upper-back', 8],
-  ['lower-back', 9],
-  ['quads', 10],
-  ['hamstrings', 11],
-  ['glutes', 12],
-  ['calves', 13],
-  ['upper-abs', 14],
-  ['lower-abs', 15],
-  ['obliques', 16],
+  ['biceps', { id: 1, name: 'Biceps' }],
+  ['triceps', { id: 2, name: 'Triceps' }],
+  ['upper-chest', { id: 3, name: 'Gornje grudi' }],
+  ['lower-chest', { id: 4, name: 'Donje grudi' }],
+  ['front-delts', { id: 5, name: 'Prednje rame' }],
+  ['side-delts', { id: 6, name: 'Srednje rame' }],
+  ['rear-delts', { id: 7, name: 'Zadnje rame' }],
+  ['upper-back', { id: 8, name: 'Gornja leđa' }],
+  ['lower-back', { id: 9, name: 'Donja leđa' }],
+  ['quads', { id: 10, name: 'Prednja loža' }],
+  ['hamstrings', { id: 11, name: 'Zadnja loža' }],
+  ['glutes', { id: 12, name: 'Gluteus' }],
+  ['calves', { id: 13, name: 'Listovi' }],
+  ['upper-abs', { id: 14, name: 'Gornji trbušnjaci' }],
+  ['lower-abs', { id: 15, name: 'Donji trbušnjaci' }],
+  ['obliques', { id: 16, name: 'Bočni trbušnjaci' }],
 ])
 
 const isPrimary = ref(true)
 const primaryMuscleGroup = ref(null)
 const primaryMuscleGroupId = computed(() => {
-  return muscleGroupsIdByName.get(primaryMuscleGroup.value)
+  return muscleGroupsIdByName.get(primaryMuscleGroup.value).id
 })
 const secondaryMuscleGroups = ref([])
 const secondaryMuscleGroupsId = computed(() => {
   let res = []
   for (let mg of secondaryMuscleGroups.value) {
-    res.push(muscleGroupsIdByName.get(mg))
+    res.push(muscleGroupsIdByName.get(mg).id)
   }
   return res
 })
@@ -59,16 +60,15 @@ watch(primaryMuscleGroup, () => {
   emit('primaryMgChange', primaryMuscleGroupId.value)
 })
 
-watch(secondaryMuscleGroups, (newV, oldV) => {
+watch(secondaryMuscleGroups.value, () => {
   disabled.value = true
-  if (oldV.length > newV.length) {
-    const unselected = oldV.filter((x) => !newV.includes(x))
-    document.getElementById(unselected[0]).classList.add('muscle-group-hover')
+  for (let entry of muscleGroupsIdByName) {
+    const currEl = document.getElementById(entry[0])
+    if (currEl.classList.contains('secondary-muscle-group')) {
+      currEl.classList.remove('secondary-muscle-group')
+    }
   }
-  for (let id of oldV) {
-    document.getElementById(id).classList.remove('secondary-muscle-group')
-  }
-  for (let id of newV) {
+  for (let id of secondaryMuscleGroups.value) {
     const currMgElement = document.getElementById(id)
     currMgElement.classList.add('secondary-muscle-group')
     if (currMgElement.classList.contains('muscle-group-hover')) {
@@ -79,16 +79,13 @@ watch(secondaryMuscleGroups, (newV, oldV) => {
   emit('secondaryMgsChange', [...secondaryMuscleGroupsId.value])
 })
 
-function handleHover(e) {
-  e.target.classList.toggle('label-hover')
-  const forAttr = e.target.htmlFor
-  const mgElementId = forAttr.substring(0, forAttr.length - 3)
-  const mgSvgElement = document.getElementById(mgElementId)
-  if (mgSvgElement.classList.value && mgSvgElement.classList.value != 'muscle-group-hover') {
-    mgSvgElement.classList.remove('muscle-group-hover')
+function secondaryMgChangeFromInput(id) {
+  if (secondaryMuscleGroups.value.includes(id)) {
+    secondaryMuscleGroups.value.splice(secondaryMuscleGroups.value.indexOf(id), 1)
+    document.getElementById(id).classList.add('muscle-group-hover')
     return
   }
-  mgSvgElement.classList.toggle('muscle-group-hover')
+  secondaryMuscleGroups.value.push(id)
 }
 </script>
 
@@ -105,556 +102,182 @@ function handleHover(e) {
         </div>
         <span>PRIMARNA GRUPA</span>
       </div>
-      <div class="primary-muscle-groups-fieldlist" v-if="isPrimary">
-        <div class="arms large-group">
+      <div class="primary-muscle-groups-fieldlist" v-show="isPrimary">
+        <div class="large-group">
           <h4>Ruke</h4>
-          <label
-            for="biceps-rb"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="radio"
-              name="primary-mg"
-              id="biceps-rb"
-              value="biceps"
-              v-model="primaryMuscleGroup"
-            />
-            <span>Biceps</span>
-          </label>
-          <label
-            for="triceps-rb"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="radio"
-              name="primary-mg"
-              id="triceps-rb"
-              value="triceps"
-              v-model="primaryMuscleGroup"
-            />
-            <span>Triceps</span>
-          </label>
+          <MuscleGroupInput
+            v-for="entry in new Map(Array.from(muscleGroupsIdByName).slice(0, 2))"
+            :key="entry[1].id"
+            type="radio"
+            :value="entry[0]"
+            :disabled="disabled"
+            :title="entry[1].name"
+            @clicked="(id) => (primaryMuscleGroup = id)"
+          ></MuscleGroupInput>
         </div>
-        <div class="chest large-group">
+        <div class="large-group">
           <h4>Grudi</h4>
-          <label
-            for="upper-chest-rb"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="radio"
-              name="primary-mg"
-              id="upper-chest-rb"
-              value="upper-chest"
-              v-model="primaryMuscleGroup"
-            />
-            <span>Gornje grudi </span>
-          </label>
-          <label
-            for="lower-chest-rb"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="radio"
-              name="primary-mg"
-              id="lower-chest-rb"
-              value="lower-chest"
-              v-model="primaryMuscleGroup"
-            />
-            <span>Donje grudi</span>
-          </label>
+          <MuscleGroupInput
+            v-for="entry in new Map(Array.from(muscleGroupsIdByName).slice(2, 4))"
+            :key="entry[1].id"
+            type="radio"
+            :value="entry[0]"
+            :disabled="disabled"
+            :title="entry[1].name"
+            @clicked="(id) => (primaryMuscleGroup = id)"
+          ></MuscleGroupInput>
         </div>
-        <div class="shoulders large-group">
+        <div class="large-group">
           <h4>Ramena</h4>
-          <label
-            for="front-delts-rb"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="radio"
-              name="primary-mg"
-              id="front-delts-rb"
-              value="front-delts"
-              v-model="primaryMuscleGroup"
-            />
-            <span>Prednje rame</span>
-          </label>
-          <label
-            for="side-delts-rb"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="radio"
-              name="primary-mg"
-              id="side-delts-rb"
-              value="side-delts"
-              v-model="primaryMuscleGroup"
-            />
-            <span>Srednje rame</span>
-          </label>
-          <label
-            for="rear-delts-rb"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="radio"
-              name="primary-mg"
-              id="rear-delts-rb"
-              value="rear-delts"
-              v-model="primaryMuscleGroup"
-            />
-            <span>Zadnje rame</span>
-          </label>
+          <MuscleGroupInput
+            v-for="entry in new Map(Array.from(muscleGroupsIdByName).slice(4, 7))"
+            :key="entry[1].id"
+            type="radio"
+            :value="entry[0]"
+            :disabled="disabled"
+            :title="entry[1].name"
+            @clicked="(id) => (primaryMuscleGroup = id)"
+          ></MuscleGroupInput>
         </div>
-        <div class="back large-group">
+        <div class="large-group">
           <h4>Leđa</h4>
-          <label
-            for="upper-back-rb"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="radio"
-              name="primary-mg"
-              id="upper-back-rb"
-              value="upper-back"
-              v-model="primaryMuscleGroup"
-            />
-            <span>Gornja leđa</span>
-          </label>
-          <label
-            for="lower-back-rb"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="radio"
-              name="primary-mg"
-              id="lower-back-rb"
-              value="lower-back"
-              v-model="primaryMuscleGroup"
-            />
-            <span>Donja leđa</span>
-          </label>
+          <MuscleGroupInput
+            v-for="entry in new Map(Array.from(muscleGroupsIdByName).slice(7, 9))"
+            :key="entry[1].id"
+            type="radio"
+            :value="entry[0]"
+            :disabled="disabled"
+            :title="entry[1].name"
+            @clicked="(id) => (primaryMuscleGroup = id)"
+          ></MuscleGroupInput>
         </div>
-        <div class="abs large-group">
+        <div class="large-group">
           <h4>Trbušnjaci</h4>
-          <label
-            for="upper-abs-rb"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="radio"
-              name="primary-mg"
-              id="upper-abs-rb"
-              value="upper-abs"
-              v-model="primaryMuscleGroup"
-            />
-            <span>Gornji trbušnjaci</span>
-          </label>
-          <label
-            for="lower-abs-rb"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="radio"
-              name="primary-mg"
-              id="lower-abs-rb"
-              value="lower-abs"
-              v-model="primaryMuscleGroup"
-            />
-            <span>Donji trbušnjaci</span>
-          </label>
-          <label
-            for="obliques-rb"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="radio"
-              name="primary-mg"
-              id="obliques-rb"
-              value="obliques"
-              v-model="primaryMuscleGroup"
-            />
-            <span>Bočni trbušnjaci</span>
-          </label>
+          <MuscleGroupInput
+            v-for="entry in new Map(Array.from(muscleGroupsIdByName).slice(13))"
+            :key="entry[1].id"
+            type="radio"
+            :value="entry[0]"
+            :disabled="disabled"
+            :title="entry[1].name"
+            @clicked="(id) => (primaryMuscleGroup = id)"
+          ></MuscleGroupInput>
         </div>
-        <div class="legs large-group">
+        <div class="large-group">
           <h4>Noge</h4>
-          <label
-            for="quads-rb"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="radio"
-              name="primary-mg"
-              id="quads-rb"
-              value="quads"
-              v-model="primaryMuscleGroup"
-            />
-            <span>Prednja loža</span>
-          </label>
-          <label
-            for="hamstrings-rb"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="radio"
-              name="primary-mg"
-              id="hamstrings-rb"
-              value="hamstrings"
-              v-model="primaryMuscleGroup"
-            />
-            <span>Zadnja loža</span>
-          </label>
-          <label
-            for="glutes-rb"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="radio"
-              name="primary-mg"
-              id="glutes-rb"
-              value="glutes"
-              v-model="primaryMuscleGroup"
-            />
-            <span>Gluteus</span>
-          </label>
-          <label
-            for="calves-rb"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="radio"
-              name="primary-mg"
-              id="calves-rb"
-              value="calves"
-              v-model="primaryMuscleGroup"
-            />
-            <span>Listovi</span>
-          </label>
+          <MuscleGroupInput
+            v-for="entry in new Map(Array.from(muscleGroupsIdByName).slice(9, 13))"
+            :key="entry[1].id"
+            type="radio"
+            :value="entry[0]"
+            :disabled="disabled"
+            :title="entry[1].name"
+            @clicked="(id) => (primaryMuscleGroup = id)"
+          ></MuscleGroupInput>
         </div>
       </div>
-      <div class="secondary-muscle-groups-fieldlist" v-else>
+      <div class="secondary-muscle-groups-fieldlist" v-show="!isPrimary">
         <div class="arms large-group">
           <h4>Ruke</h4>
-          <label
-            for="biceps-cb"
-            v-if="primaryMuscleGroup != 'biceps'"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
+          <div
+            v-for="entry in new Map(Array.from(muscleGroupsIdByName).slice(0, 2))"
+            :key="entry[1].id"
           >
-            <input
+            <MuscleGroupInput
+              v-if="primaryMuscleGroup != entry[0]"
               type="checkbox"
-              name="secondary-mg"
-              id="biceps-cb"
-              value="biceps"
-              v-model="secondaryMuscleGroups"
-            />
-            <span>Biceps</span>
-          </label>
-          <span v-else>Biceps</span>
-          <label
-            for="triceps-cb"
-            v-if="primaryMuscleGroup != 'triceps'"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="checkbox"
-              name="secondary-mg"
-              id="triceps-cb"
-              value="triceps"
-              v-model="secondaryMuscleGroups"
-            />
-            <span>Triceps</span>
-          </label>
-          <span v-else>Triceps</span>
+              :value="entry[0]"
+              :disabled="disabled"
+              :title="entry[1].name"
+              @clicked="secondaryMgChangeFromInput"
+            ></MuscleGroupInput>
+            <span v-else>{{ entry[1].name }}</span>
+          </div>
         </div>
         <div class="chest large-group">
           <h4>Grudi</h4>
-          <label
-            for="upper-chest-cb"
-            v-if="primaryMuscleGroup != 'upper-chest'"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
+          <div
+            v-for="entry in new Map(Array.from(muscleGroupsIdByName).slice(2, 4))"
+            :key="entry[1].id"
           >
-            <input
+            <MuscleGroupInput
+              v-if="primaryMuscleGroup != entry[0]"
               type="checkbox"
-              name="secondary-mg"
-              id="upper-chest-cb"
-              value="upper-chest"
-              v-model="secondaryMuscleGroups"
-            />
-            <span>Gornje grudi</span>
-          </label>
-          <span v-else>Gornje grudi</span>
-          <label
-            for="lower-chest-cb"
-            v-if="primaryMuscleGroup != 'lower-chest'"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="checkbox"
-              name="secondary-mg"
-              id="lower-chest-cb"
-              value="lower-chest"
-              v-model="secondaryMuscleGroups"
-            />
-            <span>Donje grudi</span>
-          </label>
-          <span v-else>Donje grudi</span>
+              :value="entry[0]"
+              :disabled="disabled"
+              :title="entry[1].name"
+              @clicked="secondaryMgChangeFromInput"
+            ></MuscleGroupInput>
+            <span v-else>{{ entry[1].name }}</span>
+          </div>
         </div>
         <div class="shoulders large-group">
           <h4>Ramena</h4>
-          <label
-            for="front-delts-cb"
-            v-if="primaryMuscleGroup != 'front-delts'"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
+          <div
+            v-for="entry in new Map(Array.from(muscleGroupsIdByName).slice(4, 7))"
+            :key="entry[1].id"
           >
-            <input
+            <MuscleGroupInput
+              v-if="primaryMuscleGroup != entry[0]"
               type="checkbox"
-              name="secondary-mg"
-              id="front-delts-cb"
-              value="front-delts"
-              v-model="secondaryMuscleGroups"
-            />
-            <span>Prednje rame</span>
-          </label>
-          <span v-else>Prednje rame</span>
-          <label
-            for="side-delts-cb"
-            v-if="primaryMuscleGroup != 'side-delts'"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="checkbox"
-              name="secondary-mg"
-              id="side-delts-cb"
-              value="side-delts"
-              v-model="secondaryMuscleGroups"
-            />
-            <span>Srednje rame</span>
-          </label>
-          <span v-else>Srednje rame</span>
-          <label
-            for="rear-delts-cb"
-            v-if="primaryMuscleGroup != 'rear-delts'"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="checkbox"
-              name="secondary-mg"
-              id="rear-delts-cb"
-              value="rear-delts"
-              v-model="secondaryMuscleGroups"
-            />
-            <span>Zadnje rame</span>
-          </label>
-          <span v-else>Zadnje rame</span>
+              :value="entry[0]"
+              :disabled="disabled"
+              :title="entry[1].name"
+              @clicked="secondaryMgChangeFromInput"
+            ></MuscleGroupInput>
+            <span v-else>{{ entry[1].name }}</span>
+          </div>
         </div>
         <div class="back large-group">
           <h4>Leđa</h4>
-          <label
-            for="upper-back-cb"
-            v-if="primaryMuscleGroup != 'upper-back'"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
+          <div
+            v-for="entry in new Map(Array.from(muscleGroupsIdByName).slice(7, 9))"
+            :key="entry[1].id"
           >
-            <input
+            <MuscleGroupInput
+              v-if="primaryMuscleGroup != entry[0]"
               type="checkbox"
-              name="secondary-mg"
-              id="upper-back-cb"
-              value="upper-back"
-              v-model="secondaryMuscleGroups"
-            />
-            <span>Gornja leđa</span>
-          </label>
-          <span v-else>Gornja leđa</span>
-          <label
-            for="lower-back-cb"
-            v-if="primaryMuscleGroup != 'lower-back'"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="checkbox"
-              name="secondary-mg"
-              id="lower-back-cb"
-              value="lower-back"
-              v-model="secondaryMuscleGroups"
-            />
-            <span>Donja leđa</span>
-          </label>
-          <span v-else>Donja leđa</span>
+              :value="entry[0]"
+              :disabled="disabled"
+              :title="entry[1].name"
+              @clicked="secondaryMgChangeFromInput"
+            ></MuscleGroupInput>
+            <span v-else>{{ entry[1].name }}</span>
+          </div>
         </div>
         <div class="abs large-group">
           <h4>Trbušnjaci</h4>
-          <label
-            for="upper-abs-cb"
-            v-if="primaryMuscleGroup != 'upper-abs'"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
+          <div
+            v-for="entry in new Map(Array.from(muscleGroupsIdByName).slice(13))"
+            :key="entry[1].id"
           >
-            <input
+            <MuscleGroupInput
+              v-if="primaryMuscleGroup != entry[0]"
               type="checkbox"
-              name="secondary-mg"
-              id="upper-abs-cb"
-              value="upper-abs"
-              v-model="secondaryMuscleGroups"
-            />
-            <span>Gornji trbušnjaci</span>
-          </label>
-          <span v-else>Gornji trbušnjaci</span>
-          <label
-            for="lower-abs-cb"
-            v-if="primaryMuscleGroup != 'lower-abs'"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="checkbox"
-              name="secondary-mg"
-              id="lower-abs-cb"
-              value="lower-abs"
-              v-model="secondaryMuscleGroups"
-            />
-            <span>Donji trbušnjaci</span>
-          </label>
-          <span v-else>Donji trbušnjaci</span>
-          <label
-            for="obliques-cb"
-            v-if="primaryMuscleGroup != 'obliques'"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="checkbox"
-              name="secondary-mg"
-              id="obliques-cb"
-              value="obliques"
-              v-model="secondaryMuscleGroups"
-            />
-            <span>Bočni trbušnjaci</span>
-          </label>
-          <span v-else>Bočni trbušnjaci</span>
+              :value="entry[0]"
+              :disabled="disabled"
+              :title="entry[1].name"
+              @clicked="secondaryMgChangeFromInput"
+            ></MuscleGroupInput>
+            <span v-else>{{ entry[1].name }}</span>
+          </div>
         </div>
         <div class="legs large-group">
           <h4>Noge</h4>
-          <label
-            for="quads-cb"
-            v-if="primaryMuscleGroup != 'quads'"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
+          <div
+            v-for="entry in new Map(Array.from(muscleGroupsIdByName).slice(9, 13))"
+            :key="entry[1].id"
           >
-            <input
+            <MuscleGroupInput
+              v-if="primaryMuscleGroup != entry[0]"
               type="checkbox"
-              name="secondary-mg"
-              id="quads-cb"
-              value="quads"
-              v-model="secondaryMuscleGroups"
-            />
-            <span>Prednja loža</span>
-          </label>
-          <span v-else>Prednja loža</span>
-          <label
-            for="hamstrings-cb"
-            v-if="primaryMuscleGroup != 'hamstrings'"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="checkbox"
-              name="secondary-mg"
-              id="hamstrings-cb"
-              value="hamstrings"
-              v-model="secondaryMuscleGroups"
-            />
-            <span>Zadnja loža</span>
-          </label>
-          <span v-else>Zadnja loža</span>
-          <label
-            for="glutes-cb"
-            v-if="primaryMuscleGroup != 'glutes'"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="checkbox"
-              name="secondary-mg"
-              id="glutes-cb"
-              value="glutes"
-              v-model="secondaryMuscleGroups"
-            />
-            <span>Gluteus</span>
-          </label>
-          <span v-else>Gluteus</span>
-          <label
-            for="calves-cb"
-            v-if="primaryMuscleGroup != 'calves'"
-            :class="{ 'disable-label': disabled }"
-            @mouseenter="handleHover"
-            @mouseleave="handleHover"
-          >
-            <input
-              type="checkbox"
-              name="secondary-mg"
-              id="calves-cb"
-              value="calves"
-              v-model="secondaryMuscleGroups"
-            />
-            <span>Listovi</span>
-          </label>
-          <span v-else>Listovi</span>
+              :value="entry[0]"
+              :disabled="disabled"
+              :title="entry[1].name"
+              @clicked="secondaryMgChangeFromInput"
+            ></MuscleGroupInput>
+            <span v-else>{{ entry[1].name }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -1036,24 +659,6 @@ input:checked + .slider:before {
   width: 100%;
 }
 
-.primary-muscle-groups-fieldlist input,
-.secondary-muscle-groups-fieldlist input {
-  display: none;
-}
-
-.primary-muscle-groups-fieldlist label,
-.secondary-muscle-groups-fieldlist label {
-  cursor: pointer;
-  border-radius: 20px;
-  padding: 0.5rem;
-  margin-bottom: 0.25rem;
-}
-
-.disable-label {
-  pointer-events: none;
-  cursor: default;
-}
-
 .primary-muscle-groups-fieldlist label:has(input[type='radio']:checked) {
   background-color: #0b5ad0;
   color: #fff;
@@ -1078,7 +683,10 @@ input:checked + .slider:before {
   margin-bottom: 0.25rem;
 }
 
-.large-group > span {
+/* Span for selected primary group in .secondary-muscle-groups-fieldlist */
+
+.large-group > div > span {
+  display: inline-block;
   cursor: pointer;
   background-color: #0b5ad0;
   color: #fff;
@@ -1126,10 +734,6 @@ input:checked + .slider:before {
 }
 
 @media screen and (min-width: 1024px) {
-  .label-hover:has(:not(input:checked)) {
-    background-color: #cbcbcb;
-  }
-
   .muscle-group-hover {
     fill: #cbcbcb;
   }

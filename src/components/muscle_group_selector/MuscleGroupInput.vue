@@ -54,4 +54,10 @@ label {
   pointer-events: none;
   cursor: default;
 }
+
+@media screen and (min-width: 1024px) {
+  .label-hover:has(:not(input:checked)) {
+    background-color: #cbcbcb;
+  }
+}
 </style>
