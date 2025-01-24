@@ -1,0 +1,20 @@
+@font-face {
+  font-family: 'DexaPro';
+  src: url('/fonts/DexaPro-400-Regular.otf');
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'DexaPro';
+  src: url('/fonts/DexaPro-700-Bold.otf');
+  font-style: normal;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: 'EtruscoNowCondensed';
+  src: url('/fonts/EtruscoNowCondensed-Heavy.otf');
+  font-style: normal;
+  font-weight: 900;
+}

@@ -41,8 +41,8 @@ function btnClickHandle() {
 </script>
 
 <template>
-  <div>
-    <div ref="popUpLayout">
+  <div class="popUpWrapper body-disable-scroll">
+    <div ref="popUpLayout" class="popUpContainer">
       <div v-if="enableClose">
         <button type="button" @click="btnClickHandle">close</button>
       </div>
@@ -52,3 +52,28 @@ function btnClickHandle() {
     </div>
   </div>
 </template>
+
+<style scoped>
+.popUpWrapper {
+  background-color: var(--transparent-gray);
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .popUpContainer {
+    background-color: var(--gray);
+    min-width: 400px;
+    max-width: 450px;
+    min-height: 250px;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 10px;
+    border: 1px solid var(--gray);
+  }
+}
+</style>

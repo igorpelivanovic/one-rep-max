@@ -9,6 +9,7 @@ function useFormValidation({
 }) {
   const errorsObj = reactive({})
   const isSubmited = ref(!validateAfterSubmit)
+  const isDirty = ref(false)
 
   const errors = computed(() => (Object.keys(errorsObj).length === 0 ? null : errorsObj))
 
@@ -18,6 +19,9 @@ function useFormValidation({
       () => {
         if (isSubmited.value) {
           validationField(fieldKey)
+        }
+        if (!isDirty.value) {
+          isDirty.value = true
         }
         return
       },
@@ -53,7 +57,15 @@ function useFormValidation({
       validationField(key)
     })
   }
-  return { errors, onSubmit }
+
+  function reset() {
+    isSubmited.value = false
+    isDirty.value = false
+    Object.assign(errorsObj, reactive({}))
+    console.log(errorsObj)
+  }
+
+  return { errors, onSubmit, reset, isDirty }
 }
 
 export default useFormValidation

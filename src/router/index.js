@@ -17,6 +17,16 @@ const router = createRouter({
       name: 'about',
       component: () => import('../views/AboutView.vue'),
     },
+    {
+      path: '/addpost',
+      name: 'addPost',
+      component: () => import('../views/AddPostView.vue'),
+    },
+    {
+      path: '/editpost/:id',
+      name: 'editPost',
+      component: () => import('../views/EditPostView.vue'),
+    },
     // Required Auth Route
     {
       path: '',
@@ -29,13 +39,14 @@ const router = createRouter({
           name: 'profile',
           component: () => import('../views/ProfileView.vue'),
         },
+
         {
           path: '/post',
           name: 'post',
-          component: () => import('../views/PostView.vue'),
           meta: {
             roles: ['admin'],
           },
+          children: [],
         },
         {
           path: 'user',
@@ -55,6 +66,7 @@ const router = createRouter({
       meta: {
         auth: REQUIRED_AUTH_STATUS.get('noAuthRequired'),
       },
+      component: () => import('../layout/AuthPageLayout.vue'),
       children: [
         {
           path: '/login',
@@ -68,10 +80,20 @@ const router = createRouter({
         },
       ],
     },
+    {
+      path: '/notfound',
+      component: () => import('../views/NotFoundView.vue'),
+      name: 'notfound',
+      beforeEnter: (to, from, next) => {
+        if (from.matched.length === 0) next({ name: 'home' })
+        next()
+      },
+    },
+    { path: '/:pathMatch(.*)*', redirect: () => ({ name: 'home' }) },
   ],
 })
 
-router.beforeEach(async (to, _, next) => {
+router.beforeEach(async (to, from, next) => {
   const loadingStatus = useLoadingRouteStore()
   try {
     loadingStatus.isLoading = true
