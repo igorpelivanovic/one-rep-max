@@ -31,7 +31,7 @@
       align-items: center;
       border-radius: 50%;
       .icon {
-        color: var(--gray);
+        color: var(--white);
         font-size: 1.4rem;
       }
     }

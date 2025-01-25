@@ -29,6 +29,7 @@ const showFooter = computed(() => !!slot.footer)
 
 <style scoped>
 .auth-form-container {
+  margin: auto;
   overflow: hidden;
   width: 100%;
   background-color: var(--gray);

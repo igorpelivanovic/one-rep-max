@@ -12,6 +12,7 @@ import { computed } from 'vue'
 import ModalLayout from '@/components/modal/ModalLayout.vue'
 import DeletePostModalContent from '@/components/modal/DeletePostModalContent.vue'
 import { useAlertBoxStore } from '@/stores/alertBox'
+import AdminDashContentLayout from '@/components/layout/AdminDashContentLayout.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -63,40 +64,43 @@ const deletePost = async () => {
 </script>
 
 <template>
-  <ModalLayout v-if="renderModal">
-    <DeletePostModalContent
-      @denide="renderModal = false"
-      @accept="deletePost"
-    ></DeletePostModalContent>
-  </ModalLayout>
-  <SpinnerContainer v-if="loadingRef.isLoading" />
-  <PageLayout v-if="postData">
-    <template #header>
-      <div class="header-container">
-        <h1 class="page-main-title">izmeni blog</h1>
-        <div class="btns-container">
-          <button type="button" class="remove-btn" @click="renderModal = true">
-            <span class="icon">
-              <i class="fas fa-trash"></i>
-            </span>
-            <span class="title">obirši</span>
-          </button>
+  <AdminDashContentLayout>
+    <ModalLayout v-if="renderModal">
+      <DeletePostModalContent
+        @denide="renderModal = false"
+        @accept="deletePost"
+      ></DeletePostModalContent>
+    </ModalLayout>
+    <SpinnerContainer v-if="loadingRef.isLoading" />
+    <PageLayout v-if="postData">
+      <template #header>
+        <div class="header-container">
+          <h1 class="page-main-title">izmeni blog</h1>
+          <div class="btns-container">
+            <button type="button" class="remove-btn" @click="renderModal = true">
+              <span class="icon">
+                <i class="fas fa-trash"></i>
+              </span>
+              <span class="title">obirši</span>
+            </button>
+          </div>
         </div>
-      </div>
-    </template>
-    <template #body>
-      <div class="forms-wrapper">
-        <EditPostDataForm :initial-form-data="postFormData" />
-        <EditPostImageForm :initial-form-data="imageFormData" />
-      </div>
-    </template>
-  </PageLayout>
+      </template>
+      <template #body>
+        <div class="forms-wrapper">
+          <EditPostDataForm :initial-form-data="postFormData" />
+          <EditPostImageForm :initial-form-data="imageFormData" />
+        </div>
+      </template>
+    </PageLayout>
+  </AdminDashContentLayout>
 </template>
 
 <style scoped>
 .forms-wrapper {
   display: flex;
   flex-direction: column;
+  flex: 1 0px;
   gap: 80px;
   * {
     flex: 1;
