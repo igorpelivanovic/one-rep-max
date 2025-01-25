@@ -17,7 +17,9 @@ export default {
     <div class="blog-card-content">
       <!-- <p class="blog-card-category">{{ post.category_name }}</p> -->
       <h3 class="blog-card-title">{{ post.title }}</h3>
-      <router-link :to="'/post/' + post.id" class="read-more">Pročitaj više</router-link>
+      <router-link :to="{ name: 'post', params: { id: post.id } }" class="read-more"
+        >Pročitaj više</router-link
+      >
     </div>
   </div>
 </template>

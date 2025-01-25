@@ -80,6 +80,12 @@ const router = createRouter({
       },
     },
     { path: '/:pathMatch(.*)*', redirect: () => ({ name: 'home' }) },
+    {
+      path: '/post/:id',
+      name: 'post',
+      props: true,
+      component: () => import('../views/BlogPostView.vue'),
+    },
   ],
 })
 
