@@ -1,7 +1,11 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
 import MuscleGroupInput from './MuscleGroupInput.vue'
 
+const props = defineProps({
+  primary: Number,
+  secondary: Array,
+})
 const emit = defineEmits(['primaryMgChange', 'secondaryMgsChange'])
 
 const muscleGroupsIdByName = new Map([
@@ -23,6 +27,7 @@ const muscleGroupsIdByName = new Map([
   ['obliques', { id: 16, name: 'Bočni trbušnjaci' }],
 ])
 
+let loading = true
 const isPrimary = ref(true)
 const primaryMuscleGroup = ref(null)
 const primaryMuscleGroupId = computed(() => {
@@ -57,7 +62,9 @@ watch(primaryMuscleGroup, () => {
     newSelected.classList.remove('muscle-group-hover')
   }
   disabled.value = false
-  emit('primaryMgChange', primaryMuscleGroupId.value)
+  if (!loading) {
+    emit('primaryMgChange', primaryMuscleGroupId.value)
+  }
 })
 
 watch(secondaryMuscleGroups.value, () => {
@@ -76,7 +83,9 @@ watch(secondaryMuscleGroups.value, () => {
     }
   }
   disabled.value = false
-  emit('secondaryMgsChange', [...secondaryMuscleGroupsId.value])
+  if (!loading) {
+    emit('secondaryMgsChange', [...secondaryMuscleGroupsId.value])
+  }
 })
 
 function secondaryMgChangeFromInput(id) {
@@ -87,6 +96,24 @@ function secondaryMgChangeFromInput(id) {
   }
   secondaryMuscleGroups.value.push(id)
 }
+
+onBeforeMount(() => {
+  if (props.primary) {
+    primaryMuscleGroup.value = [...muscleGroupsIdByName.entries()].find(
+      (entry) => entry[1].id === props.primary,
+    )[0]
+  }
+  if (props.secondary) {
+    const selected = [...muscleGroupsIdByName.entries()].filter((entry) =>
+      props.secondary.includes(entry[1].id),
+    )
+    for (let e of selected) {
+      secondaryMuscleGroups.value.push(e[0])
+    }
+  }
+})
+
+onMounted(() => (loading = false))
 </script>
 
 <template>
@@ -112,6 +139,7 @@ function secondaryMgChangeFromInput(id) {
             :value="entry[0]"
             :disabled="disabled"
             :title="entry[1].name"
+            :checked="primaryMuscleGroup === entry[0]"
             @clicked="(id) => (primaryMuscleGroup = id)"
           ></MuscleGroupInput>
         </div>
@@ -124,6 +152,7 @@ function secondaryMgChangeFromInput(id) {
             :value="entry[0]"
             :disabled="disabled"
             :title="entry[1].name"
+            :checked="primaryMuscleGroup === entry[0]"
             @clicked="(id) => (primaryMuscleGroup = id)"
           ></MuscleGroupInput>
         </div>
@@ -136,6 +165,7 @@ function secondaryMgChangeFromInput(id) {
             :value="entry[0]"
             :disabled="disabled"
             :title="entry[1].name"
+            :checked="primaryMuscleGroup === entry[0]"
             @clicked="(id) => (primaryMuscleGroup = id)"
           ></MuscleGroupInput>
         </div>
@@ -148,6 +178,7 @@ function secondaryMgChangeFromInput(id) {
             :value="entry[0]"
             :disabled="disabled"
             :title="entry[1].name"
+            :checked="primaryMuscleGroup === entry[0]"
             @clicked="(id) => (primaryMuscleGroup = id)"
           ></MuscleGroupInput>
         </div>
@@ -160,6 +191,7 @@ function secondaryMgChangeFromInput(id) {
             :value="entry[0]"
             :disabled="disabled"
             :title="entry[1].name"
+            :checked="primaryMuscleGroup === entry[0]"
             @clicked="(id) => (primaryMuscleGroup = id)"
           ></MuscleGroupInput>
         </div>
@@ -172,6 +204,7 @@ function secondaryMgChangeFromInput(id) {
             :value="entry[0]"
             :disabled="disabled"
             :title="entry[1].name"
+            :checked="primaryMuscleGroup === entry[0]"
             @clicked="(id) => (primaryMuscleGroup = id)"
           ></MuscleGroupInput>
         </div>
@@ -189,6 +222,7 @@ function secondaryMgChangeFromInput(id) {
               :value="entry[0]"
               :disabled="disabled"
               :title="entry[1].name"
+              :checked="secondaryMuscleGroups.includes(entry[0])"
               @clicked="secondaryMgChangeFromInput"
             ></MuscleGroupInput>
             <span v-else>{{ entry[1].name }}</span>
@@ -206,6 +240,7 @@ function secondaryMgChangeFromInput(id) {
               :value="entry[0]"
               :disabled="disabled"
               :title="entry[1].name"
+              :checked="secondaryMuscleGroups.includes(entry[0])"
               @clicked="secondaryMgChangeFromInput"
             ></MuscleGroupInput>
             <span v-else>{{ entry[1].name }}</span>
@@ -223,6 +258,7 @@ function secondaryMgChangeFromInput(id) {
               :value="entry[0]"
               :disabled="disabled"
               :title="entry[1].name"
+              :checked="secondaryMuscleGroups.includes(entry[0])"
               @clicked="secondaryMgChangeFromInput"
             ></MuscleGroupInput>
             <span v-else>{{ entry[1].name }}</span>
@@ -240,6 +276,7 @@ function secondaryMgChangeFromInput(id) {
               :value="entry[0]"
               :disabled="disabled"
               :title="entry[1].name"
+              :checked="secondaryMuscleGroups.includes(entry[0])"
               @clicked="secondaryMgChangeFromInput"
             ></MuscleGroupInput>
             <span v-else>{{ entry[1].name }}</span>
@@ -257,6 +294,7 @@ function secondaryMgChangeFromInput(id) {
               :value="entry[0]"
               :disabled="disabled"
               :title="entry[1].name"
+              :checked="secondaryMuscleGroups.includes(entry[0])"
               @clicked="secondaryMgChangeFromInput"
             ></MuscleGroupInput>
             <span v-else>{{ entry[1].name }}</span>
@@ -274,6 +312,7 @@ function secondaryMgChangeFromInput(id) {
               :value="entry[0]"
               :disabled="disabled"
               :title="entry[1].name"
+              :checked="secondaryMuscleGroups.includes(entry[0])"
               @clicked="secondaryMgChangeFromInput"
             ></MuscleGroupInput>
             <span v-else>{{ entry[1].name }}</span>

@@ -1,6 +1,9 @@
 <script setup>
-const props = defineProps(['type', 'value', 'disabled', 'title'])
+import { useTemplateRef, onMounted } from 'vue'
+const props = defineProps(['type', 'value', 'disabled', 'title', 'checked'])
 const emit = defineEmits(['clicked'])
+
+const inputDOM = useTemplateRef('input')
 
 function handleHover(e) {
   e.target.classList.toggle('label-hover')
@@ -17,6 +20,9 @@ function handleHover(e) {
 function handleClicked(e) {
   emit('clicked', e.target.value)
 }
+onMounted(() => {
+  inputDOM.value.checked = props.checked
+})
 </script>
 
 <template>
@@ -27,6 +33,7 @@ function handleClicked(e) {
     @mouseleave="handleHover"
   >
     <input
+      ref="input"
       :type="props.type"
       :name="(props.type === 'radio' ? 'primary' : 'secondary') + '-mg'"
       :id="props.value + (props.type === 'radio' ? '-rb' : '-cb')"
