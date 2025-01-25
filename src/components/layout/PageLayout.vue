@@ -15,33 +15,28 @@ const showLoading = computed(() => slots.loading && isLodingPage)
 </script>
 
 <template>
-  <div class="bg-white page-container">
+  <div class="page-container">
     <slot name="loading" v-if="showLoading"></slot>
-    <div class="container" v-else>
+    <template v-else>
       <div class="page-header">
         <slot name="header"></slot>
       </div>
       <div class="page-body">
         <slot name="body"></slot>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 <style scoped>
 .page-container {
   display: flex;
   flex-direction: column;
-  .container {
-    margin-block: 20px 40px;
+  gap: 40px;
+  flex: 1;
+  .page-body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 60px;
-    .page-body {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
   }
 }
 </style>

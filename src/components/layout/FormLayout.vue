@@ -36,6 +36,20 @@ const slot = useSlots()
     flex-direction: column;
     gap: 50px;
     height: 100%;
+    .form-top-section {
+      flex: 1 0px;
+    }
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  .form-container {
+    form {
+      .form-top-section {
+        overflow: auto;
+        padding-right: 20px;
+      }
+    }
   }
 }
 </style>

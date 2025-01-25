@@ -9,7 +9,7 @@ const emit = defineEmits(['denide', 'accept'])
     </div>
     <div class="messages-container">
       <p class="main-message">da li si siguran?</p>
-      <p class="second-message">nakon brisanja blog nije moguće vratiti.</p>
+      <p class="second-message">nakon brisanja podatka nije moguće vratiti.</p>
     </div>
     <div class="action-btns">
       <button type="button" @click="emit('denide')">odustani</button>

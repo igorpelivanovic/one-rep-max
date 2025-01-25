@@ -12,6 +12,12 @@ function getById(id) {
   return baseAxios.get('/posts/' + id)
 }
 
+function getPosts(params) {
+  return baseAxios.get('/posts', {
+    params,
+  })
+}
+
 function updateData(data) {
   const { id, ...formData } = data
   return authAxios.put('/posts/' + id, formData)
@@ -30,4 +36,4 @@ function removeById(id) {
   return authAxios.delete('/posts/' + id)
 }
 
-export default { add, getById, updateData, updateImage, removeById }
+export default { add, getById, updateData, updateImage, removeById, getPosts }

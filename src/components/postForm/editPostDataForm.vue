@@ -122,7 +122,7 @@ const rednerTextAreaClearBtn = computed(() => formData?.text?.length > 0)
       <div class="bottom-section">
         <div class="form-action-btns-container">
           <button :disabled="!isDirty" @click="resetForm" type="button">očisti</button>
-          <button :disabled="!isDirty" type="submit">izemni</button>
+          <button :disabled="!isDirty" type="submit">izmeni</button>
         </div>
         <AuthFormErrorMessage
           v-if="responseError"
