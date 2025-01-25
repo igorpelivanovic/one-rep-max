@@ -98,7 +98,7 @@ const changeInputValue = (val) => {
         width: 250px;
         height: 250px;
         overflow: hidden;
-        background-color: var(--gray);
+        background-color: var(--white);
         display: flex;
         align-items: center;
         .preview-img-container {

@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import { authRequired, getUserData, noAuthRequired, rolePremission } from './guards'
 import { REQUIRED_AUTH_STATUS } from './data'
 import { useLoadingRouteStore } from '@/stores/loadingRoute'
+import PreviewDashContent from '@/views/PreviewDashContent.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,16 +18,7 @@ const router = createRouter({
       name: 'about',
       component: () => import('../views/AboutView.vue'),
     },
-    {
-      path: '/addpost',
-      name: 'addPost',
-      component: () => import('../views/AddPostView.vue'),
-    },
-    {
-      path: '/editpost/:id',
-      name: 'editPost',
-      component: () => import('../views/EditPostView.vue'),
-    },
+
     // Required Auth Route
     {
       path: '',
@@ -41,12 +33,43 @@ const router = createRouter({
         },
 
         {
-          path: '/post',
-          name: 'post',
-          meta: {
-            roles: ['admin'],
-          },
-          children: [],
+          path: '/statistics',
+          name: 'stats',
+          component: () => import('../views/StatsView.vue'),
+        },
+        // Required Admin Role
+        {
+          path: '/dash',
+          component: () => import('../views/AdminDashView.vue'),
+          children: [
+            {
+              path: '',
+              component: PreviewDashContent,
+              name: 'main-dash',
+            },
+            /// EXERCIESES
+            {
+              path: 'exercises',
+              name: 'dash-exercises',
+              component: () => import('../views/MenageExercisesView.vue'),
+            },
+            /// POSTS
+            {
+              path: 'addpost',
+              name: 'addPost',
+              component: () => import('../views/AddPostView.vue'),
+            },
+            {
+              path: 'editpost/:id',
+              name: 'editPost',
+              component: () => import('../views/EditPostView.vue'),
+            },
+            {
+              path: 'posts',
+              name: 'dash-posts',
+              component: () => import('../views/MenagePostsView.vue'),
+            },
+          ],
         },
         {
           path: 'user',
@@ -61,30 +84,28 @@ const router = createRouter({
       ],
     },
     // Required NoAuth Route
+
     {
-      path: '',
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue'),
       meta: {
         auth: REQUIRED_AUTH_STATUS.get('noAuthRequired'),
       },
-      component: () => import('../layout/AuthPageLayout.vue'),
-      children: [
-        {
-          path: '/login',
-          name: 'login',
-          component: () => import('../views/LoginView.vue'),
-        },
-        {
-          path: '/register',
-          name: 'register',
-          component: () => import('../views/RegisterView.vue'),
-        },
-      ],
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/RegisterView.vue'),
+      meta: {
+        auth: REQUIRED_AUTH_STATUS.get('noAuthRequired'),
+      },
     },
     {
       path: '/notfound',
       component: () => import('../views/NotFoundView.vue'),
       name: 'notfound',
-      beforeEnter: (to, from, next) => {
+      beforeEnter: (_, from, next) => {
         if (from.matched.length === 0) next({ name: 'home' })
         next()
       },
