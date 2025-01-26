@@ -48,6 +48,7 @@ const { addSuccess, addError } = useAlertBoxStore()
 
 const submitForm = async () => {
   try {
+    console.log(formData)
     isLoading.value = true
     responseError.value = null
     await post.add(formData)

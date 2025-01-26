@@ -58,7 +58,9 @@ const removeExercise = async () => {
     renderModal.value = false
     await Exercises.removeById(deleteId.value)
     addSuccess({ content: 'uspešno obrisan blog' })
-    exercisesData.value = exercisesData.value.filter((exercise) => exercise.id !== deleteId.value)
+    const index = exercisesData.value.findIndex((exercise) => exercise.id === deleteId.value)
+    if (index < 0) return
+    exercisesData.value.splice(index, 1)
     return true
   } catch (e) {
     addError({ content: e.response.data.message })
@@ -83,7 +85,7 @@ const removeExercise = async () => {
         <div class="table-header-content">
           <h1 class="table-title">vežbe</h1>
           <div class="actions-container">
-            <RouterLink :to="{ name: '' }" class="action-link">
+            <RouterLink :to="{ name: 'addExercise' }" class="action-link">
               <span class="icon">
                 <i class="fas fa-plus"></i>
               </span>
@@ -116,7 +118,7 @@ const removeExercise = async () => {
         </div>
         <div class="empty-list-container" v-else>
           <p>još uvek nema vežbi</p>
-          <RouterLink :to="{ name: '' }" class="action-link">
+          <RouterLink :to="{ name: 'addExercise' }" class="action-link">
             <span class="icon">
               <i class="fas fa-plus"></i>
             </span>

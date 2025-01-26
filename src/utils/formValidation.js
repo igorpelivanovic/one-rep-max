@@ -95,6 +95,33 @@ function fileMaxSize(size, msg = DEFAULT_MESSAGE) {
   }
 }
 
+function include(array, msg = DEFAULT_MESSAGE) {
+  return (val) => {
+    if (!array.includes(val)) throw msg
+    return true
+  }
+}
+function boolean(msg = DEFAULT_MESSAGE) {
+  return (val) => {
+    if (typeof val != 'boolean') throw msg
+    return true
+  }
+}
+
+function url(msg = DEFAULT_MESSAGE) {
+  return (val) => {
+    try {
+      if (typeof val != 'string' || val.trim().length === 0) return true
+      return Boolean(new URL(val.trim()))
+    } catch (_) {
+      throw msg
+    }
+  }
+}
+function custom(fn) {
+  return fn
+}
+
 export {
   required,
   email,
@@ -108,4 +135,8 @@ export {
   image,
   fileExtension,
   fileMaxSize,
+  include,
+  boolean,
+  url,
+  custom,
 }

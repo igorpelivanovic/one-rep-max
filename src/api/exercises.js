@@ -14,4 +14,8 @@ function getById(id) {
   return authAxios.get('/exercises/' + id)
 }
 
-export default { getExercises, removeById, getById }
+function add(data) {
+  return authAxios.post('/exercises', data)
+}
+
+export default { getExercises, removeById, getById, add }

@@ -43,7 +43,7 @@ function useFormValidation({
 
   function validationField(key) {
     try {
-      validation[key].forEach((fn) => {
+      validation?.[key].forEach((fn) => {
         fn(values[key])
       })
       delete errorsObj[key]
@@ -62,6 +62,7 @@ function useFormValidation({
     isSubmited.value = false
     isDirty.value = false
     Object.assign(errorsObj, reactive({}))
+    errorsObj.length = 0
     console.log(errorsObj)
   }
 

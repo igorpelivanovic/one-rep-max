@@ -31,7 +31,6 @@ const router = createRouter({
           name: 'profile',
           component: () => import('../views/ProfileView.vue'),
         },
-
         {
           path: '/statistics',
           name: 'stats',
@@ -52,6 +51,11 @@ const router = createRouter({
               path: 'exercises',
               name: 'dash-exercises',
               component: () => import('../views/MenageExercisesView.vue'),
+            },
+            {
+              path: 'addexercise',
+              name: 'addExercise',
+              component: () => import('@/views/AddExerciseView.vue'),
             },
             /// POSTS
             {
