@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import { authRequired, getUserData, noAuthRequired, rolePremission } from './guards'
 import { REQUIRED_AUTH_STATUS } from './data'
 import { useLoadingRouteStore } from '@/stores/loadingRoute'
+import BlogPostView from '../views/BlogPostView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,6 +12,12 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
+    },
+    {
+      path: '/post/:id',
+      name: 'post',
+      component: BlogPostView,
+      props: true,
     },
     {
       path: '/about',
@@ -80,11 +87,12 @@ const router = createRouter({
       },
     },
     { path: '/:pathMatch(.*)*', redirect: () => ({ name: 'home' }) },
+
     {
-      path: '/post/:id',
-      name: 'post',
+      path: '/blog/:category?',
+      name: 'blog',
+      component: () => import('../views/BlogView.vue'),
       props: true,
-      component: () => import('../views/BlogPostView.vue'),
     },
   ],
 })

@@ -59,7 +59,7 @@ export default {
   <section class="promo">
     <div class="text-container">
       <h2 class="text">Pridruži nam se i stekni pristup personalizovanim trening planovima</h2>
-      <RouterLink to="/register" class="register-button">REGISTRUJ SE</RouterLink>
+      <RouterLink :to="{ name: 'register' }" class="register-button">REGISTRUJ SE</RouterLink>
     </div>
     <div class="image-container">
       <img src="@/assets/kartica.png" />

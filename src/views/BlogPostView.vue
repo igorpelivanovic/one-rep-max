@@ -10,6 +10,7 @@ export default {
   data() {
     return {
       post: null,
+      loading: true,
     }
   },
   mounted() {
