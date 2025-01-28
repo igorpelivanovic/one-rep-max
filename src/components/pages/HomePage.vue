@@ -22,6 +22,7 @@ export default {
   },
   mounted() {
     this.fetchPosts()
+    console.log(this.$route)
   },
   methods: {
     async fetchPosts() {

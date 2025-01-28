@@ -2,10 +2,10 @@
 export default {
   name: 'BlogPostView',
   props: {
-    id: {
-      type: String,
-      required: true,
-    },
+    // id: {
+    //   // type: String,
+    //   required: true,
+    // },
   },
   data() {
     return {
@@ -14,7 +14,7 @@ export default {
     }
   },
   mounted() {
-    this.fetchPost()
+    // this.fetchPost()
   },
   methods: {
     async fetchPost() {

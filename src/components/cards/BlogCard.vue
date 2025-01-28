@@ -9,11 +9,15 @@ export default {
       required: true,
     },
   },
-  mounted() {},
+  mounted() {
+    console.log(this.post)
+    this.$router.push({ name: 'post', params: { id: this.post.id } })
+  },
 }
 </script>
 
 <template>
+  {{ props }}
   <div class="blog-card">
     <img :src="post.image" alt="Blog Image" class="blog-card-img" />
     <div class="blog-card-content">

@@ -59,24 +59,22 @@ const router = createRouter({
     },
     // Required NoAuth Route
     {
-      path: '',
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue'),
       meta: {
         auth: REQUIRED_AUTH_STATUS.get('noAuthRequired'),
       },
-      component: () => import('../layout/AuthPageLayout.vue'),
-      children: [
-        {
-          path: '/login',
-          name: 'login',
-          component: () => import('../views/LoginView.vue'),
-        },
-        {
-          path: '/register',
-          name: 'register',
-          component: () => import('../views/RegisterView.vue'),
-        },
-      ],
     },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/RegisterView.vue'),
+      meta: {
+        auth: REQUIRED_AUTH_STATUS.get('noAuthRequired'),
+      },
+    },
+
     {
       path: '/notfound',
       component: () => import('../views/NotFoundView.vue'),
