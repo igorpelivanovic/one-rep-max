@@ -137,7 +137,7 @@ useClickOutside(elementRef, hideOptionsContainer)
   left: 0;
   right: 4px;
   top: calc(100% + 5px);
-  background-color: var(--gray);
+  background-color: var(--white);
   border-end-start-radius: 10px;
   border-end-end-radius: 10px;
   max-height: 250px;

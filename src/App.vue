@@ -15,9 +15,7 @@ const { isLoading } = toRefs(useLoadingRouteStore())
   <template v-if="isLoading">
     <SpinnerContainer />
   </template>
-  <template v-else>
-    <RouterView />
-  </template>
+  <RouterView />
 </template>
 
 <style scoped></style>
