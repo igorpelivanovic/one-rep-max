@@ -1,43 +1,44 @@
 <script>
+import { defineComponent, ref, computed, onMounted } from 'vue'
 import axios from 'axios'
-
 import BlogCard from '../cards/BlogCard.vue'
 
-export default {
+export default defineComponent({
   name: 'HomePage',
   components: {
     BlogCard,
   },
-  data() {
-    return {
-      posts: [],
-      limit: 4,
-      offset: 0,
-    }
-  },
-  computed: {
-    recentPosts() {
-      return this.posts.slice(0, this.limit)
-    },
-  },
-  mounted() {
-    this.fetchPosts()
-    console.log(this.$route)
-  },
-  methods: {
-    async fetchPosts() {
+  setup() {
+    const posts = ref([])
+    const limit = ref(4)
+    const offset = ref(0)
+
+    const recentPosts = computed(() => posts.value.slice(0, limit.value))
+
+    onMounted(() => {
+      fetchPosts()
+    })
+
+    const fetchPosts = async () => {
       try {
         const response = await axios.get(
-          `http://482n123.e2.mars-hosting.com/posts?limit=${this.limit}&offset=${this.offset}`,
+          `http://482n123.e2.mars-hosting.com/posts?limit=${limit.value}&offset=${offset.value}`,
         )
-        this.posts = response.data.data.posts
+        posts.value = response.data.data.posts
         console.log(response.data.data.posts)
       } catch (error) {
         console.error('Failed to fetch posts:', error)
       }
-    },
+    }
+
+    return {
+      posts,
+      limit,
+      offset,
+      recentPosts,
+    }
   },
-}
+})
 </script>
 
 <template>
@@ -50,13 +51,15 @@ export default {
       <p class="hero-description">Sve što ti je potrebno da postaneš bolja verzija sebe</p>
     </div>
   </section>
+
   <section class="blog-cards">
     <h2 class="section-title">DNEVNIK</h2>
     <p class="section-subtitle">Budite u toku</p>
     <div class="blog-cards-container">
-      <BlogCard v-for="post in posts" :key="post.pst_id" :post="post" />
+      <BlogCard v-for="post in recentPosts" :key="post.pst_id" :post="post" />
     </div>
   </section>
+
   <section class="promo">
     <div class="text-container">
       <h2 class="text">Pridruži nam se i stekni pristup personalizovanim trening planovima</h2>

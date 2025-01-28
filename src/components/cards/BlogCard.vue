@@ -1,7 +1,8 @@
 <script>
-import { RouterLink } from 'vue-router'
+import { defineComponent, onMounted, toRefs } from 'vue'
+import { useRouter } from 'vue-router'
 
-export default {
+export default defineComponent({
   name: 'BlogCard',
   props: {
     post: {
@@ -9,23 +10,31 @@ export default {
       required: true,
     },
   },
-  mounted() {
-    console.log(this.post)
-    this.$router.push({ name: 'post', params: { id: this.post.id } })
+  setup(props) {
+    const { post } = toRefs(props)
+    const router = useRouter()
+
+    onMounted(() => {
+      console.log(post.value)
+      router.push({ name: 'post', params: { id: post.value.id } })
+    })
+
+    return {
+      post,
+    }
   },
-}
+})
 </script>
 
 <template>
-  {{ props }}
   <div class="blog-card">
     <img :src="post.image" alt="Blog Image" class="blog-card-img" />
     <div class="blog-card-content">
       <!-- <p class="blog-card-category">{{ post.category_name }}</p> -->
       <h3 class="blog-card-title">{{ post.title }}</h3>
-      <RouterLink :to="{ name: 'post', params: { id: post.id } }" class="read-more"
-        >Pročitaj više</RouterLink
-      >
+      <RouterLink :to="{ name: 'post', params: { id: post.id } }" class="read-more">
+        Pročitaj više
+      </RouterLink>
     </div>
   </div>
 </template>
@@ -59,7 +68,6 @@ export default {
 
 .blog-card-content {
   flex-grow: 1;
-
   padding: 20px;
   color: white;
   display: flex;
@@ -80,7 +88,6 @@ export default {
 .read-more {
   display: inline-block;
   margin-top: auto;
-
   color: #f2f2f2;
   text-decoration: none;
 }
