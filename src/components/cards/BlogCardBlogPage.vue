@@ -7,9 +7,9 @@ defineProps(['post'])
     <div class="blog-card">
       <img :src="post.image" alt="Blog Image" class="blog-card-img" />
       <div class="blog-card-content">
-        <!-- <p class="blog-card-category">{{ post.category_name }}</p> -->
+        <p class="blog-type">{{ post.category_name }}</p>
         <h3 class="blog-card-title">{{ post.title }}</h3>
-        Pročitaj više
+        <span class="read-more">Pročitaj više</span>
       </div>
     </div>
   </router-link>
@@ -18,18 +18,21 @@ defineProps(['post'])
 <style scoped>
 a {
   text-decoration: none;
+  color: white;
 }
 .blog-card {
   display: flex;
-  flex-direction: column;
-  width: 300px;
-  height: 400px;
-  border-radius: 25px;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
   overflow: hidden;
   background: linear-gradient(136.83deg, #033479 17%, #212023 100%);
+  padding: 15px;
   transition:
     transform 0.2s,
     box-shadow 0.3s ease;
+  margin-bottom: 20px;
 }
 
 .blog-card:hover {
@@ -38,37 +41,27 @@ a {
 }
 
 .blog-card-img {
-  padding: 20px;
-  width: 100%;
-  height: 200px;
-  border-radius: 25px;
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
   object-fit: cover;
+  margin-right: 15px;
 }
 
 .blog-card-content {
-  flex-grow: 1;
-
-  padding: 20px;
-  color: white;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  flex-grow: 1;
 }
 
 .blog-card-title {
-  font-size: 1.3rem;
-  margin-bottom: 15px;
-}
-
-.blog-card-excerpt {
-  font-size: 1rem;
-  margin-bottom: 15px;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  color: white;
 }
 
 .read-more {
-  display: inline-block;
-  margin-top: auto;
-
   color: #f2f2f2;
   text-decoration: none;
 }

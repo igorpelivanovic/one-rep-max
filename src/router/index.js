@@ -4,6 +4,8 @@ import { authRequired, getUserData, noAuthRequired, rolePremission } from './gua
 import { REQUIRED_AUTH_STATUS } from './data'
 import { useLoadingRouteStore } from '@/stores/loadingRoute'
 import PreviewDashContent from '@/views/PreviewDashContent.vue'
+import BlogView from '@/views/BlogView.vue'
+import BlogPostView from '@/views/BlogPostView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,6 +14,18 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
+    },
+    {
+      path: '/blog',
+      name: 'BlogView',
+      component: BlogView,
+      props: true,
+    },
+    {
+      path: '/blog/:id',
+      name: 'BlogPostView',
+      component: BlogPostView,
+      props: true,
     },
     {
       path: '/about',

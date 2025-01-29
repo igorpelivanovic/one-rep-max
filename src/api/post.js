@@ -18,6 +18,10 @@ function getPosts(params) {
   })
 }
 
+function getPostsByCategory(categoryName, params) {
+  return baseAxios.get('/posts/category/' + categoryName, { params })
+}
+
 function updateData(data) {
   const { id, ...formData } = data
   return authAxios.put('/posts/' + id, formData)
@@ -36,4 +40,4 @@ function removeById(id) {
   return authAxios.delete('/posts/' + id)
 }
 
-export default { add, getById, updateData, updateImage, removeById, getPosts }
+export default { add, getById, updateData, updateImage, removeById, getPosts, getPostsByCategory }
