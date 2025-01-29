@@ -47,7 +47,6 @@ a {
 
 .blog-card-content {
   flex-grow: 1;
-
   padding: 20px;
   color: white;
   display: flex;
@@ -68,7 +67,6 @@ a {
 .read-more {
   display: inline-block;
   margin-top: auto;
-
   color: #f2f2f2;
   text-decoration: none;
 }

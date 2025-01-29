@@ -115,6 +115,7 @@ const router = createRouter({
         auth: REQUIRED_AUTH_STATUS.get('noAuthRequired'),
       },
     },
+
     {
       path: '/notfound',
       component: () => import('../views/NotFoundView.vue'),
@@ -125,6 +126,13 @@ const router = createRouter({
       },
     },
     { path: '/:pathMatch(.*)*', redirect: () => ({ name: 'home' }) },
+
+    {
+      path: '/blog/:category?',
+      name: 'blog',
+      component: () => import('../views/BlogView.vue'),
+      props: true,
+    },
   ],
 })
 

@@ -20,5 +20,27 @@ async function fetchPosts() {
 </script>
 
 <template>
-  <div class="">{{ post }}</div>
+  <div class="blog-post">
+    <p class="blog-type">{{ post.category_name }}</p>
+    <h1>{{ post.title }}</h1>
+    <img :src="post.image" class="blog-image" />
+    <!-- <p v-if="post.content">{{ post.content }}</p>
+    <p v-else>Loading post...</p> -->
+  </div>
 </template>
+
+<style scoped>
+.blog-post {
+  padding: 20px;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+</style>
