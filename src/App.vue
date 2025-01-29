@@ -10,7 +10,6 @@ const { isLoading } = toRefs(useLoadingRouteStore())
 </script>
 
 <template>
-  <HomeView />
   <AlertsLayout />
   <template v-if="isLoading">
     <SpinnerContainer />
