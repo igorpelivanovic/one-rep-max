@@ -18,4 +18,12 @@ defineProps(['workoutData'])
   background-color: var(--gray);
   border-radius: 2rem;
 }
+
+h3 {
+  margin-bottom: 1rem;
+}
+
+p {
+  color: #000000c0;
+}
 </style>

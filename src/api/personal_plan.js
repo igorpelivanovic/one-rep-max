@@ -7,4 +7,12 @@ export default {
   getWeeklyPlan: (params) => planAxios.get('/weekly_plan', { params }),
   checkActiveWeek: (params) => planAxios.patch('/weekly_plan', params),
   getWorkout: (params) => planAxios.get('/workout', { params }),
+  swapExerciseRequest: (params) => planAxios.get('/workout/swap_exercise', { params }),
+  swapExercise: (params) => planAxios.put('workout/swap_exercise', params),
+  getExerciseInWorkout: (params) => planAxios.get('workout/exercise', { params }),
+  getUserPlanParams: () => planAxios.get('/user_plan_params'),
+  changeUserPlanParams: (params) => planAxios.put('/user_plan_params', params),
+  getUserOrmParams: () => planAxios.get('/user_orm_params'),
+  setUserOrmParams: (params) => planAxios.post('/user_orm_params', params),
+  deactivateUserOrmParams: () => planAxios.patch('/user_orm_params'),
 }

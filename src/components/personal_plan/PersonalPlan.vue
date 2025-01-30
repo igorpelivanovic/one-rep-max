@@ -1,9 +1,9 @@
 <script setup>
 import { ref, computed, onBeforeMount } from 'vue'
 import { usePlanStore } from '@/stores/personal_plan'
-import PlanForm from '../personal_plan/PlanForm.vue'
+import PlanForm from './form/PlanForm.vue'
 import DeactivatePlanButton from './DeactivatePlanButton.vue'
-import WorkoutInWeeklyPlan from './WorkoutInWeeklyPlan.vue'
+import ActivePlan from './ActivePlan.vue'
 import SpinnerContainer from '../spinner/SpinnerContainer.vue'
 
 let loading = ref(true)
@@ -24,24 +24,9 @@ const deactivate = computed(() => {
   }
   return false
 })
-const weeklyPlan = ref(null)
-const workouts = ref([])
 
-async function getActivePlan() {
-  try {
-    await planStore.getPlanData()
-    if (finished.value) {
-      return
-    }
-    const res1 = await planStore.checkActiveWeek(planStore.planData.id)
-    const res2 = await planStore.getActiveWeeklyPlan(res1.data.data.id)
-    weeklyPlan.value = res2.data.data
-    workouts.value = res2.data.data.workouts
-  } catch (e) {
-    if (e.status === 404 || e.status === 401) {
-      exists.value = false
-    }
-  }
+function getActivePlan() {
+  console.log('getactiveplan')
 }
 
 async function handlePlanReset() {
@@ -57,28 +42,30 @@ async function handlePlanReset() {
   }
 }
 
+async function handlePlanCreated() {
+  loading.value = true
+}
+
 onBeforeMount(async () => {
-  await getActivePlan()
-  loading.value = false
+  try {
+    await planStore.getPlanData()
+    loading.value = false
+  } catch (e) {
+    if (e.status === 404) {
+      loading.value = false
+    }
+  }
 })
 </script>
 
 <template>
   <SpinnerContainer v-if="loading"></SpinnerContainer>
   <div class="personal-plan-wrapper" v-else>
-    <div class="weekly-plan-wrapper" v-if="exists && !finished">
-      <div class="title">
-        <h2>Plan vežbanja</h2>
-        <DeactivatePlanButton v-if="deactivate"></DeactivatePlanButton>
-      </div>
-      <div class="workouts">
-        <WorkoutInWeeklyPlan
-          v-for="wko in workouts"
-          :key="wko.id"
-          :workout-data="wko"
-        ></WorkoutInWeeklyPlan>
-      </div>
-    </div>
+    <ActivePlan
+      v-if="exists && !finished"
+      :deactivate
+      @loading-done="(value) => (loading = value)"
+    ></ActivePlan>
     <div class="finished-plan-wrapper" v-else-if="finished">
       <h2>Čestitamo ti na uspešno završenom planu treninga!</h2>
       <span
@@ -93,24 +80,11 @@ onBeforeMount(async () => {
         <DeactivatePlanButton></DeactivatePlanButton>
       </div>
     </div>
-    <PlanForm v-else></PlanForm>
+    <PlanForm v-else @plan-created="handlePlanCreated"></PlanForm>
   </div>
 </template>
 
 <style scoped>
-.weekly-plan-wrapper .title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.weekly-plan-wrapper .workouts {
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-}
-
 .finished-plan-wrapper {
   display: flex;
   flex-direction: column;
@@ -129,26 +103,6 @@ onBeforeMount(async () => {
   gap: 2rem;
   margin-top: 2rem;
 }
-
-@media screen and (min-width: 601px) {
-  .weekly-plan-wrapper .workouts {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .weekly-plan-wrapper .workouts:has(> :last-child:nth-child(4)) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media screen and (min-width: 1024px) {
-  .weekly-plan-wrapper .workouts:has(> :last-child:nth-child(4)) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .weekly-plan-wrapper .workouts:has(> :last-child:nth-child(5)) {
-    grid-template-columns: repeat(5, 1fr);
-  }
-}
 </style>
 
 <style>
@@ -159,6 +113,11 @@ button {
   border: none;
   border-radius: 1rem;
   padding: 0.7rem;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #0b5ad080;
 }
 
 a,
