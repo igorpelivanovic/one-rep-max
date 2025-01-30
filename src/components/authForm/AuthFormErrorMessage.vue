@@ -19,13 +19,15 @@ const { message, customClass } = defineProps({
 
 <style scoped>
 p.error-message {
+  cursor: text;
   width: 100%;
   display: flex;
   color: var(--red);
   margin: 0;
   position: absolute;
   top: 100%;
-  left: 15px;
+  left: 0;
+  padding-left: 15px;
   font-size: 0.8rem;
   margin-top: 4px;
   span.error-content {

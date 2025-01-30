@@ -11,7 +11,7 @@ const { labelId, error, modelValue, title, inputType } = defineProps({
   },
   modelValue: {
     type: [String, Number],
-    default: '',
+    required: true,
   },
   error: {
     type: [String, undefined],
