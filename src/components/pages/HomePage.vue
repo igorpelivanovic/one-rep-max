@@ -43,20 +43,28 @@ export default defineComponent({
 
 <template>
   <section class="hero">
-    <div class="hero-image-container">
-      <img src="@/assets/hero.jpg" class="hero-image" />
-    </div>
-    <div class="hero-content">
-      <h1 class="hero-title">POČNI DANAS</h1>
-      <p class="hero-description">Sve što ti je potrebno da postaneš bolja verzija sebe</p>
-    </div>
+    <RouterLink v-if="recentPosts.length > 0" :to="'/blog/' + recentPosts[0].id">
+      <div class="hero-image-container">
+        <img
+          v-if="recentPosts.length > 0"
+          :src="recentPosts[0].image"
+          class="hero-image"
+          alt="Hero Image"
+        />
+      </div>
+      <div class="hero-content">
+        <h1 class="hero-title">POČNI DANAS</h1>
+        <p class="hero-description">Sve što ti je potrebno da postaneš bolja verzija sebe</p>
+      </div>
+    </RouterLink>
   </section>
 
   <section class="blog-cards">
     <h2 class="section-title">DNEVNIK</h2>
     <p class="section-subtitle">Budite u toku</p>
     <div class="blog-cards-container">
-      <BlogCard v-for="post in recentPosts" :key="post.pst_id" :post="post" />
+      <!-- Display other posts as cards -->
+      <BlogCard v-for="(post, index) in recentPosts.slice(1)" :key="post.pst_id" :post="post" />
     </div>
   </section>
 

@@ -26,12 +26,16 @@ async function fetchPosts() {
     <img :src="post.image" class="blog-image" />
     <!-- <p v-if="post.content">{{ post.content }}</p>
     <p v-else>Loading post...</p> -->
+    <p class="blog-text">{{ post.text }}</p>
   </div>
 </template>
 
 <style scoped>
 .blog-post {
+  display: flex;
+  flex-direction: column;
   padding: 20px;
+  text-align: center;
 }
 
 h1 {
@@ -42,5 +46,17 @@ h1 {
 p {
   font-size: 1rem;
   line-height: 1.6;
+}
+.post-title {
+  text-align: center;
+}
+
+.blog-image {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 2rem;
+}
+
+.blog-text {
 }
 </style>

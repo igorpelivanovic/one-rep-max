@@ -23,9 +23,9 @@ a {
 .blog-card {
   display: flex;
   flex-direction: row;
-  width: 100%;
-  height: auto;
-  border-radius: 12px;
+  max-width: 300px;
+  height: 250px;
+  border-radius: 25px;
   overflow: hidden;
   background: linear-gradient(136.83deg, #033479 17%, #212023 100%);
   padding: 15px;
@@ -33,6 +33,8 @@ a {
     transform 0.2s,
     box-shadow 0.3s ease;
   margin-bottom: 20px;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .blog-card:hover {
@@ -43,7 +45,7 @@ a {
 .blog-card-img {
   width: 120px;
   height: 120px;
-  border-radius: 12px;
+  border-radius: 25px;
   object-fit: cover;
   margin-right: 15px;
 }
@@ -64,6 +66,10 @@ a {
 .read-more {
   color: #f2f2f2;
   text-decoration: none;
+}
+
+.blog-type {
+  color: #f2f2f2;
 }
 
 .read-more:hover {

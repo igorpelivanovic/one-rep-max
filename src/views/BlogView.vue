@@ -63,7 +63,7 @@ onMounted(() => {
 
 <template>
   <div class="blog-view">
-    <h2>All Blog Posts</h2>
+    <h2>BLOGOVI</h2>
 
     <p v-if="error" class="error">{{ error }}</p>
 
@@ -91,7 +91,7 @@ onMounted(() => {
     </div>
 
     <div v-if="canLoadMore" class="load-more">
-      <button @click="callApi">Load More</button>
+      <button @click="callApi">LOAD MORE</button>
     </div>
   </div>
 </template>
@@ -133,10 +133,12 @@ h2 {
 .load-more button {
   padding: 10px 20px;
   font-size: 1rem;
-  background-color: #033479;
+  font-family: DexaPro;
+  font-weight: 700;
+  background-color: #0b5ad0;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 25px;
   cursor: pointer;
 }
 
