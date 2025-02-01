@@ -18,7 +18,7 @@ const { plans, users } = defineProps({
 })
 
 const statusApp = computed(() => {
-  return (plans / users) * 100
+  return parseFloat(((plans / users) * 100).toFixed(2))
 })
 
 const statusStyleClass = computed(() => {
@@ -36,7 +36,7 @@ const statusMessage = computed(() => {
 })
 
 const fullName = computed(() => {
-  const { usr_name, usr_fullname } = getUser.value
+  const { usr_name, usr_fullname } = getUser
   return `${usr_name} ${usr_fullname}`
 })
 </script>

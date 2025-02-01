@@ -17,7 +17,14 @@ const router = useRouter()
 </script>
 
 <template>
-  <RouterLink to="test">
+  <RouterLink
+    :to="{
+      name: 'BlogPostView',
+      params: {
+        id: post.id,
+      },
+    }"
+  >
     <div class="post-container preview-content" :class="customClass">
       <div class="img-container">
         <div class="img-wrapper">
