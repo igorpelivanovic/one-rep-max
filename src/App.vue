@@ -4,7 +4,7 @@ import { useLoadingRouteStore } from './stores/loadingRoute'
 import { toRefs } from 'vue'
 import AlertsLayout from './components/alerts/AlertLayout.vue'
 import SpinnerContainer from './components/spinner/SpinnerContainer.vue'
-
+;``
 const { isLoading } = toRefs(useLoadingRouteStore())
 </script>
 
