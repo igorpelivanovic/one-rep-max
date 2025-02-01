@@ -5,133 +5,155 @@ import { REQUIRED_AUTH_STATUS } from './data'
 import { useLoadingRouteStore } from '@/stores/loadingRoute'
 import BlogView from '@/views/BlogView.vue'
 import BlogPostView from '@/views/BlogPostView.vue'
+import NavLayout from '@/layout/NavLayout.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
-    },
-    {
-      path: '/blog',
-      name: 'BlogView',
-      component: BlogView,
-      props: true,
-    },
-    {
-      path: '/blog/:id',
-      name: 'BlogPostView',
-      component: BlogPostView,
-      props: true,
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue'),
-    },
-
-    // Required Auth Route
-    {
-      path: '',
-      meta: {
-        auth: REQUIRED_AUTH_STATUS.get('authRequired'),
-      },
+      component: NavLayout,
       children: [
         {
-          path: '/profile',
-          name: 'profile',
-          component: () => import('../views/ProfileView.vue'),
+          path: '',
+          name: 'home',
+          component: HomeView,
         },
         {
-          path: '/dash',
-          component: () => import('@/views/DashRootView.vue'),
+          path: '/blog',
+          name: 'BlogView',
+          component: BlogView,
+          props: true,
+        },
+        {
+          path: '/blog/:id',
+          name: 'BlogPostView',
+          component: BlogPostView,
+          props: true,
+        },
+        {
+          path: '/blog/:category?',
+          name: 'blog',
+          component: () => import('../views/BlogView.vue'),
+          props: true,
+        },
+        {
+          path: '/about',
+          name: 'about',
+          component: () => import('../views/AboutView.vue'),
+        },
+
+        // Required Auth Route
+        {
+          path: '',
+          meta: {
+            auth: REQUIRED_AUTH_STATUS.get('authRequired'),
+          },
           children: [
             {
-              path: '',
-              component: () => import('@/views/DashView.vue'),
-              name: 'main-dash',
+              path: '/profile',
+              name: 'profile',
+              component: () => import('../views/ProfileView.vue'),
             },
-            /// STATS
             {
-              path: 'stats',
-              component: () => import('@/views/StatsRootView.vue'),
-              name: 'stats',
-            },
-            /// Reguired Admin role
-            {
-              path: '',
-              meta: {
-                roles: ['admin'],
-              },
+              path: '/dash',
+              component: () => import('@/views/DashRootView.vue'),
               children: [
                 {
-                  path: 'exercises',
-                  children: [
-                    {
-                      path: '',
-                      name: 'dash-exercises',
-                      component: () => import('../views/AdminDash/MenageExercisesView.vue'),
-                    },
-                    {
-                      path: 'add',
-                      name: 'addExercise',
-                      component: () => import('@/views/AdminDash/AddExerciseView.vue'),
-                    },
-                    {
-                      path: ':id',
-                      name: 'preview-exercise',
-                      component: () => import('@/views/AdminDash/PreviewExerciseView.vue'),
-                    },
-                    {
-                      path: 'edit/:id',
-                      name: 'editExercise',
-                      component: () => import('../views/AdminDash/EditExercisesView.vue'),
-                    },
-                  ],
+                  path: '',
+                  component: () => import('@/views/DashView.vue'),
+                  name: 'main-dash',
                 },
-
-                /// POSTS
+                /// STATS
                 {
-                  path: 'posts',
+                  path: 'stats',
+                  component: () => import('@/views/StatsRootView.vue'),
+                  name: 'stats',
+                },
+                /// Reguired Admin role
+                {
+                  path: '',
+                  meta: {
+                    roles: ['admin'],
+                  },
                   children: [
                     {
-                      path: '',
-                      name: 'dash-posts',
-                      component: () => import('../views/AdminDash/MenagePostsView.vue'),
+                      path: 'exercises',
+                      children: [
+                        {
+                          path: '',
+                          name: 'dash-exercises',
+                          component: () => import('../views/AdminDash/MenageExercisesView.vue'),
+                        },
+                        {
+                          path: 'add',
+                          name: 'addExercise',
+                          component: () => import('@/views/AdminDash/AddExerciseView.vue'),
+                        },
+                        {
+                          path: ':id',
+                          name: 'preview-exercise',
+                          component: () => import('@/views/AdminDash/PreviewExerciseView.vue'),
+                        },
+                        {
+                          path: 'edit/:id',
+                          name: 'editExercise',
+                          component: () => import('../views/AdminDash/EditExercisesView.vue'),
+                        },
+                      ],
                     },
+
+                    /// POSTS
                     {
-                      path: 'add',
-                      name: 'addPost',
-                      component: () => import('../views/AdminDash/AddPostView.vue'),
-                    },
-                    {
-                      path: 'editpost/:id',
-                      name: 'editPost',
-                      component: () => import('../views/AdminDash/EditPostView.vue'),
+                      path: 'posts',
+                      children: [
+                        {
+                          path: '',
+                          name: 'dash-posts',
+                          component: () => import('../views/AdminDash/MenagePostsView.vue'),
+                        },
+                        {
+                          path: 'add',
+                          name: 'addPost',
+                          component: () => import('../views/AdminDash/AddPostView.vue'),
+                        },
+                        {
+                          path: 'editpost/:id',
+                          name: 'editPost',
+                          component: () => import('../views/AdminDash/EditPostView.vue'),
+                        },
+                      ],
                     },
                   ],
                 },
+                /// EXERCIESES
               ],
             },
-            /// EXERCIESES
+            {
+              path: 'user',
+              name: 'user',
+              component: () => import('../views/UserProfileView.vue'),
+            },
+            {
+              path: 'workout/:id',
+              name: 'workout',
+              component: () => import('../views/WorkoutView.vue'),
+            },
           ],
         },
+        // Required NoAuth Route
+
         {
-          path: 'user',
-          name: 'user',
-          component: () => import('../views/UserProfileView.vue'),
-        },
-        {
-          path: 'workout/:id',
-          name: 'workout',
-          component: () => import('../views/WorkoutView.vue'),
+          path: '/notfound',
+          component: () => import('../views/NotFoundView.vue'),
+          name: 'notfound',
+          beforeEnter: (_, from, next) => {
+            if (from.matched.length === 0) next({ name: 'home' })
+            next()
+          },
         },
       ],
     },
-    // Required NoAuth Route
-
     {
       path: '/login',
       name: 'login',
@@ -148,24 +170,7 @@ const router = createRouter({
         auth: REQUIRED_AUTH_STATUS.get('noAuthRequired'),
       },
     },
-
-    {
-      path: '/notfound',
-      component: () => import('../views/NotFoundView.vue'),
-      name: 'notfound',
-      beforeEnter: (_, from, next) => {
-        if (from.matched.length === 0) next({ name: 'home' })
-        next()
-      },
-    },
     { path: '/:pathMatch(.*)*', redirect: () => ({ name: 'home' }) },
-
-    {
-      path: '/blog/:category?',
-      name: 'blog',
-      component: () => import('../views/BlogView.vue'),
-      props: true,
-    },
   ],
 })
 

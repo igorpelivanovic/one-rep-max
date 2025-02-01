@@ -16,6 +16,48 @@
 body:has(.body-disable-scroll) {
   overflow: hidden;
 }
+
+nav {
+  .auth-container {
+    .nav-bar-link {
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--blue-600);
+      font-weight: 400;
+      color: var(--gray);
+      font-size: 0.95rem;
+      padding-inline: 15px;
+      padding-block: 3px;
+      border-radius: 5px;
+      transition: 0.2s;
+      &:hover {
+        background-color: var(--blue-500);
+        color: var(--gray);
+      }
+      &.secondary {
+        background-color: var(--gray);
+        color: var(--blue);
+        &:hover {
+          background-color: var(--blue-500);
+          color: var(--gray);
+        }
+      }
+      text-decoration: none;
+      span {
+        &.title {
+          display: none;
+          &::first-letter {
+            text-transform: capitalize;
+          }
+        }
+      }
+    }
+  }
+}
+
 .tooltip-container {
   position: absolute;
   top: 0;
@@ -467,6 +509,16 @@ main {
 }
 
 @media screen and (min-width: 481px) {
+  nav {
+    .auth-container {
+      .nav-bar-link {
+        font-size: 1rem;
+        span.title {
+          display: block;
+        }
+      }
+    }
+  }
   .dash-wrapper {
     .table-wrapper {
       .preview-content {
@@ -514,12 +566,18 @@ main {
       }
     }
   }
+  .auth-page-wrapper {
+    .spinner-container.spinner {
+      position: absolute;
+    }
+  }
 }
 
 @media screen and (min-width: 601px) {
   .container {
     max-width: 590px;
   }
+
   .post-form {
     .bottom-section {
       align-items: flex-end;

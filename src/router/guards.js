@@ -23,8 +23,8 @@ function authRequired(to) {
 
 function rolePremission(to) {
   const { meta } = to
-  const { getUser } = useAuthUserStore()
-  if (meta.roles && getUser.role && !meta.roles.includes(getUser.role)) throw { name: 'profile' }
+  const { role } = useAuthUserStore()
+  if (meta.roles && role && !meta.roles.includes(role)) throw { name: 'profile' }
   return
 }
 

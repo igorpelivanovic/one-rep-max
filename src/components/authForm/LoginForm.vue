@@ -70,5 +70,5 @@ async function submitFormHandler() {
       :message="responseError"
     ></AuthFormErrorMessage>
   </form>
-  <SpinnerContainer v-if="loading"></SpinnerContainer>
+  <SpinnerContainer class="spinner" v-if="loading"></SpinnerContainer>
 </template>

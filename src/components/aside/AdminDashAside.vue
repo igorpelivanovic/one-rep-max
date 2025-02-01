@@ -18,7 +18,6 @@ const containerRef = useTemplateRef('container')
 const btnRef = useTemplateRef('btn')
 
 watch(hideMenu, (newValue) => {
-  console.log('check')
   setValue(newValue)
 })
 useClickOutside(containerRef, () => {
@@ -26,10 +25,6 @@ useClickOutside(containerRef, () => {
     mobileHide.value = true
   }
 }, [btnRef])
-
-const test = (e) => {
-  console.log(e.target.closest('a').getBoundingClientRect())
-}
 </script>
 
 <template>

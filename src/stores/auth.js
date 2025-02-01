@@ -5,9 +5,9 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
 const useAuthUserStore = defineStore('auth', () => {
-  let user = ref(null)
+  const user = ref(null)
 
-  const getUser = computed(() => user.value)
+  const getUser = computed(() => user)
 
   const login = async (data) => {
     const response = await auth.login(data)
@@ -21,7 +21,9 @@ const useAuthUserStore = defineStore('auth', () => {
   const logout = async () => {
     await auth.logout()
     authToken.removeAuthToken()
+    user.value = null
     router.replace({ name: 'login' })
+
     return true
   }
 
@@ -34,17 +36,15 @@ const useAuthUserStore = defineStore('auth', () => {
     return true
   }
 
-  const isLogged = () => authToken.getAuthToken() && !!user.value
-
   const register = async (data) => {
     await auth.register(data)
     router.replace({ name: 'login' })
     return true
   }
 
-  const role = computed(() => getUser.value?.role || null)
+  const role = computed(() => user.value?.role || null)
 
-  return { getUser, login, logout, me, isLogged, register, role }
+  return { getUser, login, logout, me, register, role, user }
 })
 
 export { useAuthUserStore }

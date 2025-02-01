@@ -25,7 +25,6 @@ const onSubmit = async (data, resetForm) => {
     const response = await exercises.add(formatData)
     addSuccess({ content: 'uspešno dodat post' })
     router.push({ name: 'preview-exercise', params: { id: response.data.data.id } })
-    //resetForm()
     return true
   } catch (e) {
     errorMsg.value = e?.response?.data?.message || 'something wrong'

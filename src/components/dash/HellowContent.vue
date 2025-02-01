@@ -36,7 +36,7 @@ const statusMessage = computed(() => {
 })
 
 const fullName = computed(() => {
-  const { usr_name, usr_fullname } = getUser
+  const { usr_name, usr_fullname } = getUser.value
   return `${usr_name} ${usr_fullname}`
 })
 </script>
