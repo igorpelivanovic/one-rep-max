@@ -65,6 +65,7 @@ const fullName = computed(() => {
 .hellow-content {
   position: relative;
   gap: 40px;
+  order: 1;
 }
 h2 {
   text-transform: none;

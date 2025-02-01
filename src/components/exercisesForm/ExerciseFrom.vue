@@ -22,6 +22,9 @@ import { computed } from 'vue'
 import TextAreaTemplate from '../postForm/postFormInputs/TextAreaTemplate.vue'
 import RadioField from '@/components/form/RadioField.vue'
 import ExerciseMuscleSelectorField from './ExerciseMuscleSelectorField.vue'
+import { ref } from 'vue'
+import { useTemplateRef } from 'vue'
+import { onMounted } from 'vue'
 
 const emit = defineEmits(['submitForm'])
 
@@ -41,20 +44,26 @@ const initalFormData = {
   seconderyGroups: [],
 }
 
-const { data, errorMsg } = defineProps({
+const { data, errorMsg, titleBtn } = defineProps({
   data: {
     type: Object,
   },
   errorMsg: {
     type: String,
   },
+  titleBtn: {
+    type: String,
+    default: 'kreiraj',
+  },
 })
 
-const formData = reactive(data || initalFormData)
+const formDataInit = data || initalFormData
+
+const formData = reactive({ ...formDataInit })
 
 const resetForm = () => {
   reset()
-  Object.assign(formData, { ...initalFormData })
+  Object.assign(formData, formDataInit)
   return
 }
 
@@ -90,7 +99,7 @@ const validation = {
   ],
 }
 
-const { onSubmit, errors, reset } = useFormValidation({
+const { onSubmit, errors, reset, isDirty } = useFormValidation({
   values: formData,
   validation,
   onSuccess: submitForm,
@@ -150,6 +159,7 @@ watch(
               ></AuthFormErrorMessage>
             </Transition>
           </div>
+
           <div class="other-params-container">
             <CheckBoxField
               :error="errors?.isChallenge"
@@ -159,10 +169,32 @@ watch(
             />
 
             <CheckBoxField
+              class="special"
               :error="errors?.isSpecial"
               v-model="formData.isSpecial"
               label-id="isSpecial"
-              title="vežba je specijalna"
+            >
+              <template #label>
+                <span
+                  >Vežba je specijalna
+                  <sup
+                    v-tooltip="{
+                      title: 'title',
+                      test: 'bebebe',
+                      content: 'tsss asd as sad sad  sa dasest',
+                    }"
+                    @mouseenter="showMessage"
+                  >
+                    <i class="fas fa-circle-info"></i> </sup
+                ></span>
+              </template>
+            </CheckBoxField>
+
+            <CheckBoxField
+              :error="errors?.isUnilateral"
+              v-model="formData.isUnilateral"
+              label-id="isUnilateral"
+              title="izvodi se jednostrano"
             />
           </div>
         </div>
@@ -187,10 +219,10 @@ watch(
             />
             <CheckBoxField
               v-if="formData.useWeight"
-              :error="errors?.isUnilateral"
-              v-model="formData.isUnilateral"
-              label-id="isUnilateral"
-              title="izvodi se jednostrano"
+              :error="errors?.isUseMultiple_weights"
+              v-model="formData.isUseMultiple_weights"
+              label-id="isUseMultiple_weights"
+              title="koristi više tegova"
             />
           </div>
         </div>
@@ -199,8 +231,8 @@ watch(
     <template #actions-section>
       <div class="bottom-section">
         <div class="form-action-btns-container">
-          <button type="button" @click="resetForm">očisti</button>
-          <button type="submit">kreiraj</button>
+          <button type="button" :disabled="!isDirty" @click="resetForm">očisti</button>
+          <button type="submit">{{ titleBtn }}</button>
         </div>
         <AuthFormErrorMessage
           v-if="errorMsg"
@@ -212,6 +244,16 @@ watch(
   </FormLayout>
 </template>
 <style scoped>
+.special {
+  margin: 0;
+  width: fit-content;
+}
+sup {
+  color: var(--blue-500);
+  &:hover {
+    color: var(--blue);
+  }
+}
 .type-container {
   p {
     &::first-letter {
@@ -235,7 +277,7 @@ watch(
   gap: 40px;
   overflow: hidden;
   .form-section {
-    overflow: auto;
+    overflow: auto-y;
     flex: 1;
   }
 }
@@ -257,8 +299,9 @@ watch(
 @media screen and (min-width: 769px) {
   .other-params-container {
     display: flex;
+    flex-wrap: wrap;
     > * {
-      flex: 1;
+      flex-basis: 100%;
     }
   }
   .weight-container {
@@ -272,12 +315,27 @@ watch(
   .top-section {
     flex-direction: row;
   }
+  .other-params-container {
+    align-items: flex-start;
+  }
   .type-container {
     .fields-container {
       gap: 50px;
       > * {
         flex: 0;
       }
+    }
+  }
+}
+
+@media screen and (min-width: 1284px) {
+  .other-params-container {
+    > * {
+      flex-basis: 50%;
+    }
+    .test {
+      position: relative;
+      flex-basis: fit-content;
     }
   }
 }

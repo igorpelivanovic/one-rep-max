@@ -17,7 +17,7 @@ function noAuthRequired(to) {
 function authRequired(to) {
   const { meta } = to
   if (meta.auth === REQUIRED_AUTH_STATUS.get('authRequired') && !AuthToken.getAuthToken())
-    throw { name: 'auth' }
+    throw { name: 'login' }
   return
 }
 

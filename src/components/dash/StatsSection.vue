@@ -39,7 +39,7 @@ const slot = useSlots()
 <style scoped>
 .stats-content {
   border: 1px solid var(--gray);
-
+  padding-block: 50px;
   flex: 1;
   border-radius: 20px;
   text-align: center;

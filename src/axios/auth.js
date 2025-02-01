@@ -26,6 +26,7 @@ authAxios.interceptors.response.use(
         useAlertBoxStore().addError({ content: 'prijavite se ponovo' })
       }
       if (status > 499 && status < 600) {
+        console.log('test')
         useAlertBoxStore().addError()
       }
     }

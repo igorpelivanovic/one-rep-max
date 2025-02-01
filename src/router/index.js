@@ -46,33 +46,68 @@ const router = createRouter({
               component: PreviewDashContent,
               name: 'main-dash',
             },
+            /// STATS
+            {
+              path: '/stats',
+              component: () => import('@/views/StatsView.vue'),
+              name: 'stats',
+            },
+            {
+              path: '',
+              meta: {
+                roles: ['admin'],
+              },
+              children: [
+                {
+                  path: 'exercises',
+                  children: [
+                    {
+                      path: '',
+                      name: 'dash-exercises',
+                      component: () => import('../views/MenageExercisesView.vue'),
+                    },
+                    {
+                      path: 'add',
+                      name: 'addExercise',
+                      component: () => import('@/views/AddExerciseView.vue'),
+                    },
+                    {
+                      path: ':id',
+                      name: 'preview-exercise',
+                      component: () => import('@/views/PreviewExerciseView.vue'),
+                    },
+                    {
+                      path: 'edit/:id',
+                      name: 'editExercise',
+                      component: () => import('../views/EditExercisesView.vue'),
+                    },
+                  ],
+                },
+
+                /// POSTS
+                {
+                  path: 'posts',
+                  children: [
+                    {
+                      path: '',
+                      name: 'dash-posts',
+                      component: () => import('../views/MenagePostsView.vue'),
+                    },
+                    {
+                      path: 'add',
+                      name: 'addPost',
+                      component: () => import('../views/AddPostView.vue'),
+                    },
+                    {
+                      path: 'editpost/:id',
+                      name: 'editPost',
+                      component: () => import('../views/EditPostView.vue'),
+                    },
+                  ],
+                },
+              ],
+            },
             /// EXERCIESES
-            {
-              path: 'exercises',
-              name: 'dash-exercises',
-              component: () => import('../views/MenageExercisesView.vue'),
-            },
-            {
-              path: 'addexercise',
-              name: 'addExercise',
-              component: () => import('@/views/AddExerciseView.vue'),
-            },
-            /// POSTS
-            {
-              path: 'addpost',
-              name: 'addPost',
-              component: () => import('../views/AddPostView.vue'),
-            },
-            {
-              path: 'editpost/:id',
-              name: 'editPost',
-              component: () => import('../views/EditPostView.vue'),
-            },
-            {
-              path: 'posts',
-              name: 'dash-posts',
-              component: () => import('../views/MenagePostsView.vue'),
-            },
           ],
         },
         {
@@ -128,7 +163,7 @@ router.beforeEach(async (to, from, next) => {
     rolePremission(to)
     next()
   } catch (e) {
-    next({ name: e.next || '' })
+    next({ name: e.name || '' })
   }
 })
 

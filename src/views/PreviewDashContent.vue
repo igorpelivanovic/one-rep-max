@@ -82,10 +82,18 @@ onBeforeMount(async () => {
     width: 100%;
     height: 100%;
     gap: 30px 40px;
-    grid-template-columns: 3fr 2fr;
+    grid-template-columns: 1fr;
+
     > * {
       background-color: var(--gray);
       border-radius: 20px;
+    }
+  }
+}
+@media screen and (min-width: 1281px) {
+  .dash-content-wrapper {
+    .dash-content-container {
+      grid-template-columns: 3fr 2fr;
     }
   }
 }

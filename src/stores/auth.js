@@ -7,7 +7,7 @@ import { ref, computed } from 'vue'
 const useAuthUserStore = defineStore('auth', () => {
   let user = ref(null)
 
-  const getUser = computed(() => user)
+  const getUser = computed(() => user.value)
 
   const login = async (data) => {
     const response = await auth.login(data)
@@ -21,7 +21,7 @@ const useAuthUserStore = defineStore('auth', () => {
   const logout = async () => {
     await auth.logout()
     authToken.removeAuthToken()
-    router.replace({ name: 'auth' })
+    router.replace({ name: 'login' })
     return true
   }
 
@@ -38,7 +38,7 @@ const useAuthUserStore = defineStore('auth', () => {
 
   const register = async (data) => {
     await auth.register(data)
-    router.replace({ name: 'auth' })
+    router.replace({ name: 'login' })
     return true
   }
 

@@ -62,6 +62,9 @@ a {
   gap: 0;
   flex-direction: column;
   &:hover {
+    h2 {
+      color: var(--blue-700);
+    }
     .img-container {
       .img-wrapper {
         img {
@@ -114,6 +117,7 @@ a {
         text-transform: capitalize;
       }
       h2 {
+        transition: 0.2s;
         width: 100%;
         margin-top: 8px;
         white-space: nowrap;

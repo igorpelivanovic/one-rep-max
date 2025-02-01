@@ -1,4 +1,5 @@
 <script setup>
+import { useSlots } from 'vue'
 import AuthFormErrorMessage from '../authForm/AuthFormErrorMessage.vue'
 
 const { labelId, error, modelValue, title } = defineProps({
@@ -19,6 +20,8 @@ const { labelId, error, modelValue, title } = defineProps({
   },
 })
 
+const slot = useSlots()
+
 const emit = defineEmits(['update:modelValue'])
 
 const onChange = (e) => {
@@ -31,13 +34,14 @@ const onChange = (e) => {
   <div class="label-container">
     <label :for="labelId">
       <div class="input-container">
-        <input type="checkbox" :value="modelValue" @change="onChange" :id="labelId" />
+        <input type="checkbox" :checked="modelValue" @change="onChange" :id="labelId" />
       </div>
       <span class="indicator">
         <i class="fas fa-check" v-if="modelValue"></i>
       </span>
       <div class="label">
-        <span>{{ title }}</span>
+        <span v-if="title">{{ title }}</span>
+        <slot name="label" v-if="slot.label"></slot>
       </div>
       <Transition name="error-message">
         <AuthFormErrorMessage v-if="error" :message="error"></AuthFormErrorMessage>

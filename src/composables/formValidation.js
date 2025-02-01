@@ -1,3 +1,4 @@
+import clearObject from '@/utils/clearObject'
 import { ref, computed, watch, reactive } from 'vue'
 
 function useFormValidation({
@@ -61,9 +62,7 @@ function useFormValidation({
   function reset() {
     isSubmited.value = false
     isDirty.value = false
-    Object.assign(errorsObj, reactive({}))
-    errorsObj.length = 0
-    console.log(errorsObj)
+    clearObject(errorsObj)
   }
 
   return { errors, onSubmit, reset, isDirty }

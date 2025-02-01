@@ -36,7 +36,7 @@ const changeInputValue = (val) => {
 }
 
 const formatCustomClass = computed(() => styleClass.concat(' text-area-field'))
-
+const formatText = computed(() => modelValue.toString().split('\\n').join(' &#13;&#10; '))
 const changeValue = (t) => {
   changeInputValue(t.target.value)
 }
@@ -48,7 +48,7 @@ const slots = useSlots()
   <FieldBaseInput
     :label-id
     :error
-    :value="modelValue"
+    :value="formatText"
     :title
     :style-class="formatCustomClass"
     @clear-input="changeInputValue"
@@ -65,3 +65,8 @@ const slots = useSlots()
     </template>
   </FieldBaseInput>
 </template>
+<style scoped>
+textarea {
+  white-space: pre-wrap;
+}
+</style>

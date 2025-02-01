@@ -18,4 +18,10 @@ function add(data) {
   return authAxios.post('/exercises', data)
 }
 
-export default { getExercises, removeById, getById, add }
+function update(data) {
+  console.log(data)
+  const { id, ...formData } = data
+  return authAxios.put('/exercises/' + id, formData)
+}
+
+export default { getExercises, removeById, getById, add, update }

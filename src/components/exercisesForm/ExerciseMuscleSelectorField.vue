@@ -20,6 +20,8 @@ const emit = defineEmits(['update:primary', 'update:secondaries'])
 <template>
   <div class="muscle-group-container">
     <MuscleGroupSelectorInput
+      :primary
+      :secondary="secondaries"
       @primaryMgChange="(id) => emit('update:primary', id)"
       @secondaryMgsChange="(array) => emit('update:secondaries', array)"
       class="muscle-group"

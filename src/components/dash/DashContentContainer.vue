@@ -19,7 +19,8 @@ const { customClass } = defineProps({
 
 <style scoped>
 .dash-section-container {
-  overflow: hidden;
+  /*   overflow: hidden;
+ */
   background-color: transparent;
   padding: 25px;
   display: flex;
@@ -33,7 +34,13 @@ const { customClass } = defineProps({
   }
   .dash-content-main {
     flex: 1 0px;
-    overflow: auto;
+  }
+}
+@media screen and (min-width: 1281px) {
+  .dash-section-container {
+    .dash-content-main {
+      overflow: auto;
+    }
   }
 }
 </style>

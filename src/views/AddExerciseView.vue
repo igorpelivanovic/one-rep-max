@@ -6,9 +6,11 @@ import { ref } from 'vue'
 import exercises from '@/api/exercises'
 import { useAlertBoxStore } from '@/stores/alertBox'
 import SpinnerContainer from '@/components/spinner/SpinnerContainer.vue'
+import { useRouter } from 'vue-router'
 
 const errorMsg = ref(undefined)
 const isLoading = ref(false)
+const router = useRouter()
 
 const { addSuccess } = useAlertBoxStore()
 
@@ -16,9 +18,13 @@ const onSubmit = async (data, resetForm) => {
   try {
     isLoading.value = true
     errorMsg.value = null
-    console.log(data)
-    await exercises.add(data)
+    const formatData = (({ videoUrl, ...formdata }) => ({
+      videoUrl: videoUrl ? videoUrl : null,
+      ...formdata,
+    }))(data)
+    const response = await exercises.add(formatData)
     addSuccess({ content: 'uspešno dodat post' })
+    router.push({ name: 'preview-exercise', params: { id: response.data.data.id } })
     //resetForm()
     return true
   } catch (e) {

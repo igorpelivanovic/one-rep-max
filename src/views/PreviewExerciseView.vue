@@ -1,45 +1,33 @@
-<script setup lang="ts">
+<script setup>
+import exercises from '@/api/exercises'
 import AdminDashContentLayout from '@/components/layout/AdminDashContentLayout.vue'
 import PageLayout from '@/components/layout/PageLayout.vue'
+import DeletePostModalContent from '@/components/modal/DeletePostModalContent.vue'
+import ModalLayout from '@/components/modal/ModalLayout.vue'
 import SpinnerContainer from '@/components/spinner/SpinnerContainer.vue'
-import ExerciseForm from '@/components/exercisesForm/ExerciseFrom.vue'
-import { ref } from 'vue'
+import ExercisePreview from '@/preview/ExercisePreview.vue'
 import { useAlertBoxStore } from '@/stores/alertBox'
+import { useLoadingViewStore } from '@/stores/loadingView'
+import { ref } from 'vue'
 import { onBeforeMount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import exercises from '@/api/exercises'
-import { useLoadingViewStore } from '@/stores/loadingView'
-import ModalLayout from '@/components/modal/ModalLayout.vue'
-import DeletePostModalContent from '@/components/modal/DeletePostModalContent.vue'
-import { computed } from 'vue'
-
-const errorMsg = ref(undefined)
-const isLoading = ref(false)
-const exerciseData = ref(null)
-const loadingRef = useLoadingViewStore()
-const renderModal = ref(false)
-
-const { addSuccess, addError } = useAlertBoxStore()
 const route = useRoute()
 const router = useRouter()
+
+const renderModal = ref(false)
+const exerciseData = ref(null)
+const loadingRef = useLoadingViewStore()
+const { addSuccess, addError } = useAlertBoxStore()
+
 onBeforeMount(() => {
-  getExerciseById()
+  getExercise()
 })
 
-const formData = computed(() =>
-  exerciseData.value ? (({ id, ...data }) => ({ ...data }))(exerciseData.value) : null,
-)
-
-const getExerciseById = async () => {
+const getExercise = async () => {
   try {
     loadingRef.isLoading = true
     const response = await exercises.getById(route.params.id)
-    exerciseData.value = (({ videoUrl, primaryGroup, seconderyGroup, ...data }) => ({
-      videoUrl: videoUrl ? videoUrl : '',
-      primaryGroup: primaryGroup.mgr_id,
-      seconderyGroups: seconderyGroup.map((group) => group.mgr_id),
-      ...data,
-    }))(response.data.data)
+    exerciseData.value = response.data.data
     return true
   } catch (_) {
     router.replace({ name: 'notfound' })
@@ -47,13 +35,14 @@ const getExerciseById = async () => {
     loadingRef.isLoading = false
   }
 }
+
 const deleteExercise = async () => {
   try {
     loadingRef.isLoading = true
     renderModal.value = false
     await exercises.removeById(exerciseData.value.id)
     addSuccess({ content: 'uspešno obrisana vežba' })
-    router.replace({ name: 'home' })
+    router.replace({ name: 'dash-exercises' })
     return true
   } catch (e) {
     addError({ content: e.response.data.message })
@@ -61,41 +50,30 @@ const deleteExercise = async () => {
     loadingRef.isLoading = false
   }
 }
-const onSubmit = async (data, resetForm) => {
-  try {
-    isLoading.value = true
-    errorMsg.value = null
-    const formatData = (({ videoUrl, ...formdata }) => ({
-      videoUrl: videoUrl ? videoUrl : null,
-      ...formdata,
-      id: exerciseData.value.id,
-    }))(data)
-    await exercises.update(formatData)
-    addSuccess({ content: 'uspešno izmenjen sadržaj vežbe' })
-    router.push({ name: 'preview-exercise', params: { id: exerciseData.value.id } })
-    return true
-  } catch (e) {
-    errorMsg.value = e?.response?.data?.message || 'something wrong'
-  } finally {
-    isLoading.value = false
-  }
-}
 </script>
 
 <template>
-  <AdminDashContentLayout class="layout">
-    <ModalLayout v-if="renderModal">
-      <DeletePostModalContent
-        @denide="renderModal = false"
-        @accept="deleteExercise"
-      ></DeletePostModalContent>
-    </ModalLayout>
-    <SpinnerContainer v-if="loadingRef.isLoading" />
+  <ModalLayout v-if="renderModal">
+    <DeletePostModalContent
+      @denide="renderModal = false"
+      @accept="deleteExercise"
+    ></DeletePostModalContent>
+  </ModalLayout>
+  <AdminDashContentLayout>
     <PageLayout v-if="exerciseData">
       <template #header>
         <div class="header-container">
-          <h1 class="page-main-title">izmeni vežbu</h1>
+          <h1 class="page-main-title">{{ exerciseData.title }}</h1>
           <div class="btns-container">
+            <RouterLink
+              :to="{ name: 'editExercise', params: { id: exerciseData.id } }"
+              class="nav-link"
+            >
+              <span class="icon">
+                <i class="fas fa-pen"></i>
+              </span>
+              <span class="title">izmeni</span>
+            </RouterLink>
             <button type="button" class="remove-btn" @click="renderModal = true">
               <span class="icon">
                 <i class="fas fa-trash"></i>
@@ -106,25 +84,45 @@ const onSubmit = async (data, resetForm) => {
         </div>
       </template>
       <template #body>
-        <SpinnerContainer v-if="isLoading" class="spinner-container body-disable-scroll" />
-        <ExerciseForm title-btn="izmeni" :data="formData" :errorMsg @submit-form="onSubmit" />
+        <ExercisePreview :data="exerciseData" />
       </template>
     </PageLayout>
+    <SpinnerContainer v-if="loadingRef.isLoading" />
   </AdminDashContentLayout>
 </template>
 
 <style scoped>
+.page-main-title {
+  text-transform: lowercase;
+  &::first-letter {
+    text-transform: capitalize;
+  }
+}
 .header-container {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   .btns-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    background-color: var(--white);
+    padding: 20px 60px;
+    justify-content: center;
+    border-top: 1px solid var(--gray);
+    .nav-link {
+      text-decoration: none;
+    }
+    .nav-link,
     button {
       cursor: pointer;
       background-color: var(--blue-500);
       color: var(--gray);
       border: none;
-      font-size: 1rem;
+      font-size: 1.2rem;
       border-radius: 5px;
       text-transform: capitalize;
       display: flex;
@@ -137,9 +135,6 @@ const onSubmit = async (data, resetForm) => {
           display: flex;
           font-size: 0.9rem;
         }
-        &.title {
-          display: none;
-        }
       }
       &:hover {
         background-color: var(--blue-700);
@@ -151,7 +146,39 @@ const onSubmit = async (data, resetForm) => {
 @media screen and (min-width: 481px) {
   .header-container {
     .btns-container {
+      .nav-link,
       button {
+        span.title {
+          display: block;
+        }
+      }
+    }
+  }
+}
+@media screen and (min-width: 769px) {
+  .header-container {
+    .btns-container {
+      position: initial;
+      background-color: transparent;
+      padding: 0;
+      width: initial;
+      border: none;
+      .nav-link,
+      button {
+        span.title {
+          display: none;
+        }
+      }
+    }
+  }
+}
+@media screen and (min-width: 1025px) {
+  .header-container {
+    .btns-container {
+      .nav-link,
+      button {
+        font-size: 0.9rem;
+
         span.title {
           display: block;
         }

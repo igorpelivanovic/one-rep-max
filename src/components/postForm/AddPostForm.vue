@@ -86,7 +86,7 @@ const validation = {
   ],
 }
 
-const { onSubmit, errors, reset } = useFormValidation({
+const { onSubmit, errors, reset, isDirty } = useFormValidation({
   values: formData,
   validation,
   onSuccess: submitForm,
@@ -127,6 +127,11 @@ const rednerTextAreaClearBtn = computed(() => formData.text.length > 0)
             <template #placeholder>
               <ImageFieldTemplate />
             </template>
+            <template #dragPlaceholder>
+              <div class="drag-placeholder-container">
+                <p>prevuci ovde</p>
+              </div>
+            </template>
           </ImageField>
         </div>
         <div class="form-section">
@@ -150,7 +155,7 @@ const rednerTextAreaClearBtn = computed(() => formData.text.length > 0)
     <template #actions-section>
       <div class="bottom-section">
         <div class="form-action-btns-container">
-          <button type="button" @click="resetForm">očisti</button>
+          <button type="button" :disabled="!isDirty" @click="resetForm">očisti</button>
           <button type="submit">kreiraj</button>
         </div>
         <AuthFormErrorMessage
@@ -164,6 +169,19 @@ const rednerTextAreaClearBtn = computed(() => formData.text.length > 0)
 </template>
 
 <style scoped>
+.drag-placeholder-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  p {
+    text-align: center;
+
+    &::first-letter {
+      text-transform: capitalize;
+    }
+  }
+}
 .spinner-container {
   z-index: 5;
   position: fixed;
@@ -194,8 +212,6 @@ const rednerTextAreaClearBtn = computed(() => formData.text.length > 0)
       background-color: var(--gray-650);
       border: none;
       padding: 8px 20px;
-      /*         font-size: 0.9rem;
- */
       text-transform: capitalize;
       font-size: 1.1rem;
       border-radius: 10px;
@@ -223,6 +239,9 @@ const rednerTextAreaClearBtn = computed(() => formData.text.length > 0)
       align-items: flex-end;
       button {
         font-size: 0.95rem;
+        &[type='submit'] {
+          font-size: 1rem;
+        }
       }
     }
   }
@@ -232,6 +251,16 @@ const rednerTextAreaClearBtn = computed(() => formData.text.length > 0)
   .top-section {
     flex-direction: row;
     gap: 50px;
+  }
+  .bottom-section {
+    .form-action-btns-container {
+      button {
+        font-size: 0.9rem;
+        &[type='submit'] {
+          font-size: 0.95rem;
+        }
+      }
+    }
   }
 }
 </style>

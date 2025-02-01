@@ -3,7 +3,6 @@ import useClickOutside from '@/composables/clickOutside'
 import { useLocalStorage } from '@/composables/localStorage'
 import { watch } from 'vue'
 import { useTemplateRef } from 'vue'
-import { onMounted } from 'vue'
 import { ref } from 'vue'
 
 const { setValue, value: menuCollapseInit } = useLocalStorage('orm-menu-collapse')
@@ -41,7 +40,7 @@ const test = (e) => {
     <div class="aside-content" ref="container">
       <ul>
         <li>
-          <RouterLink :to="{ name: '' }" @click="mobileHide = true">
+          <RouterLink :to="{ name: 'stats' }" @click="mobileHide = true">
             <span class="icon"><i class="fas fa-chart-simple"></i></span
             ><span class="title">statistika</span>
           </RouterLink>
@@ -181,9 +180,9 @@ aside {
             transition: color 0.1s;
 
             &.title {
-              transition: opacity 0.2s 0.2s;
-              transition: color 0.1s;
-
+              transition:
+                color 0.1s,
+                opacity 0.2s 0.2s;
               &::first-letter {
                 text-transform: capitalize;
               }
