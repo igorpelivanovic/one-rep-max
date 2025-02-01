@@ -21,8 +21,8 @@ async function fetchPosts() {
 
 <template>
   <div class="blog-post">
-    <p class="blog-type">{{ post.category_name }}</p>
-    <h1>{{ post.title }}</h1>
+    <p class="blog-type">{{ post.category_title }}</p>
+    <h1 class="blog-title">{{ post.title }}</h1>
     <img :src="post.image" class="blog-image" />
     <!-- <p v-if="post.content">{{ post.content }}</p>
     <p v-else>Loading post...</p> -->
@@ -36,6 +36,14 @@ async function fetchPosts() {
   flex-direction: column;
   padding: 20px;
   text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.blog-title {
+  width: 50%;
+  justify-content: center;
+  align-items: center;
 }
 
 h1 {
@@ -55,8 +63,10 @@ p {
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 2rem;
+  max-width: 80%;
 }
 
 .blog-text {
+  padding: 20px;
 }
 </style>

@@ -10,7 +10,7 @@ export default defineComponent({
   },
   setup() {
     const posts = ref([])
-    const limit = ref(4)
+    const limit = ref(5)
     const offset = ref(0)
 
     const recentPosts = computed(() => posts.value.slice(0, limit.value))
@@ -53,8 +53,8 @@ export default defineComponent({
         />
       </div>
       <div class="hero-content">
-        <h1 class="hero-title">POČNI DANAS</h1>
-        <p class="hero-description">Sve što ti je potrebno da postaneš bolja verzija sebe</p>
+        <p class="hero-description">{{ recentPosts[0].category_name }}</p>
+        <h1 class="hero-title">{{ recentPosts[0].title }}</h1>
       </div>
     </RouterLink>
   </section>
@@ -63,8 +63,22 @@ export default defineComponent({
     <h2 class="section-title">DNEVNIK</h2>
     <p class="section-subtitle">Budite u toku</p>
     <div class="blog-cards-container">
-      <!-- Display other posts as cards -->
       <BlogCard v-for="(post, index) in recentPosts.slice(1)" :key="post.pst_id" :post="post" />
+    </div>
+  </section>
+
+  <section class="blog">
+    <div class="blog-image-container">
+      <img src="@/assets/blog.jpg" />
+    </div>
+    <div class="blog-text-container">
+      <h2 class="blog-headline">DOBRODOŠLI NA BLOG</h2>
+      <p class="blog-text">
+        Svaki dan je nova prilika da naučimo nešto novo i postanemo bolja verzija sebe. Na ovom
+        blogu ćemo deliti inspiraciju, savete i priče koje će vas motivisati da preuzmete kontrolu
+        nad svojim životom.
+      </p>
+      <RouterLink to="/blog" class="blog-button">POGLEDAJ BLOGOVE</RouterLink>
     </div>
   </section>
 
@@ -113,6 +127,7 @@ export default defineComponent({
   text-align: center;
   color: white;
   padding: 0 20px;
+  line-height: 1;
 }
 
 .hero-title {
@@ -120,12 +135,14 @@ export default defineComponent({
   font-size: 5rem;
   font-weight: bold;
   margin-bottom: 20px;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }
 
 .hero-description {
   font-size: 1.25rem;
   line-height: 1.5;
   margin-bottom: 30px;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }
 
 @media (max-width: 768px) {
@@ -159,6 +176,7 @@ export default defineComponent({
   justify-content: center;
   width: 100%;
   text-align: center;
+  line-height: 1;
 }
 
 .section-title {
@@ -268,6 +286,88 @@ export default defineComponent({
   .promo-image {
     width: 100%;
     margin-top: 20px;
+  }
+}
+
+.blog {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 50px 30px; /* Adjust padding for balanced spacing */
+  background: linear-gradient(136.83deg, #033479 17%, #212023 100%);
+}
+
+.blog-image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.blog-image-container img {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  object-fit: cover;
+}
+
+.blog-text-container {
+  flex: 1;
+  padding-left: 30px;
+  text-align: center;
+}
+
+.blog-headline {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.blog-button {
+  display: inline-block;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #0b5ad0;
+  padding: 15px 25px;
+  border-radius: 25px;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.blog-button:hover {
+  background-color: #0745a1;
+}
+.blog-text {
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .blog {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .blog-text-container {
+    padding-left: 0;
+    padding-bottom: 30px;
+  }
+
+  .blog-headline {
+    font-size: 1.5rem;
+  }
+
+  .blog-image-container img {
+    width: 80%; /* Resize image for smaller screens */
+    margin-top: 20px;
+    padding-bottom: 20px;
   }
 }
 </style>
