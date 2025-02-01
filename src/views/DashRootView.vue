@@ -6,13 +6,15 @@ import { defineAsyncComponent } from 'vue'
 const { role } = useAuthUserStore()
 
 const asyncComponents = {
-  admin: defineAsyncComponent(() => import('@/views/AdminDash/StatsView.vue')),
-  user: defineAsyncComponent(() => import('@/views/UserDasgStats.vue')),
+  admin: defineAsyncComponent(() => import('@/views/AdminDash/AdminDashView.vue')),
 }
 
 const currentComponent = computed(() => asyncComponents[role])
 </script>
 
 <template>
-  <component :is="currentComponent" />
+  <template v-if="currentComponent">
+    <component :is="currentComponent" />
+  </template>
+  <RouterView v-else />
 </template>

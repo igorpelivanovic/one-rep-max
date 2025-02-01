@@ -42,7 +42,9 @@ const useAuthUserStore = defineStore('auth', () => {
     return true
   }
 
-  return { getUser, login, logout, me, isLogged, register }
+  const role = computed(() => user.value?.role || null)
+
+  return { getUser, login, logout, me, isLogged, register, role }
 })
 
 export { useAuthUserStore }

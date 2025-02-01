@@ -6,8 +6,8 @@ import { defineAsyncComponent } from 'vue'
 const { role } = useAuthUserStore()
 
 const asyncComponents = {
-  admin: defineAsyncComponent(() => import('@/views/AdminDash/StatsView.vue')),
-  user: defineAsyncComponent(() => import('@/views/UserDasgStats.vue')),
+  admin: defineAsyncComponent(() => import('@/views/AdminDash/PreviewDashContent.vue')),
+  user: defineAsyncComponent(() => import('@/views/UserDash.vue')),
 }
 
 const currentComponent = computed(() => asyncComponents[role])

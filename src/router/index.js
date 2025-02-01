@@ -3,7 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import { authRequired, getUserData, noAuthRequired, rolePremission } from './guards'
 import { REQUIRED_AUTH_STATUS } from './data'
 import { useLoadingRouteStore } from '@/stores/loadingRoute'
-import PreviewDashContent from '@/views/PreviewDashContent.vue'
+import PreviewDashContent from '@/views/AdminDash/PreviewDashContent.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,23 +32,17 @@ const router = createRouter({
           component: () => import('../views/ProfileView.vue'),
         },
         {
-          path: '/statistics',
-          name: 'stats',
-          component: () => import('../views/StatsView.vue'),
-        },
-        // Required Admin Role
-        {
           path: '/dash',
-          component: () => import('../views/AdminDashView.vue'),
+          component: () => import('@/views/DashRootView.vue'),
           children: [
             {
               path: '',
-              component: PreviewDashContent,
+              component: () => import('@/views/DashView.vue'),
               name: 'main-dash',
             },
             /// STATS
             {
-              path: '/stats',
+              path: 'stats',
               component: () => import('@/views/StatsView.vue'),
               name: 'stats',
             },
@@ -58,28 +52,29 @@ const router = createRouter({
                 roles: ['admin'],
               },
               children: [
+                /// EXERCIESES
                 {
                   path: 'exercises',
                   children: [
                     {
                       path: '',
                       name: 'dash-exercises',
-                      component: () => import('../views/MenageExercisesView.vue'),
+                      component: () => import('../views/AdminDash/MenageExercisesView.vue'),
                     },
                     {
                       path: 'add',
                       name: 'addExercise',
-                      component: () => import('@/views/AddExerciseView.vue'),
+                      component: () => import('@/views/AdminDash/AddExerciseView.vue'),
                     },
                     {
                       path: ':id',
                       name: 'preview-exercise',
-                      component: () => import('@/views/PreviewExerciseView.vue'),
+                      component: () => import('@/views/AdminDash/PreviewExerciseView.vue'),
                     },
                     {
                       path: 'edit/:id',
                       name: 'editExercise',
-                      component: () => import('../views/EditExercisesView.vue'),
+                      component: () => import('../views/AdminDash/EditExercisesView.vue'),
                     },
                   ],
                 },
@@ -91,23 +86,22 @@ const router = createRouter({
                     {
                       path: '',
                       name: 'dash-posts',
-                      component: () => import('../views/MenagePostsView.vue'),
+                      component: () => import('../views/AdminDash/MenagePostsView.vue'),
                     },
                     {
                       path: 'add',
                       name: 'addPost',
-                      component: () => import('../views/AddPostView.vue'),
+                      component: () => import('../views/AdminDash/AddPostView.vue'),
                     },
                     {
                       path: 'editpost/:id',
                       name: 'editPost',
-                      component: () => import('../views/EditPostView.vue'),
+                      component: () => import('../views/AdminDash/EditPostView.vue'),
                     },
                   ],
                 },
               ],
             },
-            /// EXERCIESES
           ],
         },
         {
