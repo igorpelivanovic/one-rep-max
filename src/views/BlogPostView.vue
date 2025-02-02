@@ -58,6 +58,7 @@ h1 {
 p {
   font-size: 1rem;
   line-height: 1.6;
+  margin-bottom: 15px;
 }
 .post-title {
   text-align: center;
@@ -70,7 +71,15 @@ p {
   max-width: 80%;
 }
 
+.blog-text p {
+  font-size: 1rem;
+  line-height: 1.4;
+  margin-bottom: 2px;
+}
+
 .blog-text {
   padding: 20px;
+  margin: 0;
+  max-width: 800px;
 }
 </style>
