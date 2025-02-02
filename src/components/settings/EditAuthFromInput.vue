@@ -156,12 +156,10 @@ function handleSubmit() {
       <span v-if="error" class="error-message">{{ errorMsg }}</span>
     </div>
     <div>
-      <button class="edit-submit-button" v-if="!requestChange" @click="handleRequestChange">
+      <button class="edit-button" v-if="!requestChange" @click="handleRequestChange">
         <i class="fa-regular fa-pen-to-square"></i>
       </button>
-      <button class="edit-submit-button" v-else @click="handleSubmit">
-        <i class="fa-solid fa-check"></i>
-      </button>
+      <button class="submit-button" v-else @click="handleSubmit">IZMENI</button>
     </div>
   </div>
 </template>
@@ -222,12 +220,19 @@ input {
   pointer-events: none;
 }
 
-button {
+button,
+.edit-button,
+.submit-button {
   background: none;
   border: none;
   color: var(--black);
   padding: 0.5rem;
   cursor: pointer;
+}
+
+.submit-button {
+  background-color: var(--gray);
+  border-radius: 1rem;
 }
 
 .error-input {
