@@ -139,6 +139,16 @@ const router = createRouter({
               name: 'workout',
               component: () => import('../views/WorkoutView.vue'),
             },
+            {
+              path: 'exercise/:workoutId/:exerciseId',
+              name: 'exercise',
+              component: () => import('../views/ExerciseView.vue'),
+            },
+            {
+              path: 'workout/:id/finish',
+              name: 'workout-finish',
+              component: () => import('../views/FinishWorkoutView.vue'),
+            },
           ],
         },
         // Required NoAuth Route
