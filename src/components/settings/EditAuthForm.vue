@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useAuthUserStore } from '@/stores/auth'
-import ChangeUserDataInput from './ChangeUserDataInput.vue'
+import EditAuthFormInput from './EditAuthFromInput.vue'
 
 const authUserStore = useAuthUserStore()
 const newUsername = ref(authUserStore.user.name)
@@ -53,9 +53,9 @@ async function submitForm(event) {
     }
     if (newPassword.value.length) {
       await authUserStore.changeAuthData({
-        name: newUsername,
-        password: newPassword,
-        fullname: newFullname,
+        name: newUsername.value,
+        password: newPassword.value,
+        fullname: newFullname.value,
       })
     }
     event.target.disabled = false
@@ -69,28 +69,28 @@ async function submitForm(event) {
 <template>
   <div class="user-data-form-wrapper">
     <h2>Moji podaci</h2>
-    <ChangeUserDataInput
+    <EditAuthFormInput
       title="username"
       i-label="Korisničko ime"
       :i-value="newUsername"
       :validator="validateUsername"
       @input-change="(val) => (newUsername = val)"
-    ></ChangeUserDataInput>
-    <ChangeUserDataInput
+    ></EditAuthFormInput>
+    <EditAuthFormInput
       title="fullname"
       i-label="Ime i prezime"
       :i-value="newFullname"
       :validator="validateFullname"
       @input-change="(val) => (newFullname = val)"
-    ></ChangeUserDataInput>
-    <ChangeUserDataInput
+    ></EditAuthFormInput>
+    <EditAuthFormInput
       title="password"
       i-label="Lozinka"
       type="password"
       :i-value="newPassword"
       :validator="validatePassword"
       @input-change="(val) => (newPassword = val)"
-    ></ChangeUserDataInput>
+    ></EditAuthFormInput>
     <button @click="submitForm">SAČUVAJ IZMENE</button>
   </div>
 </template>

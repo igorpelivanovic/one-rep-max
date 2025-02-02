@@ -1,7 +1,7 @@
 <script setup>
-import UserDataForm from '@/components/settings/UserDataForm.vue'
+import EditAuthForm from '@/components/settings/EditAuthForm.vue'
 </script>
 
 <template>
-  <UserDataForm></UserDataForm>
+  <EditAuthForm></EditAuthForm>
 </template>
