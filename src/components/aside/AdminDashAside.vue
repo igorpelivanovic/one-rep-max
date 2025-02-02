@@ -53,9 +53,9 @@ useClickOutside(containerRef, () => {
           >
         </li>
         <li>
-          <RouterLink :to="{ name: 'dash-exercises' }" @click="mobileHide = true">
-            <span class="icon"><i class="fas fa-dumbbell"></i></span
-            ><span class="title">vežbe</span></RouterLink
+          <RouterLink :to="{ name: 'settings' }" @click="mobileHide = true">
+            <span class="icon"><i class="fas fa-gear"></i></span>
+            <span class="title">podešavanja</span></RouterLink
           >
         </li>
       </ul>

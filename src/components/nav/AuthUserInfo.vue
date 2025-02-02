@@ -5,7 +5,7 @@ const { logout, getUser } = useAuthUserStore()
 </script>
 
 <template>
-  <RouterLink :to="{ name: '' }" class="nav-bar-link">
+  <RouterLink :to="{ name: 'main-dash' }" class="nav-bar-link">
     <span class="icon"><i class="fas fa-user"></i></span>
     <span class="user-title">{{ getUser.name }}</span>
   </RouterLink>
