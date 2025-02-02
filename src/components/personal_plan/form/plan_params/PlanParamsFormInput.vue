@@ -59,6 +59,9 @@ const props = defineProps({
 <style scoped>
 .plan-form-wrapper {
   margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .plan-form-input-wrapper {
@@ -69,13 +72,14 @@ const props = defineProps({
 
 .plan-form-input-wrapper > label {
   align-self: baseline;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   font-size: 1.2rem;
-  font-weight: 500;
+  font-weight: 700;
 }
 
 .inputs-wrapper {
   width: 100%;
+  max-width: 650px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -102,12 +106,23 @@ const props = defineProps({
 
   .special {
     flex-direction: column;
+    gap: 1rem;
   }
 }
 
-@media screen and (min-width: 481px) {
+@media screen and (min-width: 601px) {
   .special {
     flex-direction: row;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .plan-form-input-wrapper > label {
+    align-self: center;
+  }
+
+  .error-input {
+    align-self: center;
   }
 }
 </style>

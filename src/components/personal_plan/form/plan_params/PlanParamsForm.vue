@@ -148,5 +148,15 @@ onBeforeMount(async () => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  background-color: var(--gray);
+  border-radius: 2rem;
+  padding: 1rem;
+}
+
+@media screen and (min-width: 1281px) {
+  .plan-params-form-wrapper {
+    background-color: var(--gray);
+    border-radius: 2rem;
+  }
 }
 </style>

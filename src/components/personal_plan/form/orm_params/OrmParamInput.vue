@@ -136,6 +136,7 @@ watch(props, () => {
 
 .input-wrapper input {
   border: none;
+  background-color: inherit;
   min-width: fit-content;
 }
 

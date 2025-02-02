@@ -7,7 +7,7 @@ const { role } = useAuthUserStore()
 
 const dynamicComponents = {
   admin: defineAsyncComponent(() => import('@/views/AdminDash/StatsView.vue')),
-  user: defineAsyncComponent(() => import('@/views/UserStatsView.vue')),
+  user: defineAsyncComponent(() => import('@/views/UserDash/UserStatsView.vue')),
 }
 
 const activeComponent = computed(() => dynamicComponents[role])

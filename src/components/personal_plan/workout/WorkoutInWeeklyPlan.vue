@@ -23,7 +23,6 @@ defineProps({
 
 <style scoped>
 .workout-done {
-  opacity: 0.5;
   pointer-events: none;
   border-radius: 2rem;
 }
@@ -42,17 +41,17 @@ defineProps({
   margin-bottom: 1rem;
 }
 
+.workout-in-week-title > i {
+  color: var(--orange);
+}
+
 .workout-done-background {
-  background-color: var(--blue);
+  background-color: var(--blue-600);
 }
 
 .workout-done-background > * {
   color: var(--white);
 }
-
-/* h3 {
-  margin: 0;
-} */
 
 p {
   color: #000000c0;

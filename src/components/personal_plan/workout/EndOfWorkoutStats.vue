@@ -21,7 +21,6 @@ const exercisesData = ref(null)
 onBeforeMount(async () => {
   const res = await planStore.getWorkout(+route.params.id)
   exercisesData.value = res.data.data.exercises
-  console.log(exercisesData)
 })
 
 async function handleWorkoutEnd(event) {
@@ -38,7 +37,7 @@ async function handleWorkoutEnd(event) {
       await planStore.addChallengeToStats()
     }
     event.target.disabled = false
-    router.push({ name: 'user' })
+    router.push({ name: 'main-dash' })
   } catch (error) {
     event.target.disabled = false
     console.log(error)

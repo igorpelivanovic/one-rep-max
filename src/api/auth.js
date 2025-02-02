@@ -17,4 +17,8 @@ function userData() {
   return authAxios.get('/me')
 }
 
-export default { login, logout, userData, register }
+function changeAuthData(data) {
+  return authAxios.put('/me', data)
+}
+
+export default { login, logout, userData, register, changeAuthData }
