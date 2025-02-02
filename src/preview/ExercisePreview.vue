@@ -72,7 +72,7 @@ const formatSeconderyGroups = computed(() =>
             <td class="main-group title">glavna grupa:</td>
             <td>{{ data.primaryGroup.mgr_name }}</td>
           </tr>
-          <tr v-if="data.seconderyGroup.lenght > 0">
+          <tr v-if="data.seconderyGroup.length > 0">
             <td class="secondery-group title">pod grupe:</td>
             <td>{{ formatSeconderyGroups }}</td>
           </tr>
