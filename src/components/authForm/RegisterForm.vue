@@ -31,12 +31,12 @@ const validation = {
     }),
   ],
   name: [
-    required('ime je obavezno'),
+    required('korisničko ime je obavezno'),
     minLength({ msg: 'min', length: 3 }),
     maxLength({ msg: 'max', length: 60 }),
   ],
   fullname: [
-    required('prezime je obavezno'),
+    required('ime i prezime je obavezno'),
     minLength({ msg: 'min', length: 3 }),
     maxLength({ msg: 'max', length: 60 }),
   ],
@@ -76,15 +76,20 @@ async function submitFormHandler() {
         </template>
       </AuthFormInput>
 
-      <AuthFormInput v-model="formData.name" label-id="firstName" title="ime" :error="errors?.name">
+      <AuthFormInput
+        v-model="formData.name"
+        label-id="userName"
+        title="korisničko ime"
+        :error="errors?.name"
+      >
         <template #icon>
           <i class="fas fa-user"></i>
         </template>
       </AuthFormInput>
       <AuthFormInput
         v-model="formData.fullname"
-        label-id="lastName"
-        title="prezime"
+        label-id="fullName"
+        title="ime i prezime"
         :error="errors?.fullname"
       >
         <template #icon>

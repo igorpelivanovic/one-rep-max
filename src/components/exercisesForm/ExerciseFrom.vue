@@ -93,7 +93,6 @@ const validation = {
   primaryGroup: [number('nevalidan podatak'), min(1)],
   seconderyGroups: [
     custom((val) => {
-      if (val.length === 0) throw 'sekundarne grupe su obavezne'
       if (val.some((id) => number('sekundarne grupe su nevalidan podatak')(id))) return true
     }),
   ],
@@ -181,7 +180,12 @@ watch(
                     v-tooltip="{
                       title: 'title',
                       test: 'bebebe',
-                      content: 'tsss asd as sad sad  sa dasest',
+                      content: `Težine tegova sa kojima se rade vežbe računaju se kao procenat One Rep Max težina, i to za grupe mišića:
+                                - ruku, grudi, i ramena koristi se 1RM Potiska na klupi,
+                                - ledja koristi se 1RM Veslanja u pretklonu,
+                                - nogu i trbušnjaka koristi se 1RM Čučnja.
+                                Označite ovo polje, ukoliko se 1RM ove vežbe znatno razlikuje od 1RM referentne vežbe, na osnovu grupe mišića koju aktivira.
+                                Primer: Leg Press i Mrtvo dizanje koriste veću težinu od čučnja, Bočno podizanje ruku koristi manju težinu od Potiska na klupi.`,
                     }"
                     @mouseenter="showMessage"
                   >
@@ -245,7 +249,6 @@ watch(
 </template>
 <style scoped>
 .special {
-  margin: 0;
   width: fit-content;
 }
 sup {
