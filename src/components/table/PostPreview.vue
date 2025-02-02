@@ -17,7 +17,14 @@ const router = useRouter()
 </script>
 
 <template>
-  <RouterLink to="test">
+  <RouterLink
+    :to="{
+      name: 'BlogPostView',
+      params: {
+        id: post.id,
+      },
+    }"
+  >
     <div class="post-container preview-content" :class="customClass">
       <div class="img-container">
         <div class="img-wrapper">
@@ -62,6 +69,9 @@ a {
   gap: 0;
   flex-direction: column;
   &:hover {
+    h2 {
+      color: var(--blue-700);
+    }
     .img-container {
       .img-wrapper {
         img {
@@ -114,6 +124,7 @@ a {
         text-transform: capitalize;
       }
       h2 {
+        transition: 0.2s;
         width: 100%;
         margin-top: 8px;
         white-space: nowrap;

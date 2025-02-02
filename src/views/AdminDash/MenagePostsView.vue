@@ -60,7 +60,9 @@ const removePost = async () => {
     renderModal.value = false
     await Post.removeById(deleteId.value)
     addSuccess({ content: 'uspešno obrisan blog' })
-    postsData.value = postsData.value.filter((post) => post.pst_id !== deleteId.value)
+    const index = postsData.value.findIndex((post) => post.id === deleteId.value)
+    if (index < 0) return
+    postsData.value.splice(index, 1)
     return true
   } catch (e) {
     addError({ content: e.response.data.message })
@@ -97,12 +99,12 @@ const removePost = async () => {
       <template #body>
         <div class="table-body-content" v-if="postsData.length > 0">
           <ul class="post-list">
-            <li v-for="post in postsData" :key="post.pst_id">
+            <li v-for="post in postsData" :key="post.id">
               <PostPreview
                 :post
                 @remove="
                   () => {
-                    deleteId = post.pst_id
+                    deleteId = post.id
                     renderModal = true
                   }
                 "

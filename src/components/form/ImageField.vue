@@ -1,11 +1,18 @@
 <script setup>
 import { computed } from 'vue'
 import AuthFormErrorMessage from '../authForm/AuthFormErrorMessage.vue'
+import { ref } from 'vue'
+import { useSlots } from 'vue'
+import { onMounted } from 'vue'
 
-const { labelId, modelValue, error, styleClass } = defineProps({
+const { labelId, modelValue, error, styleClass, dragDrop } = defineProps({
   labelId: {
     required: true,
     type: String,
+  },
+  dragDrop: {
+    type: Boolean,
+    default: true,
   },
   modelValue: {
     required: true,
@@ -20,6 +27,9 @@ const { labelId, modelValue, error, styleClass } = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue'])
+const isDragging = ref(false)
+
+const slots = useSlots()
 
 const isEmptyInput = computed(() => !modelValue)
 
@@ -34,8 +44,37 @@ const fileSizeToMB = computed(() => {
   return 0
 })
 
+const renderBasePlaceholder = computed(
+  () =>
+    (isEmptyInput.value && !isDragging.value) ||
+    (isEmptyInput.value && isDragging.value && !slots.dragPlaceholder()),
+)
+const renderDragPlaceholder = computed(
+  () => isEmptyInput.value && isDragging.value && slots.dragPlaceholder(),
+)
+
 const changeInputValue = (val) => {
   emit('update:modelValue', val)
+  return
+}
+const dropHandler = (e) => {
+  e.preventDefault()
+  if (!dragDrop) return
+  changeInputValue(e.dataTransfer.files[0])
+  isDragging.value = false
+  return
+}
+const dragOverHandler = (e) => {
+  e.preventDefault()
+  if (!dragDrop) return
+  isDragging.value = true
+  return
+}
+
+const dragLeaveHandler = () => {
+  if (!dragDrop) return
+  isDragging.value = false
+  return
 }
 </script>
 
@@ -45,11 +84,17 @@ const changeInputValue = (val) => {
       <div class="input-container">
         <input type="file" :id="labelId" @change="(e) => changeInputValue(e.target.files[0])" />
       </div>
-      <label :for="labelId">
+      <label
+        :for="labelId"
+        @drop="dropHandler"
+        @dragover="dragOverHandler"
+        @dragleave="dragLeaveHandler"
+      >
         <div class="field-preview">
-          <div class="file-preview-container">
-            <slot name="placeholder" v-if="isEmptyInput"></slot>
-            <div v-else class="preview-img-container">
+          <div class="file-preview-container" :class="{ isDragging }">
+            <slot name="dragPlaceholder" v-if="renderDragPlaceholder"></slot>
+            <slot name="placeholder" v-if="renderBasePlaceholder"></slot>
+            <div class="preview-img-container" v-if="!isEmptyInput">
               <img :src="previewImage" alt="" />
             </div>
           </div>
@@ -101,6 +146,28 @@ const changeInputValue = (val) => {
         background-color: var(--white);
         display: flex;
         align-items: center;
+        position: relative;
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: transparent;
+          transition: 0.2s;
+        }
+        &.isDragging {
+          &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--transparent-gray);
+          }
+        }
         .preview-img-container {
           height: 100%;
           width: 100%;

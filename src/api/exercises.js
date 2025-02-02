@@ -14,4 +14,14 @@ function getById(id) {
   return authAxios.get('/exercises/' + id)
 }
 
-export default { getExercises, removeById, getById }
+function add(data) {
+  return authAxios.post('/exercises', data)
+}
+
+function update(data) {
+  console.log(data)
+  const { id, ...formData } = data
+  return authAxios.put('/exercises/' + id, formData)
+}
+
+export default { getExercises, removeById, getById, add, update }

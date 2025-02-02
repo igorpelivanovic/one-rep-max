@@ -52,7 +52,7 @@ const { getAlerts } = toRefs(useAlertBoxStore())
     top: inherit;
     bottom: 50px;
     justify-content: flex-end;
-    max-height: auto;
+    max-height: initial;
   }
 }
 </style>

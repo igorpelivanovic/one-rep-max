@@ -17,14 +17,14 @@ function noAuthRequired(to) {
 function authRequired(to) {
   const { meta } = to
   if (meta.auth === REQUIRED_AUTH_STATUS.get('authRequired') && !AuthToken.getAuthToken())
-    throw { name: 'auth' }
+    throw { name: 'login' }
   return
 }
 
 function rolePremission(to) {
   const { meta } = to
-  const { getUser } = useAuthUserStore()
-  if (meta.roles && getUser.role && !meta.roles.includes(getUser.role)) throw { name: 'profile' }
+  const { role } = useAuthUserStore()
+  if (meta.roles && role && !meta.roles.includes(role)) throw { name: 'profile' }
   return
 }
 

@@ -5,7 +5,7 @@
         <i class="fas fa-camera icon"></i>
       </div>
       <p class="title">
-        <span class="main">dodaj sliku</span>
+        <span class="main">klikni ili prevuci za dodavanje slike</span>
         <span>(maksimalna veličina 5MB)</span>
       </p>
     </div>
@@ -20,7 +20,6 @@
   align-items: flex-end;
   align-self: stretch;
   .no-image-placeholder-content {
-    height: 60%;
     .icon-container {
       margin: auto;
       background-color: var(--gray-620);
@@ -36,12 +35,15 @@
       }
     }
     p.title {
+      padding-inline: 10px;
       font-size: 0.85rem;
       span {
         display: block;
         &.main {
+          &::first-letter {
+            text-transform: capitalize;
+          }
           font-size: 0.95rem;
-          text-transform: capitalize;
           margin-bottom: 5px;
         }
         &:not(.main) {

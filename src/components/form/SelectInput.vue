@@ -5,6 +5,7 @@ import { computed } from 'vue'
 import { useTemplateRef } from 'vue'
 import { onMounted } from 'vue'
 import { ref } from 'vue'
+import OptionsContainer from './OptionsContainer.vue'
 
 const { options, modelValue, labelId, title, placeholder, error } = defineProps({
   options: {
@@ -38,7 +39,7 @@ const { options, modelValue, labelId, title, placeholder, error } = defineProps(
 
 const componentRef = useTemplateRef('componentRef')
 
-const elementRef = computed(() => componentRef.value.wrapper)
+const elementRef = computed(() => componentRef.value?.wrapper)
 
 const renderOptionsContainer = ref(false)
 
@@ -57,6 +58,10 @@ const formatTitle = computed(() => {
     return options.find((opt) => opt.value === modelValue).title
   }
   return placeholder
+})
+
+const formatOptions = computed(() => {
+  return options.filter((opt) => opt.value !== modelValue)
 })
 
 useClickOutside(elementRef, hideOptionsContainer)
@@ -82,18 +87,12 @@ useClickOutside(elementRef, hideOptionsContainer)
           </span>
         </div>
         <Transition name="options-container-trasnition-container">
-          <div class="options-container" v-if="renderOptionsContainer">
-            <ul>
-              <template v-for="option of options" :key="option.value">
-                <li
-                  v-if="option.value != modelValue"
-                  @click="$emit('update:modelValue', option.value)"
-                >
-                  {{ option.title }}
-                </li>
-              </template>
-            </ul>
-          </div>
+          <OptionsContainer
+            @close="renderOptionsContainer = false"
+            :options="formatOptions"
+            v-if="renderOptionsContainer"
+            @checked="$emit('update:modelValue', $event)"
+          />
         </Transition>
       </div>
     </template>
@@ -126,38 +125,6 @@ useClickOutside(elementRef, hideOptionsContainer)
   }
 }
 
-.options-container {
-  cursor: auto;
-  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.16);
-  z-index: 1;
-  border: 1px solid;
-  border-top: none;
-  border-color: var(--gray-600);
-  position: absolute;
-  left: 0;
-  right: 4px;
-  top: calc(100% + 5px);
-  background-color: var(--white);
-  border-end-start-radius: 10px;
-  border-end-end-radius: 10px;
-  max-height: 250px;
-  overflow-y: auto;
-  ul {
-    padding: 8px 0px 10px;
-
-    li {
-      position: relative;
-      &::first-letter {
-        text-transform: capitalize;
-      }
-      cursor: pointer;
-      padding: 3px 12px;
-      &:hover {
-        background-color: var(--blue-300);
-      }
-    }
-  }
-}
 span {
   display: block;
   padding-block: 1px;

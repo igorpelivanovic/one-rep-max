@@ -10,7 +10,7 @@ const { exercise } = defineProps({
 </script>
 
 <template>
-  <DashContentContainer custom-class="hellow-content blue">
+  <DashContentContainer class="hellow-content blue">
     <template #header>
       <h2>najnovija vežba</h2>
       <RouterLink class="header-link" :to="{ name: 'dash-posts' }">sve vežbe</RouterLink>
@@ -25,10 +25,14 @@ const { exercise } = defineProps({
   </DashContentContainer>
 </template>
 <style scoped>
+.hellow-content {
+  order: 4;
+}
 .body-link {
   flex-direction: column;
   justify-content: center;
   gap: 15px;
+  padding-block: 30px;
   p {
     margin: 0;
     text-align: center;

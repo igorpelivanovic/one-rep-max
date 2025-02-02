@@ -18,6 +18,7 @@ const { stats } = defineProps({
     <template #body>
       <div class="stats-content-container">
         <StatsSection
+          class="grid-element"
           title="korisnika"
           :value="stats.num_of_register_users"
           v-if="stats.num_of_active_plans != undefined"
@@ -29,6 +30,7 @@ const { stats } = defineProps({
           </template>
         </StatsSection>
         <StatsSection
+          class="grid-element"
           title="aktivni planovi"
           :value="stats.num_of_active_plans"
           v-if="stats.num_of_active_plans != undefined"
@@ -40,6 +42,7 @@ const { stats } = defineProps({
           </template>
         </StatsSection>
         <StatsSection
+          class="grid-element"
           title="vežbi"
           :value="stats.num_of_exercises"
           v-if="stats.num_of_active_plans != undefined"
@@ -51,6 +54,7 @@ const { stats } = defineProps({
           </template>
         </StatsSection>
         <StatsSection
+          class="grid-element"
           title="blogova"
           :value="stats.num_of_posts"
           v-if="stats.num_of_active_plans != undefined"
@@ -69,13 +73,28 @@ const { stats } = defineProps({
 <style scoped>
 #stats {
   border-radius: 0;
+  order: 2;
   padding: 0;
+}
+.grid-element {
+  padding-block: 30px;
+}
+h2 {
+  color: var(--blue-600);
+  flex: 1;
+  font-size: 1.8rem;
+  text-transform: capitalize;
 }
 .stats-content-container {
   height: 100%;
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   align-items: stretch;
+  .grid-element {
+    flex-basis: 40%;
+    flex-grow: 1;
+  }
   .icon {
     margin: auto;
     font-size: 1.4rem;
@@ -101,6 +120,16 @@ const { stats } = defineProps({
     &.blog {
       color: var(--purple-600);
       background-color: var(--purple-100);
+    }
+  }
+}
+@media screen and (min-width: 1281px) {
+  #stats {
+    order: 1;
+  }
+  .stats-content-container {
+    .grid-element {
+      flex-basis: 140px;
     }
   }
 }

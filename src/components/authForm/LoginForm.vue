@@ -35,9 +35,8 @@ async function submitFormHandler() {
     loading.value = true
     await login(formData)
   } catch (e) {
-    console.log(e)
-    addError()
     responseError.value = e?.response?.data?.message || 'something wrong'
+    addError({ content: responseError.value })
   } finally {
     loading.value = false
   }
@@ -71,5 +70,5 @@ async function submitFormHandler() {
       :message="responseError"
     ></AuthFormErrorMessage>
   </form>
-  <SpinnerContainer v-if="loading"></SpinnerContainer>
+  <SpinnerContainer class="spinner" v-if="loading"></SpinnerContainer>
 </template>

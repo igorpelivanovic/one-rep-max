@@ -18,7 +18,7 @@ const { plans, users } = defineProps({
 })
 
 const statusApp = computed(() => {
-  return (plans / users) * 100
+  return parseFloat(((plans / users) * 100).toFixed(2))
 })
 
 const statusStyleClass = computed(() => {
@@ -65,6 +65,7 @@ const fullName = computed(() => {
 .hellow-content {
   position: relative;
   gap: 40px;
+  order: 1;
 }
 h2 {
   text-transform: none;

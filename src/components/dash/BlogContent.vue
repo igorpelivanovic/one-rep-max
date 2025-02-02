@@ -11,7 +11,7 @@ const { post } = defineProps({
 </script>
 
 <template>
-  <DashContentContainer custom-class="blue">
+  <DashContentContainer class="blue">
     <template #header>
       <h2>najnoviji blog</h2>
       <RouterLink class="header-link" :to="{ name: 'dash-posts' }">svi postovi</RouterLink>
@@ -22,4 +22,8 @@ const { post } = defineProps({
   </DashContentContainer>
 </template>
 
-<style scoped></style>
+<style scoped>
+.blue {
+  order: 3;
+}
+</style>

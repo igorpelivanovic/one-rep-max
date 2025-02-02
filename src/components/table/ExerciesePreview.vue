@@ -13,7 +13,7 @@ const router = useRouter()
 </script>
 
 <template>
-  <RouterLink :to="{ name: '' }">
+  <RouterLink :to="{ name: 'preview-exercise', params: { id: exercise.id } }">
     <div class="exercise-container preview-content">
       <p class="category">{{ exercise.type }}</p>
       <p class="title">{{ exercise.name }}</p>
@@ -26,7 +26,7 @@ const router = useRouter()
         </button>
         <button
           type="button"
-          @click.prevent="() => router.push({ name: 'editPost', params: { id: post.pst_id } })"
+          @click.prevent="() => router.push({ name: 'editExercise', params: { id: exercise.id } })"
         >
           <span class="icon">
             <i class="fas fa-pencil"></i>

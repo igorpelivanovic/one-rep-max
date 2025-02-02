@@ -6,7 +6,7 @@ import { ref, computed } from 'vue'
 import { removeExercises, removeUsedWeights } from '@/utils/exeInWkoToken'
 
 const useAuthUserStore = defineStore('auth', () => {
-  let user = ref(null)
+  const user = ref(null)
 
   const getUser = computed(() => user)
 
@@ -22,9 +22,11 @@ const useAuthUserStore = defineStore('auth', () => {
   const logout = async () => {
     await auth.logout()
     authToken.removeAuthToken()
+    user.value = null
     removeExercises()
     removeUsedWeights()
-    router.replace({ name: 'auth' })
+    router.replace({ name: 'login' })
+
     return true
   }
 
@@ -37,15 +39,15 @@ const useAuthUserStore = defineStore('auth', () => {
     return true
   }
 
-  const isLogged = () => authToken.getAuthToken() && !!user.value
-
   const register = async (data) => {
     await auth.register(data)
-    router.replace({ name: 'auth' })
+    router.replace({ name: 'login' })
     return true
   }
 
-  return { getUser, login, logout, me, isLogged, register }
+  const role = computed(() => user.value?.role || null)
+
+  return { getUser, login, logout, me, register, role, user }
 })
 
 export { useAuthUserStore }
