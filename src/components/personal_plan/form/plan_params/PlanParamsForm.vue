@@ -2,25 +2,23 @@
 import { ref, watch, onBeforeMount } from 'vue'
 import PlanParamsFormInput from './PlanParamsFormInput.vue'
 import { InputProps, InputData } from '../validation/propValidation'
-import { usePlanStore } from '@/stores/personal_plan'
+import { usePlanStore } from '@/stores/planStore'
+import SpinnerContainer from '@/components/spinner/SpinnerContainer.vue'
 
+const props = defineProps({
+  errors: {
+    type: Array,
+    default: () => [],
+  },
+})
 const emit = defineEmits(['userPlanDataChange'])
 
 const planStore = usePlanStore()
-let loading = true
+let loading = ref(true)
 
-const userPlanData = ref({
-  fitnessLvl: null,
-  weeklyWkoNum: null,
-  goal: null,
-  wkoType: null,
-  isInGym: null,
-})
+const userPlanData = ref({})
 
 function handleSelected(data) {
-  if (loading) {
-    loading = false
-  }
   if (!isNaN(data[1])) {
     if (data[0] === 'isInGym') {
       userPlanData.value[data[0]] = !!+data[1]
@@ -36,9 +34,8 @@ function handleSelected(data) {
 }
 
 watch(userPlanData.value, () => {
-  if (loading) {
-    loading = false
-    return
+  if (loading.value) {
+    loading.value = false
   }
   emit('userPlanDataChange', userPlanData.value)
 })
@@ -61,19 +58,25 @@ onBeforeMount(async () => {
     }
   } catch (error) {
     if (error.status === 404) {
-      return
+      userPlanData.value = {
+        fitnessLvl: null,
+        weeklyWkoNum: null,
+        goal: null,
+        wkoType: null,
+        isInGym: null,
+      }
     }
   }
 })
 </script>
 
 <template>
-  <div class="plan-params-form-wrapper">
+  <SpinnerContainer v-if="loading"></SpinnerContainer>
+  <div v-else class="plan-params-form-wrapper">
     <h3>Unesi ili izmeni svoje podatke, i već danas započni svoj fintes put.</h3>
-    <p>Polja označena sa * su obavezna.</p>
     <PlanParamsFormInput
       id="fitness-level-input"
-      title="* Koliko često treniraš?"
+      title="Koliko često treniraš?"
       :input-props="
         new InputProps('radio', 'fitnessLvl', [
           new InputData(0, 'nikad', userPlanData.fitnessLvl === 0),
@@ -82,10 +85,11 @@ onBeforeMount(async () => {
         ])
       "
       @selected="handleSelected"
+      :error="props.errors.includes('fitnessLvl')"
     ></PlanParamsFormInput>
     <PlanParamsFormInput
       id="weekly-workouts-input"
-      title="* Koliko puta nedeljno želiš da treniraš?"
+      title="Koliko puta nedeljno želiš da treniraš?"
       :input-props="
         new InputProps('radio', 'weeklyWkoNum', [
           new InputData(3, 'tri', userPlanData.weeklyWkoNum === 3),
@@ -94,10 +98,11 @@ onBeforeMount(async () => {
         ])
       "
       @selected="handleSelected"
+      :error="props.errors.includes('weeklyWkoNum')"
     ></PlanParamsFormInput>
     <PlanParamsFormInput
       id="goal-input"
-      title="* Unesi svoj cilj"
+      title="Unesi svoj cilj"
       :special-style="true"
       :input-props="
         new InputProps('radio', 'goal', [
@@ -107,10 +112,11 @@ onBeforeMount(async () => {
         ])
       "
       @selected="handleSelected"
+      :error="props.errors.includes('goal')"
     ></PlanParamsFormInput>
     <PlanParamsFormInput
       id="workout-type-input"
-      title="* Unesi željeni tip treninga"
+      title="Unesi željeni tip treninga"
       :input-props="
         new InputProps('radio', 'wkoType', [
           new InputData('fullbody', 'za celo telo', userPlanData.wkoType === 'fullbody'),
@@ -118,10 +124,11 @@ onBeforeMount(async () => {
         ])
       "
       @selected="handleSelected"
+      :error="props.errors.includes('wkoType')"
     ></PlanParamsFormInput>
     <PlanParamsFormInput
       id="is-in-gym-input"
-      title="* Da li ćeš trenirati u teretani ili kod kuće?"
+      title="Da li ćeš trenirati u teretani ili kod kuće?"
       :disabled="userPlanData.goal === 'get-stronger'"
       :input-props="
         new InputProps('radio', 'isInGym', [
@@ -130,6 +137,7 @@ onBeforeMount(async () => {
         ])
       "
       @selected="handleSelected"
+      :error="props.errors.includes('isInGym')"
     ></PlanParamsFormInput>
     <p>(Za cilj "JAČANJE MIŠIĆA", automatski će biti izabrana opcija "TERETANA".)</p>
   </div>

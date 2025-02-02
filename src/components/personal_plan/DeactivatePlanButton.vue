@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { usePlanStore } from '@/stores/personal_plan'
+import { usePlanStore } from '@/stores/planStore'
 
 const planStore = usePlanStore()
 let buttonDisable = ref(false)

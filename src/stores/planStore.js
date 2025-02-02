@@ -49,6 +49,22 @@ const usePlanStore = defineStore('plan', () => {
     return api.getExerciseInWorkout({ exerciseId, workoutId })
   }
 
+  function setWorkoutStats(workoutId, workoutData) {
+    return api.setWorkoutStats({ workoutId, workoutData })
+  }
+
+  function finishWorkout(workoutId) {
+    return api.finishWorkout({ workoutId })
+  }
+
+  function getChallengeExercise() {
+    return api.getChallenge()
+  }
+
+  function addChallengeToStats() {
+    return api.addChallenge()
+  }
+
   function getUserPlanParams() {
     return api.getUserPlanParams()
   }
@@ -94,6 +110,10 @@ const usePlanStore = defineStore('plan', () => {
     swapExerciseRequest,
     swapExercise,
     getExerciseInWorkout,
+    setWorkoutStats,
+    finishWorkout,
+    getChallengeExercise,
+    addChallengeToStats,
     getUserPlanParams,
     changeUserPlanParams,
     getUserOrmParams,

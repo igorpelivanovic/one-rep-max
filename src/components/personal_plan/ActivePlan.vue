@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue'
-import { usePlanStore } from '@/stores/personal_plan'
+import { usePlanStore } from '@/stores/planStore'
 import DeactivatePlanButton from './DeactivatePlanButton.vue'
 import WorkoutInWeeklyPlan from './workout/WorkoutInWeeklyPlan.vue'
 

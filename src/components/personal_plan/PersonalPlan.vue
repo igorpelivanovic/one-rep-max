@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onBeforeMount } from 'vue'
-import { usePlanStore } from '@/stores/personal_plan'
+import { usePlanStore } from '@/stores/planStore'
 import PlanForm from './form/PlanForm.vue'
 import DeactivatePlanButton from './DeactivatePlanButton.vue'
 import ActivePlan from './ActivePlan.vue'

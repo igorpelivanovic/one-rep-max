@@ -22,13 +22,17 @@ const props = defineProps({
     type: InputProps,
     required: true,
   },
+  error: {
+    type: Boolean,
+    default: false,
+  },
 })
 </script>
 
 <template>
   <div class="plan-form-wrapper">
     <div class="plan-form-input-wrapper">
-      <label :for="props.id">
+      <label :for="props.id" :class="{ 'error-input': props.error }">
         <span>{{ props.title }}</span>
       </label>
       <div class="inputs-wrapper" :class="{ special: props.specialStyle }">
@@ -46,6 +50,9 @@ const props = defineProps({
         ></PlanFormRadioInput>
       </div>
     </div>
+    <span v-if="props.error" class="error-input"
+      >Neophodno je da odabereš jednu od ponuđenih opcija.</span
+    >
   </div>
 </template>
 
@@ -73,6 +80,19 @@ const props = defineProps({
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
+}
+
+.error-input {
+  color: var(--red);
+}
+
+.error-input > span {
+  font-weight: 700;
+}
+
+.plan-form-wrapper > span {
+  font-size: 0.8rem;
+  font-weight: 400;
 }
 
 @media screen and (min-width: 350px) {

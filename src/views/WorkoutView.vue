@@ -1,10 +1,17 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { usePlanStore } from '@/stores/personal_plan'
+import { usePlanStore } from '@/stores/planStore'
 import ExerciseInWorkout from '@/components/personal_plan/workout/ExerciseInWorkout.vue'
 import PopUpLayout from '@/components/popup/PopUpLayout.vue'
 import ExerciseInPopUp from '@/components/personal_plan/workout/ExerciseInPopUp.vue'
+import {
+  setExercises,
+  nextExercise,
+  currExerciseId,
+  removeExercises,
+  removeUsedWeights,
+} from '@/utils/exeInWkoToken'
 
 const route = useRoute()
 const router = useRouter()
@@ -56,19 +63,15 @@ function startWorkout(event) {
   for (let exe of workoutData.value.exercises) {
     exercisesIds.push(exe.id)
   }
-  localStorage.setItem('exercises', exercisesIds.toString() + ',')
-  const nextExeId = localStorage
-    .getItem('exercises')
-    .slice(0, localStorage.getItem('exercises').indexOf(','))
-  // localStorage.setItem(
-  //   'exercises',
-  //   localStorage.getItem('exercises').slice(localStorage.getItem('exercises').indexOf(',') + 1),
-  // )
+  removeExercises()
+  removeUsedWeights()
+  setExercises(exercisesIds)
+  nextExercise()
   router.push({
     name: 'exercise',
     params: {
       workoutId: route.params.id,
-      exerciseId: nextExeId,
+      exerciseId: currExerciseId(),
     },
   })
 }
@@ -162,6 +165,8 @@ onMounted(async () => getWorkoutData(route.params.id))
 
 .start-workout-button {
   margin-top: 1rem;
+  width: fit-content;
+  align-self: center;
 }
 
 .swap-button:disabled,

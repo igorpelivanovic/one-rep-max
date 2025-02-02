@@ -42,7 +42,7 @@ function toggleSelected(e) {
     <div class="swap-exercise-title-wrapper">
       <div>
         <span>{{ props.exercise.name }}</span>
-        <span><i v-if="props.exercise.weight" class="fa-solid fa-dumbbell"></i></span>
+        <span v-if="props.exercise.weight"><i class="fa-solid fa-dumbbell"></i></span>
         <button class="arrow-button" @click="toggleDesc" v-if="showDescButton">
           <i class="fa-solid fa-chevron-down"></i>
         </button>
@@ -52,10 +52,10 @@ function toggleSelected(e) {
       </div>
       <div class="select-buttons-wrapper" @click="toggleSelected">
         <button v-if="!selected" class="select-swap-exercise-button">
-          <i class="fa-solid fa-check"></i>
+          <i class="fa-regular fa-circle-check"></i>
         </button>
         <button v-else class="select-swap-exercise-button">
-          <i class="fa-solid fa-xmark"></i>
+          <i class="fa-regular fa-circle-xmark"></i>
         </button>
       </div>
     </div>
@@ -125,6 +125,11 @@ function toggleSelected(e) {
   cursor: pointer;
   margin-left: 0.5rem;
   color: #000;
+}
+
+.select-swap-exercise-button {
+  font-size: 1.5rem;
+  text-align: center;
 }
 
 .arrow-button:disabled,

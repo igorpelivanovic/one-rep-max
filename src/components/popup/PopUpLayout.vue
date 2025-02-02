@@ -67,11 +67,12 @@ function btnClickHandle() {
   justify-content: center;
   .popUpContainer {
     background-color: var(--gray);
-    min-width: 400px;
+    width: 90%;
     max-width: 450px;
     min-height: 250px;
+    max-height: 70vh;
     border-radius: 10px;
-    overflow: hidden;
+    overflow: scroll;
     padding: 10px;
     border: 1px solid var(--gray);
   }

@@ -3,6 +3,7 @@ import router from '@/router'
 import authToken from '@/utils/authToken'
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { removeExercises, removeUsedWeights } from '@/utils/exeInWkoToken'
 
 const useAuthUserStore = defineStore('auth', () => {
   let user = ref(null)
@@ -21,6 +22,8 @@ const useAuthUserStore = defineStore('auth', () => {
   const logout = async () => {
     await auth.logout()
     authToken.removeAuthToken()
+    removeExercises()
+    removeUsedWeights()
     router.replace({ name: 'auth' })
     return true
   }

@@ -31,11 +31,30 @@ const router = createRouter({
           name: 'profile',
           component: () => import('../views/ProfileView.vue'),
         },
-
         {
           path: '/statistics',
           name: 'stats',
           component: () => import('../views/StatsView.vue'),
+        },
+        {
+          path: 'user',
+          name: 'user',
+          component: () => import('../views/UserProfileView.vue'),
+        },
+        {
+          path: 'workout/:id',
+          name: 'workout',
+          component: () => import('../views/WorkoutView.vue'),
+        },
+        {
+          path: 'exercise/:workoutId/:exerciseId',
+          name: 'exercise',
+          component: () => import('../views/ExerciseView.vue'),
+        },
+        {
+          path: 'workout/:id/finish',
+          name: 'workout-finish',
+          component: () => import('../views/FinishWorkoutView.vue'),
         },
         // Required Admin Role
         {
@@ -70,21 +89,6 @@ const router = createRouter({
               component: () => import('../views/MenagePostsView.vue'),
             },
           ],
-        },
-        {
-          path: 'user',
-          name: 'user',
-          component: () => import('../views/UserProfileView.vue'),
-        },
-        {
-          path: '/workout/:id',
-          name: 'workout',
-          component: () => import('../views/WorkoutView.vue'),
-        },
-        {
-          path: 'exercise/:workoutId/:exerciseId',
-          name: 'exercise',
-          component: () => import('../views/ExerciseView.vue'),
         },
       ],
     },

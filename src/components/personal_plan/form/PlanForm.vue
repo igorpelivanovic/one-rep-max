@@ -2,7 +2,7 @@
 import PlanParamsForm from './plan_params/PlanParamsForm.vue'
 import OrmParamsForm from './orm_params/OrmParamsForm.vue'
 import { ref } from 'vue'
-import { usePlanStore } from '@/stores/personal_plan'
+import { usePlanStore } from '@/stores/planStore'
 
 const emit = defineEmits(['planCreated'])
 
@@ -10,6 +10,7 @@ const planStore = usePlanStore()
 
 const userPlanData = ref(null)
 const userOrmData = ref(null)
+const inputErrors = ref([])
 
 async function submit(event) {
   try {
@@ -64,6 +65,7 @@ async function submit(event) {
   } catch (error) {
     if (error.message === 'missing form data') {
       console.log(error.missingData)
+      inputErrors.value = error.missingData
       event.target.disabled = false
     }
     event.target.disabled = false
@@ -75,7 +77,10 @@ async function submit(event) {
   <div class="plan-form-container">
     <h2>Kreiraj svoj plan treninga!</h2>
     <div class="plan-forms-wrapper">
-      <PlanParamsForm @user-plan-data-change="(value) => (userPlanData = value)"></PlanParamsForm>
+      <PlanParamsForm
+        @user-plan-data-change="(value) => (userPlanData = value)"
+        :errors="inputErrors"
+      ></PlanParamsForm>
       <OrmParamsForm @user-orm-change="(value) => (userOrmData = value)"></OrmParamsForm>
     </div>
     <div class="submit-button">

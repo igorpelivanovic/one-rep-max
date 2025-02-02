@@ -1,24 +1,22 @@
 <script setup>
 import OrmParamInput from './OrmParamInput.vue'
-import { usePlanStore } from '@/stores/personal_plan'
+import { usePlanStore } from '@/stores/planStore'
 import { ref, watch, onBeforeMount } from 'vue'
+import SpinnerContainer from '@/components/spinner/SpinnerContainer.vue'
 
 const planStore = usePlanStore()
 
 const emit = defineEmits(['userOrmChange'])
 
-let loading = true
+let loading = ref(true)
 const deactivated = ref(false)
 const userOrmParams = ref({
-  bench: 0,
-  squat: 0,
-  barbellrow: 0,
+  bench: null,
+  squat: null,
+  barbellrow: null,
 })
 
 function handleInput(data) {
-  if (loading) {
-    loading = false
-  }
   if (deactivated.value) {
     deactivated.value = false
   }
@@ -52,9 +50,8 @@ function handleInput(data) {
 }
 
 watch(userOrmParams.value, () => {
-  if (loading) {
-    loading = false
-    return
+  if (loading.value) {
+    loading.value = false
   }
   emit('userOrmChange', userOrmParams.value)
 })
@@ -95,13 +92,17 @@ onBeforeMount(async () => {
         squat: 0,
         barbellrow: 0,
       }
+      userOrmParams.value.bench = 0
+      userOrmParams.value.squat = 0
+      userOrmParams.value.barbellrow = 0
     }
   }
 })
 </script>
 
 <template>
-  <div class="orm-params-form-wrapper">
+  <SpinnerContainer v-if="loading"></SpinnerContainer>
+  <div v-else class="orm-params-form-wrapper">
     <h3>Tvoje OneRepMax vrednosti</h3>
     <p>
       Ako želiš da saznaš više o OneRepMax parametrima, kako se mere i koriste u izradi plana
