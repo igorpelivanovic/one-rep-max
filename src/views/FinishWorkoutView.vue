@@ -76,6 +76,7 @@ h1 {
   border: none;
   background: none;
   font-size: 1.2rem;
+  color: #000;
 }
 
 .finish-workout-content-wrapper {

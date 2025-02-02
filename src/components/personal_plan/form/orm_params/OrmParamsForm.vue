@@ -153,6 +153,9 @@ onBeforeMount(async () => {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  background-color: var(--gray);
+  border-radius: 2rem;
+  padding: 1rem;
 }
 
 .orm-param-wrapper {

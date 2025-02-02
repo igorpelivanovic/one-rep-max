@@ -51,11 +51,6 @@ const router = createRouter({
           },
           children: [
             {
-              path: '/profile',
-              name: 'profile',
-              component: () => import('../views/ProfileView.vue'),
-            },
-            {
               path: '/dash',
               component: () => import('@/views/DashRootView.vue'),
               children: [
@@ -69,6 +64,12 @@ const router = createRouter({
                   path: 'stats',
                   component: () => import('@/views/StatsRootView.vue'),
                   name: 'stats',
+                },
+                /// SETTINGS
+                {
+                  path: 'settings',
+                  component: () => import('@/views/SettingsRootView.vue'),
+                  name: 'settings',
                 },
                 /// Reguired Admin role
                 {
@@ -128,11 +129,6 @@ const router = createRouter({
                 },
                 /// EXERCIESES
               ],
-            },
-            {
-              path: 'user',
-              name: 'user',
-              component: () => import('../views/UserProfileView.vue'),
             },
             {
               path: 'workout/:id',

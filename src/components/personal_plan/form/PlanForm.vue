@@ -116,13 +116,7 @@ h2 {
   margin-top: 1rem;
 }
 
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-  .plan-form-container {
-    max-width: 85%;
-  }
-}
-
-@media screen and (min-width: 1025px) {
+@media screen and (min-width: 1281px) {
   .plan-form-container {
     align-items: baseline;
   }

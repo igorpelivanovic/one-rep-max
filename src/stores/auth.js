@@ -47,7 +47,13 @@ const useAuthUserStore = defineStore('auth', () => {
 
   const role = computed(() => user.value?.role || null)
 
-  return { getUser, login, logout, me, register, role, user }
+  const changeAuthData = async (data) => {
+    const res = await auth.changeAuthData(data)
+    user.value.name = res.data.data.name
+    user.value.usr_fullname = res.data.data.fullname
+  }
+
+  return { getUser, login, logout, me, register, role, user, changeAuthData }
 })
 
 export { useAuthUserStore }
