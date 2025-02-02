@@ -53,7 +53,7 @@ onBeforeMount(async () => {
       </div>
       <div class="challenge-desc-wrapper">
         <span>Instrukcije</span>
-        <p v-for="(row, ind) in challengeData.desc.split('\\n')" :key="ind">{{ row }}</p>
+        <p v-for="(row, ind) in challengeData.desc.split('\n')" :key="ind">{{ row }}</p>
       </div>
       <button
         class="finish-challenge-button"

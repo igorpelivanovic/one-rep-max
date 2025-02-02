@@ -10,7 +10,7 @@ const props = defineProps({
 
 const emit = defineEmits(['selected'])
 
-const exercisesDesc = ref(props.exercise.descr.split('\\n'))
+const exercisesDesc = ref(props.exercise.descr.split('\n'))
 
 const showDesc = ref(false)
 const showDescButton = ref(true)
