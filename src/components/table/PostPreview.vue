@@ -28,7 +28,7 @@ const router = useRouter()
     <div class="post-container preview-content" :class="customClass">
       <div class="img-container">
         <div class="img-wrapper">
-          <img :src="post.image" alt="" />
+          <img :src="post.image" v-if="post.image" alt="" />
         </div>
       </div>
       <div class="contnet-container">

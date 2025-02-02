@@ -1,7 +1,6 @@
 <script setup>
 import post from '@/api/post'
 import useFormValidation from '@/composables/formValidation'
-import Format from '@/utils/format'
 import {
   file,
   fileExtension,
