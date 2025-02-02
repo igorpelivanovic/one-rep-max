@@ -7,13 +7,14 @@ import UserChallenges from '@/components/personal_plan/stats/UserChallenges.vue'
 
 const loading = ref(true)
 const records = ref([])
-const challenges = ref(null)
+const challenges = ref(0)
 
 onBeforeMount(async () => {
   try {
     const res = await Stats.getStats()
     records.value = res.data.data.personalRecords
     challenges.value = res.data.data.challenges
+    console.log(challenges.value)
     loading.value = false
   } catch (error) {
     if (error.status === 404) {

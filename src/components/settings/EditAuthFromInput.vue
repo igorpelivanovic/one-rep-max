@@ -61,17 +61,19 @@ function handleSubmit() {
     errorMsg.value = 'Lozinka se ne poklapa'
     return
   }
-  const check = props.validator(newValue.value)
+  const check = props.validator(newValue.value.trim())
   if (check) {
     requestChange.value = !requestChange.value
     if (props.type === 'password') {
       validPassword.value = true
+      showPassword.value = false
     }
     error.value = false
-    emit('inputChange', newValue.value)
+    emit('inputChange', newValue.value.trim())
   } else {
     if (newValue.value === '') {
       if (props.type === 'password') {
+        showPassword.value = false
         emit('inputChange', '')
       }
       requestChange.value = false
@@ -101,7 +103,7 @@ function handleSubmit() {
             @keyup.enter="handleSubmit"
             :disabled="!requestChange"
           />
-          <span v-else>{{ newValue }}</span>
+          <input v-else type="text" v-model="newValue" @keyup.enter="handleSubmit" />
           <div>
             <button v-if="showPassword" @click="toggleShowPassword">
               <i class="fa-regular fa-eye"></i>
@@ -123,7 +125,7 @@ function handleSubmit() {
             @keyup.enter="handleSubmit"
             :disabled="!requestChange"
           />
-          <span v-else>{{ newValue1 }}</span>
+          <input v-else type="text" v-model="newValue1" @keyup.enter="handleSubmit" />
           <div>
             <button v-if="showPassword" @click="toggleShowPassword">
               <i class="fa-regular fa-eye"></i>

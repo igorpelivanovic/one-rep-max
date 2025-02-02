@@ -9,7 +9,6 @@ const newPassword = ref('')
 const newFullname = ref(authUserStore.user.usr_fullname)
 
 function validateUsername(username) {
-  console.log('username')
   if (username.length < 3 || username.length > 60) {
     return false
   }
@@ -58,6 +57,9 @@ async function submitForm(event) {
         fullname: newFullname.value,
       })
     }
+    newUsername.value = authUserStore.user.name
+    newPassword.value = ''
+    newFullname.value = authUserStore.user.usr_fullname
     event.target.disabled = false
   } catch (error) {
     console.log(error)
