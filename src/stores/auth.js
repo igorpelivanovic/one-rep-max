@@ -15,7 +15,7 @@ const useAuthUserStore = defineStore('auth', () => {
     const resData = response.data.data
     user.value = { ...user.value, ...resData.user }
     authToken.setAuthToken(resData.sessionId)
-    router.push({ name: 'profile' })
+    router.push({ name: 'main-dash' })
     return true
   }
 
