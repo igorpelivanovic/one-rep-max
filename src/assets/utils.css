@@ -39,6 +39,9 @@ nav {
 
       text-decoration: none;
       span {
+        &.user-title {
+          display: none;
+        }
         &.title {
           display: none;
           &::first-letter {
@@ -505,7 +508,8 @@ main {
     .auth-container {
       .nav-bar-link {
         font-size: 1rem;
-        span.title {
+        span.title,
+        span.user-title {
           display: block;
         }
       }

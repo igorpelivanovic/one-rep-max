@@ -52,7 +52,7 @@ const submitForm = async () => {
     isLoading.value = true
     responseError.value = null
     await post.add(formData)
-    addSuccess({ content: 'uspešno dodat post' })
+    addSuccess({ content: 'uspešno dodata vežba' })
     resetForm()
   } catch (e) {
     responseError.value = e?.response?.data?.message || 'something wrong'

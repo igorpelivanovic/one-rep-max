@@ -9,6 +9,10 @@ const post = ref({})
 
 onMounted(() => fetchPosts())
 
+const formatText = computed(() => {
+  return post.value?.text?.split('\n') || []
+})
+
 async function fetchPosts() {
   try {
     const res = await api.getById(blogId.value)
@@ -26,7 +30,7 @@ async function fetchPosts() {
     <img :src="post.image" class="blog-image" />
     <!-- <p v-if="post.content">{{ post.content }}</p>
     <p v-else>Loading post...</p> -->
-    <p class="blog-text">{{ post.text }}</p>
+    <p class="blog-text" v-for="(part, index) of formatText" :key="index">{{ part }}</p>
   </div>
 </template>
 

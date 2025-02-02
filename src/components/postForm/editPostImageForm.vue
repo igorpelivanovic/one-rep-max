@@ -11,6 +11,7 @@ import FormLayout from '../layout/FormLayout.vue'
 import AuthFormErrorMessage from '../authForm/AuthFormErrorMessage.vue'
 import ImageFieldTemplate from './postFormInputs/ImageFieldTemplate.vue'
 import { useAlertBoxStore } from '@/stores/alertBox'
+import { useRouter } from 'vue-router'
 
 const { initialFormData } = defineProps({
   initialFormData: {
@@ -22,6 +23,7 @@ const { initialFormData } = defineProps({
 const initialImageData = ref(initialFormData.image)
 
 const { addSuccess } = useAlertBoxStore()
+const router = useRouter()
 
 const formData = reactive({ image: undefined })
 const responseError = ref(null)
@@ -38,7 +40,8 @@ const validation = {
 const submitForm = async () => {
   try {
     isLoading.value = true
-    await post.updateImage({ id: initialFormData.id, ...formData })
+    const response = await post.updateImage({ id: initialFormData.id, ...formData })
+    router.push({ name: 'BlogPostView', params: { id: response.data.data.id } })
     addSuccess({ content: 'uspešno izemenjena slika bloga' })
   } catch (e) {
     console.log(e)
