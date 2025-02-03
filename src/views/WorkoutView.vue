@@ -28,7 +28,7 @@ async function getWorkoutData(id) {
     const res = await planStore.getWorkout(id)
     workoutData.value = res.data.data
     workoutData.value.exercises.forEach((element) => {
-      exercisesDesc.value.push(element.descr.split('\\n'))
+      exercisesDesc.value.push(element.descr.split('\n'))
     })
   } catch (error) {
     console.log(error)

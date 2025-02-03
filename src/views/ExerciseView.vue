@@ -151,8 +151,8 @@ onBeforeRouteUpdate(async (to, from) => {
         ></iframe>
       </div>
       <div class="exercise-desc-wrapper">
-        <span>Instrukcije</span>
-        <p v-for="(row, ind) in exerciseData.desc.split('\\n')" :key="ind">{{ row }}</p>
+        <span class="bold">Instrukcije</span>
+        <p v-for="(row, ind) in exerciseData.desc.split('\n')" :key="ind">{{ row }}</p>
       </div>
       <div class="muscle-groups-wrapper">
         <MuscleGroupsExercise
@@ -233,6 +233,10 @@ onBeforeRouteUpdate(async (to, from) => {
   gap: 0.5rem;
   font-size: 1.2rem;
   max-width: 620px;
+}
+
+.bold {
+  font-weight: 700;
 }
 
 .exercise-desc-wrapper > span {
