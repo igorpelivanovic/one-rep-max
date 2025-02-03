@@ -118,14 +118,6 @@ async function submitForm(event) {
   align-self: last baseline;
 }
 
-a:link,
-a:visited,
-a:hover,
-a:active {
-  text-decoration: underline;
-  color: var(--blue);
-}
-
 @media screen and (min-width: 769px) {
   .user-data-form-wrapper > div {
     width: 100%;

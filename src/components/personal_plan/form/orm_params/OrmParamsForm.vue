@@ -135,7 +135,9 @@ onBeforeMount(async () => {
     <p>
       Ako želiš da saznaš više o OneRepMax parametrima, kako se mere i koriste u izradi plana
       treninga, pogledaj
-      <RouterLink :to="{ name: 'BlogPostView', params: { id: 51 } }">članak</RouterLink>.
+      <RouterLink class="blog-link" :to="{ name: 'BlogPostView', params: { id: 51 } }"
+        >članak</RouterLink
+      >.
     </p>
     <div class="orm-param-wrapper">
       <h4>Potisak na ravnoj klupi</h4>
@@ -197,5 +199,13 @@ onBeforeMount(async () => {
 
 p {
   text-align: center;
+}
+
+.blog-link:link,
+.blog-link:visited,
+.blog-link:hover,
+.blog-link:active {
+  text-decoration: underline;
+  color: var(--blue);
 }
 </style>
