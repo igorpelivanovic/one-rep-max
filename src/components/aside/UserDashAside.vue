@@ -66,12 +66,12 @@ useClickOutside(containerRef, () => {
   display: none;
   width: 50px;
   aspect-ratio: 1/1;
+  border: 2px solid var(--orange);
   border-radius: 50%;
   z-index: 1;
   font-size: 1.4rem;
   color: var(--gray);
   background-color: var(--blue-500);
-  border: none;
   justify-content: center;
   align-items: center;
   opacity: 0;

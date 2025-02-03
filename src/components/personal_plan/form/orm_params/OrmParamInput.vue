@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 
 const props = defineProps({
   exercise: {
@@ -50,6 +50,17 @@ function clearInput(id) {
 }
 
 watch(props, () => {
+  if (loading) {
+    return
+  } else if (props.weight === 0) {
+    if (props.deactivated) {
+      paramData.value.reps = null
+    }
+    paramData.value.weight = null
+  }
+})
+
+onMounted(() => {
   if (once && loading) {
     paramData.value.reps = 1
     paramData.value.weight = props.weight

@@ -71,28 +71,30 @@ async function submitForm(event) {
 <template>
   <div class="user-data-form-wrapper">
     <h2>Moji podaci</h2>
-    <EditAuthFormInput
-      title="username"
-      i-label="Korisničko ime"
-      :i-value="newUsername"
-      :validator="validateUsername"
-      @input-change="(val) => (newUsername = val)"
-    ></EditAuthFormInput>
-    <EditAuthFormInput
-      title="fullname"
-      i-label="Ime i prezime"
-      :i-value="newFullname"
-      :validator="validateFullname"
-      @input-change="(val) => (newFullname = val)"
-    ></EditAuthFormInput>
-    <EditAuthFormInput
-      title="password"
-      i-label="Lozinka"
-      type="password"
-      :i-value="newPassword"
-      :validator="validatePassword"
-      @input-change="(val) => (newPassword = val)"
-    ></EditAuthFormInput>
+    <div>
+      <EditAuthFormInput
+        title="username"
+        i-label="Korisničko ime"
+        :i-value="newUsername"
+        :validator="validateUsername"
+        @input-change="(val) => (newUsername = val)"
+      ></EditAuthFormInput>
+      <EditAuthFormInput
+        title="fullname"
+        i-label="Ime i prezime"
+        :i-value="newFullname"
+        :validator="validateFullname"
+        @input-change="(val) => (newFullname = val)"
+      ></EditAuthFormInput>
+      <EditAuthFormInput
+        title="password"
+        i-label="Lozinka"
+        type="password"
+        :i-value="newPassword"
+        :validator="validatePassword"
+        @input-change="(val) => (newPassword = val)"
+      ></EditAuthFormInput>
+    </div>
     <button @click="submitForm">SAČUVAJ IZMENE</button>
   </div>
 </template>
@@ -103,5 +105,25 @@ async function submitForm(event) {
   flex-direction: column;
   gap: 2rem;
   align-items: baseline;
+}
+
+.user-data-form-wrapper > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+.user-data-form-wrapper > button {
+  align-self: last baseline;
+}
+
+@media screen and (min-width: 769px) {
+  .user-data-form-wrapper > div {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+  }
 }
 </style>
