@@ -62,7 +62,7 @@ function setUsedWeight() {
     return
   }
   const usedWeightCheck = +usedWeight.value
-  if (usedWeightCheck > 3 * exerciseData.value.recomendedWeight || Number.isNaN(usedWeightCheck)) {
+  if (usedWeightCheck > 3 * exerciseData.value.recomendedWeight && Number.isNaN(usedWeightCheck)) {
     throw 'invalid used weight'
   }
   addUsedWeightForExe(route.params.exerciseId, usedWeight.value)
@@ -71,9 +71,7 @@ function setUsedWeight() {
 function next(event) {
   try {
     event.target.disabled = true
-    if (exerciseData.value.recomendedWeight) {
-      setUsedWeight()
-    }
+    setUsedWeight()
     currExerciseId(route.params.exerciseId)
     nextExercise()
     loading.value = true
@@ -96,10 +94,8 @@ function next(event) {
 
 function finishWorkout() {
   try {
-    if (exerciseData.value.recomendedWeight) {
-      setUsedWeight()
-      router.push({ name: 'workout-finish', params: { id: route.params.workoutId } })
-    }
+    setUsedWeight()
+    router.push({ name: 'workout-finish', params: { id: route.params.workoutId } })
   } catch (error) {
     if (error === 'invalid used weight') {
       usedWeightInputError.value = true
