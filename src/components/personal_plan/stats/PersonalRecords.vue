@@ -43,13 +43,7 @@ const recordsShown = computed(() => {
 <template>
   <SpinnerContainer v-if="!props.loaded"></SpinnerContainer>
   <div v-else class="personal-records-container">
-    <div v-if="!hasData" class="no-data-wrapper">
-      <h2>
-        <span><i class="fa-solid fa-trophy"></i> </span> Već posle prvog treninga ovde ćeš moći da
-        vidiš svoje uspehe i rekorde!
-      </h2>
-    </div>
-    <div v-else class="personal-records-data-wrapper">
+    <div v-if="hasData" class="personal-records-data-wrapper">
       <div class="records-title">
         <span><i class="fa-solid fa-trophy"></i></span>
         <h2>Moji rekordi</h2>

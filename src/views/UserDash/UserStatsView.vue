@@ -5,6 +5,7 @@ import PersonalRecords from '@/components/personal_plan/stats/PersonalRecords.vu
 import UserChallenges from '@/components/personal_plan/stats/UserChallenges.vue'
 import PlanRecords from '@/components/personal_plan/stats/PlanRecords.vue'
 import OrmRecords from '@/components/personal_plan/stats/OrmRecords.vue'
+import SpinnerContainer from '@/components/spinner/SpinnerContainer.vue'
 
 const loading = ref(true)
 const stats = ref(null)
@@ -25,8 +26,9 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div class="user-stats-container">
-    <div v-if="!stats" class="no-data-wrapper">
+  <SpinnerContainer v-if="loading"></SpinnerContainer>
+  <div v-else class="user-stats-container">
+    <div v-if="stats === null" class="no-data-wrapper">
       <h2>
         <span><i class="fa-solid fa-trophy"></i> </span> Već posle prvog treninga ovde ćeš moći da
         vidiš svoje uspehe i rekorde!
@@ -45,11 +47,11 @@ onBeforeMount(async () => {
         <h2>Istorija planova vežbanja</h2>
         <PlanRecords :loaded="!loading" :plans="stats.plansStats"></PlanRecords>
       </div>
-      <div class="orm-stats-container margin-bottom">
+      <div v-if="stats.ormStats" class="orm-stats-container margin-bottom">
         <h2>OneRepMax istorija</h2>
         <OrmRecords :loaded="!loading" :orm-groups="stats.ormStats.groups"></OrmRecords>
       </div>
-      <div class="orm-stats-container">
+      <div v-if="stats.ormStats" class="orm-stats-container">
         <h2>OneRepMax rekordi</h2>
         <OrmRecords
           :loaded="!loading"
