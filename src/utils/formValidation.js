@@ -31,8 +31,8 @@ function maxLength({ msg = DEFAULT_MESSAGE, length }) {
 
 function pattern({ msg = DEFAULT_MESSAGE, regex }) {
   return (val) => {
-    if (!regex.test(val)) throw msg
-    return true
+    if (new RegExp(regex).test(val)) return true
+    throw msg
   }
 }
 

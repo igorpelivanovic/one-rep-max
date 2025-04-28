@@ -36,10 +36,10 @@ import UserDashAside from '@/components/aside/UserDashAside.vue'
 
 @media screen and (min-width: 1025px) {
   .dash-wrapper {
-    height: 100dvh;
     .dash-wrapper-content {
       margin-block: auto;
       height: 80dvh;
+      margin-top: 3rem;
       main {
         padding-right: 50px;
         padding-block: 0px;
@@ -58,5 +58,19 @@ h4,
 h5,
 h6 {
   margin: 0;
+}
+
+button {
+  background-color: var(--blue);
+  color: var(--white);
+  font-weight: 700;
+  border: none;
+  border-radius: 1rem;
+  padding: 0.7rem;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #0b5ad080;
 }
 </style>

@@ -67,7 +67,7 @@ export default {
       const { maxWidth = 250, maxHeight = 150, content } = binding.value
       tooltipContainer = generateTooltipContainer(content, {
         maxWidth: maxWidth + 'px',
-        maxHeight: maxHeight + 'px',
+        maxHeight: 'auto',
       })
       positionContainer(el, tooltipContainer)
     })

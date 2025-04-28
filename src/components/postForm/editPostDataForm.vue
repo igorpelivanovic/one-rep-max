@@ -14,6 +14,7 @@ import TextAreaTemplate from './postFormInputs/TextAreaTemplate.vue'
 import FormLayout from '../layout/FormLayout.vue'
 import AuthFormErrorMessage from '../authForm/AuthFormErrorMessage.vue'
 import { useAlertBoxStore } from '@/stores/alertBox'
+import { useRoute, useRouter } from 'vue-router'
 
 const { initialFormData } = defineProps({
   initialFormData: {
@@ -21,6 +22,8 @@ const { initialFormData } = defineProps({
     required: true,
   },
 })
+
+const router = useRouter()
 
 const initFormDataRef = ref({ ...initialFormData })
 
@@ -35,8 +38,9 @@ const submitFormHandle = async () => {
   try {
     isLoading.value = true
     responseError.value = null
-    await post.updateData(formData)
+    const response = await post.updateData(formData)
     addSuccess({ content: 'uspešno izmenjen sadržaj bloga' })
+    router.push({ name: 'BlogPostView', params: { id: response.data.data.id } })
   } catch (e) {
     responseError.value = e?.response?.data?.message || 'something wrong'
   } finally {

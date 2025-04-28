@@ -16,7 +16,7 @@ import {
 const route = useRoute()
 const router = useRouter()
 const planStore = usePlanStore()
-const workoutData = ref({}) // id, desc, name
+const workoutData = ref({})
 const exercisesDesc = ref([])
 const swapExercises = ref([])
 const showPopup = ref(false)

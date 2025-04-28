@@ -37,7 +37,7 @@ function showStats() {
 
 <template>
   <div class="finish-workout-container">
-    <button class="back-button" @click="showQuestion">
+    <button class="back-button" @click="showQuestion" v-if="!question">
       <i class="fa-solid fa-arrow-left-long"></i>
     </button>
     <div class="finish-workout-content-wrapper">

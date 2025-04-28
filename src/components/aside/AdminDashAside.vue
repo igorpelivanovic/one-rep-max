@@ -52,6 +52,12 @@ useClickOutside(containerRef, () => {
             ><span class="title">vežbe</span></RouterLink
           >
         </li>
+        <li>
+          <RouterLink :to="{ name: 'settings' }" @click="mobileHide = true">
+            <span class="icon"><i class="fas fa-gear"></i></span>
+            <span class="title">podešavanja</span></RouterLink
+          >
+        </li>
       </ul>
       <button type="button" class="toggle-menu" @click="toggleMenuStyle">
         <span class="icon">

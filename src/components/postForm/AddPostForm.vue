@@ -1,7 +1,6 @@
 <script setup>
 import post from '@/api/post'
 import useFormValidation from '@/composables/formValidation'
-import Format from '@/utils/format'
 import {
   file,
   fileExtension,
@@ -25,6 +24,7 @@ import TextAreaTemplate from './postFormInputs/TextAreaTemplate.vue'
 import FormLayout from '../layout/FormLayout.vue'
 import ImageFieldTemplate from './postFormInputs/ImageFieldTemplate.vue'
 import { useAlertBoxStore } from '@/stores/alertBox'
+import router from '@/router'
 
 const initalFormData = {
   title: '',
@@ -48,11 +48,11 @@ const { addSuccess, addError } = useAlertBoxStore()
 
 const submitForm = async () => {
   try {
-    console.log(formData)
     isLoading.value = true
     responseError.value = null
-    await post.add(formData)
-    addSuccess({ content: 'uspešno dodat post' })
+    const response = await post.add(formData)
+    addSuccess({ content: 'uspešno dodata vežba' })
+    router.push({ name: 'BlogPostView', params: { id: response.data.data.id } })
     resetForm()
   } catch (e) {
     responseError.value = e?.response?.data?.message || 'something wrong'

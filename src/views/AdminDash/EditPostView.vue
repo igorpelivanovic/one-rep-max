@@ -54,7 +54,7 @@ const deletePost = async () => {
     renderModal.value = false
     await post.removeById(postData.value.id)
     addSuccess({ content: 'uspešno obrisan blog' })
-    router.replace({ name: 'home' })
+    router.replace({ name: 'dash-posts' })
   } catch (e) {
     addError({ content: e.response.data.message })
   } finally {
